@@ -6,7 +6,7 @@
 #    By: xauffray <xauffray@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/28 11:47:14 by mservais          #+#    #+#              #
-#    Updated: 2021/10/18 23:00:06 by xauffray         ###   ########.fr        #
+#    Updated: 2021/10/18 23:29:52 by xauffray         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,7 @@ clean:
 	$(MAKE) clean -C libft
 
 shell:
-	@gcc main.c -lreadline libft/libft.a && ./a.out && clear
+	@gcc main.c -lreadline libft/libft.a && ./a.out
 
 
 fclean: clean

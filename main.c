@@ -72,17 +72,21 @@ void	echo(char **splited, int word_count)
 	}
 }
 
+void	ft_exit(char **splited, int *exit)
+{
+	if (!ft_strncmp(splited[0], "exit", 5))
+		*exit = 1;
+}
+
 void pwd(char **splited)
 {
 	char *pwd;
 
-	if (!ft_strncmp(splited[0], "pwd"))
-	{
+	if (!ft_strncmp(splited[0], "pwd", 3))
 		printf("%s\n", getcwd(pwd, 50));
-	}
 }
 
-void	handle_command(char *command)
+void	handle_command(char *command, int *exit)
 {
 	char	**splited;
 	int		word_count;
@@ -94,13 +98,14 @@ void	handle_command(char *command)
 		word_count++;
 	echo(splited, word_count);
 	pwd(splited);
+	ft_exit(splited, exit);
 	x = 0;
 	while (splited[x])
 		free(splited[x++]);
 	free(splited);
 }
 
-void	parser(char *line)
+void	parser(char *line, int *exit)
 {
 	char	**commands;
 	int		x;
@@ -120,7 +125,7 @@ void	parser(char *line)
 	// }
 	while (commands[x])
 	{
-		handle_command(commands[x]);
+		handle_command(commands[x], exit);
 		x++;
 	}
 	x = 0;
@@ -129,16 +134,23 @@ void	parser(char *line)
 	free(commands);
 }
 
-int	main()
- {
-	char	*line;
-
-	while (1)
-	{
-		line = readline("mini_shell>");
-		parser(line);
-	}
+int end(char *line)
+{
 	free(line);
 	// system("leaks a.out");
 	return (0);
+}
+
+int	main()
+ {
+	char	*line;
+	int 	exit;
+
+	exit = 0;
+	while (!exit)
+	{
+		line = readline("mini_shell>");
+		parser(line, &exit);
+	}
+	return (end(line));
 }
