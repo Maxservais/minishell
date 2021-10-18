@@ -52,23 +52,16 @@ char	**handle_dquote(char *line, char **commands)
 // 	return (commands);
 // }
 
-void	handle_command(char *command)
+void	echo(char **splited, int word_count)
 {
-	char	**splited;
 	int		x;
-	int		word_count;
 
-	splited = ft_split(command, ' ');
-	word_count = 0;
-	while (splited[word_count])
-		word_count++;
 	if (!ft_strncmp(splited[0], "echo", 4) && ft_strncmp(splited[1], "-n", 2))
 	{
 		x = 1;
 		while (splited[x] && x != word_count - 1)
 			printf("%s ", splited[x++]);
-		printf("%s", splited[x]);
-		printf("\n");
+		printf("%s\n", splited[x]);
 	}
 	if (!ft_strncmp(splited[0], "echo", 4) && !ft_strncmp(splited[1], "-n", 2))
 	{
@@ -77,6 +70,19 @@ void	handle_command(char *command)
 			printf("%s ", splited[x++]);
 		printf("%s", splited[x]);
 	}
+}
+
+void	handle_command(char *command)
+{
+	char	**splited;
+	int		word_count;
+	int		x;
+
+	splited = ft_split(command, ' ');
+	word_count = 0;
+	while (splited[word_count])
+		word_count++;
+	echo(splited, word_count);
 	x = 0;
 	while (splited[x])
 		free(splited[x++]);
@@ -116,8 +122,11 @@ int	main()
  {
 	char	*line;
 
-	line = readline("mini_shell >");
-	parser(line);
+	while (1)
+	{
+		line = readline("mini_shell>");
+		parser(line);
+	}
 	free(line);
 	// system("leaks a.out");
 	return (0);
