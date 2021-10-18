@@ -54,20 +54,33 @@ char	**handle_dquote(char *line, char **commands)
 
 void	handle_command(char *command)
 {
-	char **splited_command;
-	int	x;
+	char	**splited;
+	int		x;
+	int		word_count;
 
-	splited_command = ft_split(command, ' ');
-	x = 1;
-	if (!ft_strncmp(splited_command[0], "echo", 4))
-		while (splited_command[x])
-			printf("%s ", splited_command[x++]);
-	if (!(!ft_strncmp(splited_command[0], "echo", 4) && !ft_strncmp(splited_command[1], "-n", 2)))
+	splited = ft_split(command, ' ');
+	word_count = 0;
+	while (splited[word_count])
+		word_count++;
+	if (!ft_strncmp(splited[0], "echo", 4) && ft_strncmp(splited[1], "-n", 2))
+	{
+		x = 1;
+		while (splited[x] && x != word_count - 1)
+			printf("%s ", splited[x++]);
+		printf("%s", splited[x]);
 		printf("\n");
+	}
+	if (!ft_strncmp(splited[0], "echo", 4) && !ft_strncmp(splited[1], "-n", 2))
+	{
+		x = 2;
+		while (splited[x] && x != word_count - 1)
+			printf("%s ", splited[x++]);
+		printf("%s", splited[x]);
+	}
 	x = 0;
-	while (splited_command[x])
-		free(splited_command[x++]);
-	free(splited_command);
+	while (splited[x])
+		free(splited[x++]);
+	free(splited);
 }
 
 void	parser(char *line)
