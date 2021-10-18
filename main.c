@@ -72,6 +72,16 @@ void	echo(char **splited, int word_count)
 	}
 }
 
+void pwd(char **splited)
+{
+	char *pwd;
+
+	if (!ft_strncmp(splited[0], "pwd"))
+	{
+		printf("%s\n", getcwd(pwd, 50));
+	}
+}
+
 void	handle_command(char *command)
 {
 	char	**splited;
@@ -83,6 +93,7 @@ void	handle_command(char *command)
 	while (splited[word_count])
 		word_count++;
 	echo(splited, word_count);
+	pwd(splited);
 	x = 0;
 	while (splited[x])
 		free(splited[x++]);
