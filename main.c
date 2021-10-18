@@ -36,20 +36,38 @@ char	**handle_dquote(char *line, char **commands)
 	return (commands);
 }
 
-char **clean_commands(char **commands)
-{
-	int		x;
-	char	*temp;
+// char **clean_commands(char **commands)
+// {
+// 	int		x;
+// 	char	*temp;
 
+// 	x = 0;
+// 	while (commands[x])
+// 	{
+// 		temp = ft_strtrim(commands[x], "'\" ");
+// 		free(commands[x]);
+// 		commands[x] = temp;
+// 		x++;
+// 	}
+// 	return (commands);
+// }
+
+void	handle_command(char *command)
+{
+	char **splited_command;
+	int	x;
+
+	splited_command = ft_split(command, ' ');
+	x = 1;
+	if (!ft_strncmp(splited_command[0], "echo", 4))
+		while (splited_command[x])
+			printf("%s ", splited_command[x++]);
+	if (!(!ft_strncmp(splited_command[0], "echo", 4) && !ft_strncmp(splited_command[1], "-n", 2)))
+		printf("\n");
 	x = 0;
-	while (commands[x])
-	{
-		temp = ft_strtrim(commands[x], "'\" ");
-		free(commands[x]);
-		commands[x] = temp;
-		x++;
-	}
-	return (commands);
+	while (splited_command[x])
+		free(splited_command[x++]);
+	free(splited_command);
 }
 
 void	parser(char *line)
@@ -64,10 +82,15 @@ void	parser(char *line)
 		line = readline("dquote>");
 		commands = handle_dquote(line, commands);
 	}
-	commands = clean_commands(commands);
+	// commands = clean_commands(commands);
+	// while (commands[x])
+	// {
+	// 	printf("%s\n", commands[x]);
+	// 	x++;
+	// }
 	while (commands[x])
 	{
-		printf("%s\n", commands[x]);
+		handle_command(commands[x]);
 		x++;
 	}
 	x = 0;
@@ -83,6 +106,6 @@ int	main()
 	line = readline("mini_shell >");
 	parser(line);
 	free(line);
-	system("leaks a.out");
+	// system("leaks a.out");
 	return (0);
 }
