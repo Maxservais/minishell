@@ -5,6 +5,7 @@
 #include <readline/history.h>
 #include <limits.h>
 #include "libft/libft.h"
+#include "pipex.h"
 
 int	count_occurence(char *str)
 {
