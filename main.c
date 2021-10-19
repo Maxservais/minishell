@@ -5,6 +5,7 @@
 #include <readline/history.h>
 #include <limits.h>
 #include "libft/libft.h"
+#include "pipex.h"
 
 int	count_occurence(char *str)
 {
@@ -84,7 +85,7 @@ void	echo(char **splited, int word_count)
 			printf("%s ", splited[x++]);
 		printf("%s\n", splited[x]);
 	}
-	if (!ft_strncmp(splited[0], "echo", 4) && !ft_strncmp(splited[1], "-n", 2))
+	if (!ft_strncmp(splited[0], ECHO, 4) && !ft_strncmp(splited[1], "-n", 2))
 	{
 		x = 2;
 		while (splited[x] && x != word_count - 1)

@@ -6,7 +6,7 @@
 /*   By: mservais <mservais@student.s19.be >        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/28 10:57:37 by mservais          #+#    #+#             */
-/*   Updated: 2021/10/05 11:35:35 by mservais         ###   ########.fr       */
+/*   Updated: 2021/10/19 11:16:54 by mservais         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # define ERROR_USAGE "Usage: ./pipex infile cmd1 cmd2 outfile\n"
 # define READ 0
 # define WRITE 1
+# define ECHO "echo"
 
 typedef struct s_param
 {
