@@ -4,6 +4,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "libft/libft.h"
+#include <limits.h>
 
 int	count_occurence(char *str)
 {
@@ -23,7 +24,7 @@ int	count_occurence(char *str)
 
 char	**handle_dquote(char *line, char **commands)
 {
-	int	num;
+	int		num;
 	char	*temp;
 
 	num = 0;
@@ -33,6 +34,41 @@ char	**handle_dquote(char *line, char **commands)
 	free(commands[num - 1]);
 	free(line);
 	commands[num - 1] = temp;
+	return (commands);
+}
+
+char	**quote_remover(char **commands)
+{
+	int		x;
+	int		y;
+	int		z;
+	int		occurences;
+	char	*temp;
+
+	x = 0;
+	y = 0;
+	z = 0;
+	while (commands[x])
+	{
+		occurences = count_occurence(commands[x]);
+		temp = malloc(ft_strlen(commands[x]) - occurences + 1);
+		// to be protected
+		while (commands[x][y])
+		{
+			if (commands[x][y] != '\'' && commands[x][y] != '\"')
+			{
+				temp[z] = commands[x][y];
+				z++;
+			}
+			y++;
+		}
+		temp[z] = '\0';
+		free(commands[x]);
+		commands[x] = temp;
+		z = 0;
+		y = 0;
+		x++;
+	}
 	return (commands);
 }
 
@@ -80,10 +116,10 @@ void	ft_exit(char **splited, int *exit)
 
 void pwd(char **splited)
 {
-	char *pwd;
+	char pwd[PATH_MAX];
 
-	if (!ft_strncmp(splited[0], "pwd", 3))
-		printf("%s\n", getcwd(pwd, 50));
+	if (!ft_strncmp(splited[0], "pwd", 3) && getcwd(pwd, sizeof(pwd)))
+		printf("%s\n", pwd);
 }
 
 void	handle_command(char *command, int *exit)
@@ -114,15 +150,10 @@ void	parser(char *line, int *exit)
 	commands = ft_split(line, '|');
 	if (count_occurence(line) % 2 == 1)
 	{
-		line = readline("dquote>");
+		line = readline(">");
 		commands = handle_dquote(line, commands);
 	}
-	// commands = clean_commands(commands);
-	// while (commands[x])
-	// {
-	// 	printf("%s\n", commands[x]);
-	// 	x++;
-	// }
+	commands = quote_remover(commands);
 	while (commands[x])
 	{
 		handle_command(commands[x], exit);
@@ -134,13 +165,6 @@ void	parser(char *line, int *exit)
 	free(commands);
 }
 
-int end(char *line)
-{
-	free(line);
-	// system("leaks a.out");
-	return (0);
-}
-
 int	main()
  {
 	char	*line;
@@ -149,8 +173,10 @@ int	main()
 	exit = 0;
 	while (!exit)
 	{
-		line = readline("mini_shell>");
+		line = readline("$");
 		parser(line, &exit);
 	}
-	return (end(line));
+	free(line);
+	system("leaks a.out");
+	return (0);
 }
