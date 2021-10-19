@@ -3,8 +3,8 @@
 #include <unistd.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-#include "libft/libft.h"
 #include <limits.h>
+#include "libft/libft.h"
 
 int	count_occurence(char *str)
 {
@@ -31,6 +31,7 @@ char	**handle_dquote(char *line, char **commands)
 	while (commands[num])
 		num++;
 	temp = ft_strjoin(commands[num - 1], line);
+	// to be protected
 	free(commands[num - 1]);
 	free(line);
 	commands[num - 1] = temp;
@@ -72,22 +73,6 @@ char	**quote_remover(char **commands)
 	return (commands);
 }
 
-// char **clean_commands(char **commands)
-// {
-// 	int		x;
-// 	char	*temp;
-
-// 	x = 0;
-// 	while (commands[x])
-// 	{
-// 		temp = ft_strtrim(commands[x], "'\" ");
-// 		free(commands[x]);
-// 		commands[x] = temp;
-// 		x++;
-// 	}
-// 	return (commands);
-// }
-
 void	echo(char **splited, int word_count)
 {
 	int		x;
@@ -122,6 +107,42 @@ void pwd(char **splited)
 		printf("%s\n", pwd);
 }
 
+void	env(char **splited)
+{
+	if (!ft_strncmp(splited[0], "env", 3))
+	{
+		printf("TERM_PROGRAM=%s\n", getenv("TERM_PROGRAM"));
+		printf("TERM=%s\n", getenv("TERM"));
+		printf("SHELL=%s\n", getenv("SHELL"));
+		printf("TMPDIR=%s\n", getenv("TMPDIR"));
+		printf("TERM_PROGRAM_VERSION=%s\n", getenv("TERM_PROGRAM_VERSION"));
+		printf("TERM_SESSION_ID=%s\n", getenv("TERM_SESSION_ID"));
+		printf("ZSH=%s\n", getenv("ZSH"));
+		printf("USER=%s\n", getenv("USER"));
+		printf("COMMAND_MODE=%s\n", getenv("COMMAND_MODE"));
+		printf("SSH_AUTH_SOCK=%s\n", getenv("SSH_AUTH_SOCK"));
+		printf("__CF_USER_TEXT_ENCODING=%s\n", getenv("__CF_USER_TEXT_ENCODING"));
+		printf("PAGER=%s\n", getenv("PAGER"));
+		printf("LSCOLORS=%s\n", getenv("LSCOLORS"));
+		printf("PATH=%s\n", getenv("PATH"));
+		printf("PWD=%s\n", getenv("PWD"));
+		printf("LANG=%s\n", getenv("LANG"));
+		printf("ITERM_PROFILE=%s\n", getenv("ITERM_PROFILE"));
+		printf("XPC_FLAGS=%s\n", getenv("XPC_FLAGS"));
+		printf("XPC_SERVICE_NAME=%s\n", getenv("XPC_SERVICE_NAME"));
+		printf("SHLVL=%s\n", getenv("SHLVL"));
+		printf("HOME=%s\n", getenv("HOME"));
+		printf("COLORFGBG=%s\n", getenv("COLORFGBG"));
+		printf("LC_TERMINAL_VERSION=%s\n", getenv("LC_TERMINAL_VERSION"));
+		printf("ITERM_SESSION_ID=%s\n", getenv("ITERM_SESSION_ID"));
+		printf("LESS=%s\n", getenv("LESS"));
+		printf("LOGNAME=%s\n", getenv("LOGNAME"));
+		printf("LC_TERMINAL=%s\n", getenv("LC_TERMINAL"));
+		printf("SECURITYSESSIONID=%s\n", getenv("SECURITYSESSIONID"));
+		printf("COLORTERM=%s\n", getenv("COLORTERM"));
+	}
+}
+
 void	handle_command(char *command, int *exit)
 {
 	char	**splited;
@@ -129,12 +150,14 @@ void	handle_command(char *command, int *exit)
 	int		x;
 
 	splited = ft_split(command, ' ');
+	// to be protected
 	word_count = 0;
 	while (splited[word_count])
 		word_count++;
 	echo(splited, word_count);
 	pwd(splited);
 	ft_exit(splited, exit);
+	env(splited);
 	x = 0;
 	while (splited[x])
 		free(splited[x++]);
@@ -148,12 +171,14 @@ void	parser(char *line, int *exit)
 
 	x = 0;
 	commands = ft_split(line, '|');
+	// to be protected
 	if (count_occurence(line) % 2 == 1)
 	{
 		line = readline(">");
 		commands = handle_dquote(line, commands);
 	}
 	commands = quote_remover(commands);
+	// to be protected
 	while (commands[x])
 	{
 		handle_command(commands[x], exit);
