@@ -6,7 +6,7 @@
 #    By: mservais <mservais@student.s19.be >        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/12 17:29:50 by mservais          #+#    #+#              #
-#    Updated: 2021/09/01 13:43:15 by mservais         ###   ########.fr        #
+#    Updated: 2021/10/19 14:36:46 by mservais         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -78,19 +78,19 @@ CFLAGS			= -Wall -Wextra -Werror
 all: $(NAME)
 
 $(NAME): $(OBJ_FILES)
-	ar -rcs $@ $^
+	@ar -rcs $@ $^
 
 bonus: $(OBJ_FILES_BONUS)
-	ar -rcs $(NAME) $^
+	@ar -rcs $(NAME) $^
 
 %.o: %.c
-	$(CC) -c $(CFLAGS) -o $@ $<
+	@$(CC) -c $(CFLAGS) -o $@ $<
 
 clean:
-	rm -f $(OBJ_FILES) $(OBJ_FILES_BONUS)
+	@rm -f $(OBJ_FILES) $(OBJ_FILES_BONUS)
 
 fclean: clean
-	rm -f $(NAME)
+	@rm -f $(NAME)
 
 re: fclean all
 
