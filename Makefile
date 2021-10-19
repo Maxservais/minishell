@@ -6,15 +6,25 @@
 #    By: xauffray <xauffray@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/28 11:47:14 by mservais          #+#    #+#              #
-#    Updated: 2021/10/18 23:29:52 by xauffray         ###   ########.fr        #
+#    Updated: 2021/10/19 11:51:16 by xauffray         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRC_FILES		=	pipex.c \
-					error.c \
-					utils.c
+SRC_FILES		=	pipex.c			\
+					error.c 		\
+				 	utils.c			\
+					 
+SRC_FILES_PIPEX =   main.c 			\
+					echo.c			\
+					exit.c			\
+					pwd.c			\
+					env.c			\
+					export.c		\
+					cd.c			\
 
 OBJ_FILES		=	$(SRC_FILES:.c=.o)
+
+OBJ_FILES_PIPEX		=	$(SRC_FILES_PIPEX:.c=.o)
 
 NAME			=	pipex
 
@@ -41,7 +51,7 @@ clean:
 	$(MAKE) clean -C libft
 
 shell:
-	@gcc main.c -lreadline libft/libft.a && ./a.out
+	@gcc ${SRC_FILES_PIPEX} -lreadline libft/libft.a && ./a.out
 
 
 fclean: clean
