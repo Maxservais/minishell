@@ -35,6 +35,7 @@ fclean: clean
 	@rm -f $(NAME)
 	@rm -f $(MINISHELL_LIB)
 	@$(MAKE) fclean -C libft
+	@rm -f libft.a
 
 re: fclean all
 

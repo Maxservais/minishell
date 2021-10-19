@@ -1,74 +1,6 @@
-
 #include "minishell.h"
 
-int	count_occurence(char *str)
-{
-	int	x;
-	int counter;
-
-	x = 0;
-	counter = 0;
-	while (str[x])
-	{
-		if (str[x] == '"' || str[x] == '\'')
-			counter++;
-		x++;
-	}
-	return (counter);
-}
-
-char	**handle_dquote(char *line, char **commands)
-{
-	int		num;
-	char	*temp;
-
-	num = 0;
-	while (commands[num])
-		num++;
-	temp = ft_strjoin(commands[num - 1], line);
-	// to be protected
-	free(commands[num - 1]);
-	free(line);
-	commands[num - 1] = temp;
-	return (commands);
-}
-
-char	**quote_remover(char **commands)
-{
-	int		x;
-	int		y;
-	int		z;
-	int		occurences;
-	char	*temp;
-
-	x = 0;
-	y = 0;
-	z = 0;
-	while (commands[x])
-	{
-		occurences = count_occurence(commands[x]);
-		temp = malloc(ft_strlen(commands[x]) - occurences + 1);
-		// to be protected
-		while (commands[x][y])
-		{
-			if (commands[x][y] != '\'' && commands[x][y] != '\"')
-			{
-				temp[z] = commands[x][y];
-				z++;
-			}
-			y++;
-		}
-		temp[z] = '\0';
-		free(commands[x]);
-		commands[x] = temp;
-		z = 0;
-		y = 0;
-		x++;
-	}
-	return (commands);
-}
-
-void	handle_command(char *command, int *exit)
+void	handle_command(char *command, int *exit, int quote)
 {
 	char	**splited;
 	int		word_count;
@@ -79,7 +11,7 @@ void	handle_command(char *command, int *exit)
 	word_count = 0;
 	while (splited[word_count])
 		word_count++;
-	echo(splited, word_count);
+	echo(splited, word_count, quote);
 	pwd(splited);
 	ft_exit(splited, exit);
 	env(splited);
@@ -94,12 +26,16 @@ void	parser(char *line, int *exit)
 {
 	char	**commands;
 	int		x;
+	int		quote;
 
 	x = 0;
 	commands = ft_split(line, '|');
 	// to be protected
-	if (count_occurence(line) % 2 == 1)
+	quote = 0;
+	while (occ_in_commands(commands, '\'') % 2 == 1
+		|| occ_in_commands(commands, '\"') % 2 == 1)
 	{
+		quote = 1;
 		line = readline(">");
 		commands = handle_dquote(line, commands);
 	}
@@ -107,7 +43,7 @@ void	parser(char *line, int *exit)
 	// to be protected
 	while (commands[x])
 	{
-		handle_command(commands[x], exit);
+		handle_command(commands[x], exit, quote);
 		x++;
 	}
 	x = 0;
@@ -124,7 +60,7 @@ int	main()
 	exit = 0;
 	while (!exit)
 	{
-		line = readline("$");
+		line = readline("sh-3.2$");
 		parser(line, &exit);
 		free(line);
 	}
