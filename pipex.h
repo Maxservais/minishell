@@ -6,7 +6,7 @@
 /*   By: xauffray <xauffray@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/28 10:57:37 by mservais          #+#    #+#             */
-/*   Updated: 2021/10/19 11:52:00 by xauffray         ###   ########.fr       */
+/*   Updated: 2021/10/19 14:07:14 by xauffray         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,10 @@ void	export(char **splited);
 void	env(char **splited);
 void 	pwd(char **splited);
 void	ft_exit(char **splited, int *exit);
-void	echo(char **splited, int word_count);
+void	echo(char **splited, int word_count, int quote);
+char	**handle_dquote(char *line, char **commands);
+char	**quote_remover(char **commands);
+int		count_occurence(char *str, char c);
+int		occ_in_commands(char **commands, char c);
 
 #endif
