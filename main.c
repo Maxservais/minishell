@@ -22,24 +22,41 @@ void	handle_command(char *command, int *exit, int quote)
 	free(splited);
 }
 
+char	find_first_quote(char *line)
+{
+	int		x;
+
+	x = 0;
+	while (line[x])
+	{
+		if (line[x] == '\'')
+			return ('\'');
+		if (line[x] == '\"')
+			return ('\"');
+		x++;
+	}
+	return (0);
+}
+
 void	parser(char *line, int *exit)
 {
 	char	**commands;
 	int		x;
 	int		quote;
+	char	first_quote;
 
 	x = 0;
 	commands = ft_split(line, '|');
 	// to be protected
 	quote = 0;
-	while (occ_in_commands(commands, '\'') % 2 == 1
-		|| occ_in_commands(commands, '\"') % 2 == 1)
+	first_quote = find_first_quote(line);
+	while (first_quote && occ_in_commands(commands, first_quote) % 2 == 1)
 	{
-		quote = 1;
-		line = readline(">");
+		quote++;
+		line = readline("> ");
 		commands = handle_dquote(line, commands);
 	}
-	commands = quote_remover(commands);
+	commands = quote_remover(commands, first_quote);
 	// to be protected
 	while (commands[x])
 	{
@@ -60,10 +77,10 @@ int	main()
 	exit = 0;
 	while (!exit)
 	{
-		line = readline("sh-3.2$");
+		line = readline("bash-3.2$ ");
 		parser(line, &exit);
 		free(line);
 	}
-	system("leaks minishell");
+	// system("leaks minishell");
 	return (EXIT_SUCCESS);
 }
