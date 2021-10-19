@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mservais <mservais@student.s19.be >        +#+  +:+       +#+         #
+#    By: xauffray <xauffray@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/28 11:47:14 by mservais          #+#    #+#              #
-#    Updated: 2021/10/18 13:27:01 by mservais         ###   ########.fr        #
+#    Updated: 2021/10/18 23:29:52 by xauffray         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,6 +39,10 @@ $(NAME): $(OBJ_FILES)
 clean:
 	rm -f $(OBJ_FILES) $(OBJ_FILES_BONUS)
 	$(MAKE) clean -C libft
+
+shell:
+	@gcc main.c -lreadline libft/libft.a && ./a.out
+
 
 fclean: clean
 	rm -f $(NAME)
