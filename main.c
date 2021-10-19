@@ -8,8 +8,8 @@
 
 int	count_occurence(char *str)
 {
-	int counter;
 	int	x;
+	int counter;
 
 	x = 0;
 	counter = 0;
@@ -99,7 +99,7 @@ void	echo(char **splited, int word_count)
 			printf("%s ", splited[x++]);
 		printf("%s\n", splited[x]);
 	}
-	if (!ft_strncmp(splited[0], "echo", 4) && !ft_strncmp(splited[1], "-n", 2))
+	if (!ft_strncmp(splited[0], ECHO, 4) && !ft_strncmp(splited[1], "-n", 2))
 	{
 		x = 2;
 		while (splited[x] && x != word_count - 1)
@@ -120,6 +120,8 @@ void pwd(char **splited)
 
 	if (!ft_strncmp(splited[0], "pwd", 3) && getcwd(pwd, sizeof(pwd)))
 		printf("%s\n", pwd);
+	else
+		perror("Error");
 }
 
 void	handle_command(char *command, int *exit)
@@ -175,8 +177,8 @@ int	main()
 	{
 		line = readline("$");
 		parser(line, &exit);
+		free(line);
 	}
-	free(line);
 	system("leaks a.out");
-	return (0);
+	return (EXIT_SUCCESS);
 }
