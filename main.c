@@ -13,6 +13,7 @@ void	handle_command(char *command, int *exit, int quote)
 		word_count++;
 	echo(splited, word_count, quote);
 	pwd(splited);
+	cd(splited);
 	ft_exit(splited, exit);
 	env(splited);
 	export(splited);

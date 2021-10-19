@@ -10,8 +10,6 @@ OBJ_FILES		=	$(SRC_FILES:.c=.o)
 
 NAME			=	minishell
 
-MINISHELL_LIB	=	libminishell.a
-
 CC				=	gcc
 
 CFLAGS			=	-Wall -Wextra -Werror

@@ -1,7 +1,8 @@
-# Files & libs
+# Files, libs && executables
 infile
 outfile
 libpipex.a
+minishell
 
 # Prerequisites
 *.d
