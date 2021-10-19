@@ -1,11 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <limits.h>
-#include "libft/libft.h"
-#include "pipex.h"
+
+#include "minishell.h"
 
 int	count_occurence(char *str)
 {
@@ -134,6 +128,6 @@ int	main()
 		parser(line, &exit);
 		free(line);
 	}
-	system("leaks a.out");
+	system("leaks minishell");
 	return (EXIT_SUCCESS);
 }

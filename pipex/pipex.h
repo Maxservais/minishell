@@ -12,7 +12,6 @@
 # define ERROR_USAGE "Usage: ./pipex infile cmd1 cmd2 outfile\n"
 # define READ 0
 # define WRITE 1
-# define ECHO "echo"
 
 typedef struct s_param
 {
@@ -41,12 +40,5 @@ int		ft_err_return(char *error);
 int		ft_perror(void);
 int		report_error(void);
 int		ft_free(char ***argv);
-
-/* Mini_shell */
-void	export(char **splited);
-void	env(char **splited);
-void 	pwd(char **splited);
-void	ft_exit(char **splited, int *exit);
-void	echo(char **splited, int word_count);
 
 #endif

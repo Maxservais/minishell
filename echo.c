@@ -1,4 +1,4 @@
-#include "pipex.h"
+#include "minishell.h"
 
 void	echo(char **splited, int word_count)
 {

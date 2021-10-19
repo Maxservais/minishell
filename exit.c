@@ -1,4 +1,4 @@
-#include "pipex.h"
+#include "minishell.h"
 
 void	ft_exit(char **splited, int *exit)
 {
