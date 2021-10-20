@@ -26,7 +26,7 @@ int		count_occurence(char *str, char c);
 int		occ_in_commands(char **commands, char c);
 
 /* Built-ins */
-void 	pwd(char **splited);
+int		pwd(char **splited);
 int		cd(char **splited);
 
 #endif
