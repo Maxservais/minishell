@@ -11,6 +11,7 @@ void	handle_command(char *command, int *exit, int quote)
 	word_count = 0;
 	while (splited[word_count])
 		word_count++;
+	// Ici au lieu de rentrer dans chacune des fonctions une à une, on peut check la valeur de splited[0]
 	echo(splited, word_count, quote);
 	pwd(splited);
 	cd(splited);

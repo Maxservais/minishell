@@ -27,6 +27,6 @@ int		occ_in_commands(char **commands, char c);
 
 /* Built-ins */
 void 	pwd(char **splited);
-void	cd(char **splited);
+int		cd(char **splited);
 
 #endif
