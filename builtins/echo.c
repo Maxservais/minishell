@@ -135,21 +135,28 @@ void	echo(char **splited, int word_count, int quote)
 	else if (!ft_strncmp(splited[0], "echo", 4) && !ft_strncmp(splited[1], "-n", 2))
 	{
 		x = 2;
-		while (splited[x][y + quote])
+		while (splited[x])
 		{
-			if (splited[x][y] == '\'' || splited[x][y] == '\"')
-				y++;
-			else
-				printf("%c", splited[x][y++]);
-		}
-		if (quote)
-			printf("\n");
-		while (splited[x][y])
-		{
-			if (splited[x][y] == '\'' || splited[x][y] == '\"')
-				y++;
-			else
-				printf("%c", splited[x][y++]);
+			while (splited[x][y + quote])
+			{
+				if (splited[x][y] == '\'' || splited[x][y] == '\"')
+					y++;
+				else
+					printf("%c", splited[x][y++]);
+			}
+			if (splited[x + 1])
+				printf(" ");
+			if (quote)
+				printf("\n");
+			while (splited[x][y])
+			{
+				if (splited[x][y] == '\'' || splited[x][y] == '\"')
+					y++;
+				else
+					printf("%c", splited[x][y++]);
+			}
+			x++;
+			y = 0;
 		}
 	}
 }

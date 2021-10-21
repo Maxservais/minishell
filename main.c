@@ -44,17 +44,23 @@ void	parser(char *line, int *exit)
 	int		x;
 	int		quote;
 	char	first_quote;
+	// int y = 0;
 
 	x = 0;
 	commands = ft_split(line, '|');
 	// to be protected
 	quote = 0;
 	first_quote = find_first_quote(line);
-	while (first_quote && occ_in_commands(commands, first_quote) % 2 == 1)
+	while (!ft_strncmp(commands[0], "echo", 4)
+		&& first_quote && occ_in_commands(commands, first_quote) % 2 == 1)
 	{
 		line = readline("> ");
 		commands = handle_dquote(line, commands, &quote);
-		printf("%c\n", first_quote);
+		// while (commands[y])
+		// {
+		// 	printf("%s ", commands[y]);
+		// 	y++;
+		// }
 	}
 	// commands = quote_remover(commands, first_quote);
 	// to be protected
