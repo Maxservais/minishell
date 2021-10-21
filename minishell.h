@@ -20,7 +20,7 @@ void	env(char **splited);
 void 	pwd(char **splited);
 void	ft_exit(char **splited, int *exit);
 void	echo(char **splited, int word_count, int quote);
-char	**handle_dquote(char *line, char **commands);
+char	**handle_dquote(char *line, char **commands, int *quote);
 char	**quote_remover(char **commands, char first_quote);
 int		count_occurence(char *str, char c);
 int		occ_in_commands(char **commands, char c);

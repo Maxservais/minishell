@@ -52,11 +52,11 @@ void	parser(char *line, int *exit)
 	first_quote = find_first_quote(line);
 	while (first_quote && occ_in_commands(commands, first_quote) % 2 == 1)
 	{
-		quote++;
 		line = readline("> ");
-		commands = handle_dquote(line, commands);
+		commands = handle_dquote(line, commands, &quote);
+		printf("%c\n", first_quote);
 	}
-	commands = quote_remover(commands, first_quote);
+	// commands = quote_remover(commands, first_quote);
 	// to be protected
 	while (commands[x])
 	{
