@@ -34,3 +34,8 @@ int	env(char **splited)
 	}
 	return (EXIT_SUCCESS);
 }
+
+/* si env -eje, erreur below:
+		env: illegal option -- e
+		usage: env [-iv] [-P utilpath] [-S string] [-u name]
+           [name=value ...] [utility [argument ...]] */

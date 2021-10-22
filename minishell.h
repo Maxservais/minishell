@@ -24,7 +24,7 @@ int		occ_in_commands(char **commands, char c);
 int		pwd(char **splited);
 int		cd(char **splited);
 int		env(char **splited);
-void	export(char **splited);
+int		export(char **splited);
 void	ft_exit(char **splited, int *exit);
 void	echo(char **splited, int word_count, int quote);
 
