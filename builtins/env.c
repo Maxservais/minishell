@@ -24,7 +24,7 @@ int	env(char **splited)
 		if (splited[1])
 		{
 			error_env(splited[1]);
-			return (EXIT_FAILURE);
+			return (127);
 		}
 		while (environ[i] != NULL)
 		{

@@ -15,10 +15,6 @@
 #include "libft/libft.h"
 
 /* Minishell */
-
-
-
-
 char	**handle_dquote(char *line, char **commands);
 char	**quote_remover(char **commands);
 int		count_occurence(char *str, char c);
