@@ -41,6 +41,7 @@ int	pwd(char **splited)
 			perror("bash: error");
 			return (EXIT_FAILURE);
 		}
+	//		command->job_done = 1;
 	}
 	return (EXIT_SUCCESS);
 }

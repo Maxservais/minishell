@@ -2,37 +2,18 @@
 
 void	handle_command(t_lst *commands)
 {
-<<<<<<< HEAD
-	char	**splited;
-	int		word_count;
-	int		x;
-
-	splited = ft_split(command, ' ');
-	// to be protected
-	word_count = 0;
-	while (splited[word_count])
-		word_count++;
-	// Ici au lieu de rentrer dans chacune des fonctions une à une, on peut check la valeur de splited[0]
-	echo(splited, word_count, quote);
-	pwd(splited);
-	cd(splited);
-	ft_exit(splited, exit);
-	env(splited);
-	export(splited);
-	x = 0;
-	while (splited[x])
-		free(splited[x++]);
-	free(splited);
-=======
 	while (commands)
 	{
 		ft_exit(*commands);
 		echo(commands);
+		pwd(commands->content);
 		if (!commands->job_done)
+		{
 			printf("bash: %s: command not found\n", commands->content[0]);
+			data.command_code = 127;
+		}
 		commands = commands->next;
 	}
->>>>>>> parsing
 }
 
 void	parser_lst(char *line)
@@ -74,7 +55,6 @@ void	sighandler(int signum)
 	// printf("signum == %d\n", signum);
 	if (signum == 2)
 	{
-		data.new_line = 1;
 		return ;
 	}
 }
@@ -90,8 +70,6 @@ int	main(void)
 		data.nb_of_commands = 0;
 		line = readline("bash-3.2$ ");
 		signal(SIGINT, sighandler);
-		if (data.new_line)
-			line = readline("bash-3.2$ ");
 		if (ft_strlen(line))
 		{
 			first_quote = find_first_quote(line);

@@ -10,19 +10,10 @@
 # include <fcntl.h>
 # include <sys/types.h>
 # include <sys/wait.h>
-<<<<<<< HEAD
 # include <errno.h>
 # include <string.h>
-#include "libft/libft.h"
-
-/* Minishell */
-char	**handle_dquote(char *line, char **commands);
-char	**quote_remover(char **commands);
-=======
 # include <signal.h>
 # include "libft/libft.h"
-
-# define ECHO "echo"
 
 typedef struct s_data
 {
@@ -47,14 +38,10 @@ typedef struct s_lst
 
 
 /* Mini_shell */
-void	export(char **splited);
-void	env(char **splited);
-void 	pwd(char **splited);
 void	ft_exit(t_lst command);
 void	echo(t_lst *commands);
 char	**handle_dquote(char *line, char **commands, int *quote);
 char	**quote_remover(char **commands, char first_quote);
->>>>>>> parsing
 int		count_occurence(char *str, char c);
 int		occ_in_commands(char **commands, char c);
 char	*ft_strnljoin(char const *s1, char const *s2);
@@ -73,7 +60,5 @@ int		pwd(char **splited);
 int		cd(char **splited);
 int		env(char **splited);
 int		export(char **splited);
-void	ft_exit(char **splited, int *exit);
-void	echo(char **splited, int word_count, int quote);
 
 #endif
