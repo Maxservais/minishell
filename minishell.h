@@ -17,10 +17,11 @@
 
 typedef struct s_data
 {
-	int	exit;
-	int	new_line;
-	int	nb_of_commands;
-	int	command_code;
+	int		exit;
+	int		new_line;
+	int		nb_of_commands;
+	int		command_code;
+	char	**envp;
 }				t_data;
 
 t_data data;
@@ -35,7 +36,6 @@ typedef struct s_lst
 	int				job_done;
 	struct s_lst	*next;
 }				t_lst;
-
 
 /* Mini_shell */
 char	**handle_dquote(char *line, char **commands, int *quote);
@@ -58,7 +58,10 @@ int		pwd(t_lst *commands);
 int		cd(t_lst *commands);
 int		env(t_lst *commands);
 int		export(t_lst *command);
+int		unset(t_lst *commands);
 void	ft_exit(t_lst *command);
 void	echo(t_lst *commands);
+void	error_cmd(char *bash, char *cmd_name, char *input);
+void	error_usage(char *cmd_name, char *str, char *usage);
 
 #endif

@@ -14,8 +14,31 @@ int		execute_builtin(t_lst *commands)
 		export(commands);
 	else if (!ft_strncmp(commands->content[0], "pwd", 3))
 		pwd(commands);
+	else if (!ft_strncmp(commands->content[0], "unset", 5))
+		unset(commands);
 	// Return Success if at least one builtin command got executed
 	return (0);
+}
+
+int		copy_env(void)
+{
+	int			i;
+	int			counter;
+	extern char	**environ;
+
+	i = 0;
+	counter = 0;
+	while (environ[counter] != NULL)
+		counter++;
+	data.envp = malloc(sizeof(char *) * counter + 1);
+	while (environ[i] != NULL)
+	{
+		data.envp[i] = strdup(environ[i]);
+		// check for errors and free
+		i++;
+	}
+	data.envp[i] = NULL;
+	return (EXIT_SUCCESS);
 }
 
 void	handle_command(t_lst *commands)
@@ -83,6 +106,7 @@ int	main(void)
 	char	*line;
 	char	first_quote;
 
+	copy_env(); // check if succesful execution or not
 	data.exit = -1;
 	while (data.exit == -1)
 	{

@@ -5,6 +5,8 @@ SRC_FILES 		=	main.c 				\
 					./builtins/env.c	\
 					./builtins/export.c	\
 					./builtins/cd.c		\
+					./builtins/unset.c	\
+					./builtins/error_handler.c \
 					lst.c 				\
 
 OBJ_FILES		=	$(SRC_FILES:.c=.o)

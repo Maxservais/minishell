@@ -1,21 +1,8 @@
 /* Reminders:
-- Condition to check whether command is 'pwd' or not can be removed
-once we check in the parsing which function should be called (cd, pwd, echo, etc.).
+- Is return value the right one - 0 or 1?
 */
 
 #include "../minishell.h"
-
-static void	error_pwd(char *str)
-{
-	char	*err;
-
-	err = ft_substr(str, 0, 2);
-	ft_putstr_fd("bash: pwd: ", STDERR_FILENO);
-	ft_putstr_fd(err, STDERR_FILENO);
-	ft_putendl_fd(": invalid option", STDERR_FILENO);
-	ft_putendl_fd("pwd: usage: pwd [-LP]", STDERR_FILENO);
-	free((void *)err);
-}
 
 int	pwd(t_lst *commands)
 {
@@ -28,7 +15,8 @@ int	pwd(t_lst *commands)
 			if (ft_strncmp(commands->content[1], "-L", 2)
 				&& ft_strncmp(commands->content[1], "-P", 2))
 			{
-				error_pwd(commands->content[1]);
+				error_usage("pwd: ", commands->content[1], "pwd: usage: pwd [-LP]");
+				commands->job_done = 1;
 				return (EXIT_FAILURE);
 			}
 		}
@@ -36,7 +24,8 @@ int	pwd(t_lst *commands)
 	}
 	else
 	{
-		perror("bash: error");
+		perror("bash: pwd");
+		commands->job_done = 1;
 		return (EXIT_FAILURE);
 	}
 	commands->job_done = 1;
