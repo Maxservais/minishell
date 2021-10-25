@@ -2,28 +2,6 @@
 
 void	handle_command(t_lst *commands)
 {
-<<<<<<< HEAD
-	char	**splited;
-	int		word_count;
-	int		x;
-
-	splited = ft_split(command, ' ');
-	// to be protected
-	word_count = 0;
-	while (splited[word_count])
-		word_count++;
-	// Ici au lieu de rentrer dans chacune des fonctions une à une, on peut check la valeur de splited[0]
-	echo(splited, word_count, quote);
-	pwd(splited);
-	cd(splited);
-	ft_exit(splited, exit);
-	env(splited);
-	export(splited);
-	x = 0;
-	while (splited[x])
-		free(splited[x++]);
-	free(splited);
-=======
 	while (commands)
 	{
 		ft_exit(*commands);
@@ -32,7 +10,6 @@ void	handle_command(t_lst *commands)
 			printf("bash: %s: command not found\n", commands->content[0]);
 		commands = commands->next;
 	}
->>>>>>> parsing
 }
 
 void	parser_lst(char *line)

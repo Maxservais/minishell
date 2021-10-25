@@ -1,10 +1,11 @@
-SRC_FILES 		=	main.c 			\
+SRC_FILES 		=	main.c 				\
 					./builtins/echo.c	\
 					./builtins/exit.c	\
-					./builtins/pwd.c		\
-					./builtins/env.c		\
+					./builtins/pwd.c	\
+					./builtins/env.c	\
 					./builtins/export.c	\
 					./builtins/cd.c		\
+					lst.c 				\
 
 OBJ_FILES		=	$(SRC_FILES:.c=.o)
 
