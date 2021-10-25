@@ -48,20 +48,6 @@ char	find_first_quote(char *line)
 {
 	int		x;
 
-<<<<<<< HEAD
-	splited = ft_split(command, ' ');
-	// to be protected
-	word_count = 0;
-	while (splited[word_count])
-		word_count++;
-	echo(splited, word_count, quote);
-	pwd(splited);
-	cd(splited);
-	ft_exit(splited, exit);
-	env(splited);
-	export(splited);
-=======
->>>>>>> parsing
 	x = 0;
 	while (line[x])
 	{
