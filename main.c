@@ -1,25 +1,47 @@
 #include "minishell.h"
 
-void	handle_command(char *command, int *exit, int quote)
+void	echo(t_lst commands)
 {
-	char	**splited;
-	int		word_count;
-	int		x;
+	int	x;
 
-	splited = ft_split(command, ' ');
-	// to be protected
-	word_count = 0;
-	while (splited[word_count])
-		word_count++;
-	echo(splited, word_count, quote);
-	pwd(splited);
-	ft_exit(splited, exit);
-	env(splited);
-	export(splited);
-	x = 0;
-	while (splited[x])
-		free(splited[x++]);
-	free(splited);
+	if (!ft_strncmp(commands.content[0], "echo", 4) && !commands.content[1])
+	{
+		printf("\n");
+		return ;
+	}
+	else if (!ft_strncmp(commands.content[0], "echo", 4) && ft_strncmp(commands.content[1], "-n", 2))
+	{
+		x = 1;
+		while (commands.content[x])
+		{
+			if (commands.content[x + 1])
+				printf("%s ", commands.content[x++]);
+			else
+				printf("%s", commands.content[x++]);
+		}
+		printf("\n");
+	}
+	else if (!ft_strncmp(commands.content[0], "echo", 4) && !ft_strncmp(commands.content[1], "-n", 2))
+	{
+		x = 2;
+		while (commands.content[x])
+		{
+			if (commands.content[x + 1])
+				printf("%s ", commands.content[x++]);
+			else
+				printf("%s", commands.content[x++]);
+		}
+	}
+}
+
+void	handle_command(t_lst *commands)
+{
+	while (commands)
+	{
+		ft_exit(*commands);
+		echo(*commands);
+		commands = commands->next;
+	}
 }
 
 char	find_first_quote(char *line)
@@ -38,55 +60,119 @@ char	find_first_quote(char *line)
 	return (0);
 }
 
-void	parser(char *line, int *exit)
+char	*dquote(char *line)
 {
-	char	**commands;
-	int		x;
-	int		quote;
-	char	first_quote;
-	// int y = 0;
+	char	*new_line;
+	char	*temp;
+	char	*temp_2;
 
-	x = 0;
-	commands = ft_split(line, '|');
-	// to be protected
-	quote = 0;
-	first_quote = find_first_quote(line);
-	while (!ft_strncmp(commands[0], "echo", 4)
-		&& first_quote && occ_in_commands(commands, first_quote) % 2 == 1)
-	{
-		line = readline("> ");
-		commands = handle_dquote(line, commands, &quote);
-		// while (commands[y])
-		// {
-		// 	printf("%s ", commands[y]);
-		// 	y++;
-		// }
-	}
-	// commands = quote_remover(commands, first_quote);
-	// to be protected
-	while (commands[x])
-	{
-		handle_command(commands[x], exit, quote);
-		x++;
-	}
-	x = 0;
-	while (commands[x])
-		free(commands[x++]);
-	free(commands);
+	new_line = readline("> ");
+	temp_2 = ft_strjoin(line, "\n");
+	temp = ft_strjoin(temp_2, new_line);
+	free(temp_2);
+	free(line);
+	free(new_line);
+	return (temp);
 }
 
-int	main()
+char	*remove_useless_quotes(char *line, char first_quote)
+{
+	char	*new_line;
+	int		x;
+	int		y;
+
+	x = 0;
+	y = 0;
+	new_line = malloc(ft_strlen(line) - count_occurence(line, first_quote) + 1);
+	while (line[x])
+	{
+		if (line[x] == first_quote)
+			x++;
+		else
+			new_line[y++] = line[x++];
+	}
+	new_line[y] = '\0';
+	free(line);
+	return (new_line);
+}
+
+int	position_of_char(char *line, char c)
+{
+	int	position;
+	int	x;
+
+	x = 0;
+	position = 0;
+	while (line[x])
+	{
+		if (line[x] == c)
+			return (x);
+		x++;
+	}
+	return (-1);
+}
+
+void	parser_lst(char *line)
+{
+	t_lst	*commands;
+	char	**splited;
+	char	*temp;
+	int		x;
+	int		y;
+
+	splited = ft_split(line, '|');
+	x = 0;
+	while (splited[x])
+	{
+		temp = ft_strtrim(splited[x], " ");
+		free(splited[x]);
+		splited[x++] = temp;
+	}
+	x = 0;
+	commands = lstnew(ft_split(splited[x++], ' '));
+	while (splited[x])
+		lstadd_back(&commands, lstnew(ft_split(splited[x++], ' ')));
+	y = 0;
+	while (splited[y])
+		free(splited[y++]);
+	free(splited);
+	handle_command(commands);
+	lstclear(&commands);
+}
+
+void	sighandler(int signum)
+{
+	// printf("signum == %d\n", signum);
+	if (signum == 2)
+	{
+		data.new_line = 1;
+		return ;
+	}
+}
+
+int	main(void)
  {
 	char	*line;
-	int 	exit;
+	char	first_quote;
 
-	exit = 0;
-	while (!exit)
+	data.exit = -1;
+	while (data.exit == -1)
 	{
+		data.new_line = 0;
 		line = readline("bash-3.2$ ");
-		parser(line, &exit);
+		signal(SIGINT, sighandler);
+		if (data.new_line)
+			line = readline("bash-3.2$ ");
+		if (ft_strlen(line))
+		{
+			first_quote = find_first_quote(line);
+			while (count_occurence(line, first_quote) % 2 == 1)
+				line = dquote(line);
+			line = remove_useless_quotes(line, first_quote);
+			parser_lst(line);
+		}
 		free(line);
 	}
-	// system("leaks minishell");
+	system("leaks minishell");
 	return (EXIT_SUCCESS);
 }
