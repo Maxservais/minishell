@@ -13,15 +13,14 @@ NAME			=	minishell
 
 CC				=	gcc
 
-CFLAGS			=	-Wall -Wextra -Werror
+CFLAGS			=	-Wall -Wextra -Werror -I /Users/$(USER)/.brew/opt/readline/include
 
 all: $(NAME)
 
 $(NAME): $(OBJ_FILES)
 	@$(MAKE) -s -C libft
 	@cp libft/libft.a .
-	@$(CC) $(CFLAGS) ${SRC_FILES} -lreadline libft.a -o $(NAME)
-	@./$(NAME)
+	@$(CC) $(CFLAGS) ${SRC_FILES} -lreadline libft.a -o $(NAME) -L /Users/$(USER)/.brew/opt/readline/lib
 
 %.o: %.c
 	$(CC) -c $(CFLAGS) -o $@ $<

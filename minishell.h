@@ -19,8 +19,9 @@
 
 typedef struct s_data
 {
-    int exit;
-    int new_line;
+    int     exit;
+    int     new_line;
+    char    *line;
 }		    	t_data;
 
 t_data data;
@@ -51,7 +52,7 @@ void	lstclear(t_lst **lst);
 void	lstadd_back(t_lst **lst, t_lst *new);
 t_lst	*lstnew(char **content);
 t_lst	*lstlast(t_lst *lst);
-
+void	sighandler(int signum);
 
 /* Built-ins */
 void 	pwd(char **splited);

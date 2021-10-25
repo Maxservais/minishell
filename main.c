@@ -140,30 +140,24 @@ void	parser_lst(char *line)
 	lstclear(&commands);
 }
 
-void	sighandler(int signum)
+int test(char *line)
 {
-	// printf("signum == %d\n", signum);
-	if (signum == 2)
-	{
-		data.new_line = 1;
-		return ;
-	}
-}
-
-int	main(void)
- {
-	char	*line;
 	char	first_quote;
 
+	data.line = line;
 	data.exit = -1;
 	while (data.exit == -1)
 	{
-		data.new_line = 0;
-		line = readline("bash-3.2$ ");
 		signal(SIGINT, sighandler);
-		if (data.new_line)
-			line = readline("bash-3.2$ ");
-		if (ft_strlen(line))
+		signal(SIGQUIT, SIG_IGN);
+		line = readline("bash-3.2$ ");
+		if (!line)
+		{
+			printf("exit\n");
+			data.exit = 1;
+			break;
+		}
+		else if (ft_strlen(line))
 		{
 			first_quote = find_first_quote(line);
 			while (count_occurence(line, first_quote) % 2 == 1)
@@ -173,6 +167,47 @@ int	main(void)
 		}
 		free(line);
 	}
+	if (data.exit == 1)
+	{
+		system("leaks minishell");
+		exit (EXIT_SUCCESS);
+	}
+	return (0);
+}
+
+void	sighandler(int signum)
+{
+	if (signum == 2)
+	{
+		rl_replace_line("", 0);
+		write(1, "\n", 1);
+		rl_on_new_line();
+		rl_redisplay();
+	}
+}
+
+int	main(void)
+ {
+	char	*line;
+	// char	first_quote;
+
+	line = NULL;
+	test(line);
+	// data.exit = -1;
+	// while (data.exit == -1)
+	// {
+	// 	signal(SIGINT, sighandler);
+	// 	line = readline("bash-3.2$ ");
+	// 	if (ft_strlen(line))
+	// 	{
+	// 		first_quote = find_first_quote(line);
+	// 		while (count_occurence(line, first_quote) % 2 == 1)
+	// 			line = dquote(line);
+	// 		line = remove_useless_quotes(line, first_quote);
+	// 		parser_lst(line);
+	// 	}
+	// 	free(line);
+	// }
 	system("leaks minishell");
 	return (EXIT_SUCCESS);
 }
