@@ -14,6 +14,7 @@
 # include <string.h>
 # include <signal.h>
 # include "libft/libft.h"
+# include <termios.h>
 
 typedef struct s_data
 {

@@ -78,6 +78,54 @@ void	sighandler(int signum)
 	}
 }
 
+int	char_position(char *line, char c)
+{
+	int	position;
+
+	position = 0;
+	while (line[position])
+	{
+		if (line[position] == c)
+			return (position);
+		position++;
+	}
+	return (-1);
+
+}
+
+int	space_position(char *line, char c, int start)
+{
+	int	position;
+
+	position = start;
+	while (line[position])
+	{
+		if (line[position] == c)
+			return (position);
+		position++;
+	}
+	return (-1);
+}
+
+char	*add_env(char *line)
+{
+	extern char	**environ;
+	int			x;
+	int			dollar;
+	int			space;
+	char		*key;
+
+	x = 0;
+	dollar = char_position(line, '$');
+	space = space_position(line, ' ', dollar);
+	if (dollar >= 0)
+	{
+		key = ft_substr(line, dollar + 1, space - dollar);
+		free(key);
+	}
+	return (line);
+}
+
 int	main(void)
  {
 	char	*line;
@@ -95,6 +143,7 @@ int	main(void)
 			while (count_occurence(line, first_quote) % 2 == 1)
 				line = dquote(line);
 			line = remove_useless_quotes(line, first_quote);
+			line = add_env(line);
 			parser_lst(line);
 		}
 		free(line);
