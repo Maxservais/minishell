@@ -1,12 +1,32 @@
 #include "minishell.h"
 
+int		execute_builtin(t_lst *commands)
+{
+	if (!ft_strncmp(commands->content[0], "cd", 2))
+		cd(commands);
+	else if (!ft_strncmp(commands->content[0], "echo", 4))
+		echo(commands);
+	else if (!ft_strncmp(commands->content[0], "env", 3))
+		env(commands);
+	else if (!ft_strncmp(commands->content[0], "exit", 5))
+		ft_exit(commands);
+	else if (!ft_strncmp(commands->content[0], "export", 6))
+		export(commands);
+	else if (!ft_strncmp(commands->content[0], "pwd", 3))
+		pwd(commands);
+	// Return Success if at least one builtin command got executed
+	return (0);
+}
+
 void	handle_command(t_lst *commands)
 {
 	while (commands)
 	{
-		ft_exit(commands);
-		echo(commands);
-		pwd(commands->content);
+		execute_builtin(commands);
+		// execute_external_cmd(commands);
+		// execute pipe
+		// execute redirection
+		// ...
 		if (!commands->job_done)
 		{
 			printf("bash: %s: command not found\n", commands->content[0]);

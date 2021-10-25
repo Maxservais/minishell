@@ -17,31 +17,28 @@ static void	error_pwd(char *str)
 	free((void *)err);
 }
 
-int	pwd(char **splited)
+int	pwd(t_lst *commands)
 {
 	char	current_path[PATH_MAX];
 
-	if (!ft_strncmp(splited[0], "pwd", 3))
+	if (getcwd(current_path, sizeof(current_path)))
 	{
-		if (getcwd(current_path, sizeof(current_path)))
+		if (commands->content[1] && !ft_strncmp(commands->content[1], "-", 1))
 		{
-			if (splited[1] && !ft_strncmp(splited[1], "-", 1))
+			if (ft_strncmp(commands->content[1], "-L", 2)
+				&& ft_strncmp(commands->content[1], "-P", 2))
 			{
-				if (ft_strncmp(splited[1], "-L", 2)
-					&& ft_strncmp(splited[1], "-P", 2))
-				{
-					error_pwd(splited[1]);
-					return (EXIT_FAILURE);
-				}
+				error_pwd(commands->content[1]);
+				return (EXIT_FAILURE);
 			}
-			ft_putendl_fd(current_path, 1);
 		}
-		else
-		{
-			perror("bash: error");
-			return (EXIT_FAILURE);
-		}
-	//		command->job_done = 1;
+		ft_putendl_fd(current_path, 1);
 	}
+	else
+	{
+		perror("bash: error");
+		return (EXIT_FAILURE);
+	}
+	commands->job_done = 1;
 	return (EXIT_SUCCESS);
 }

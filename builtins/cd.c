@@ -22,26 +22,24 @@ static void	error_cd(char *str)
 	ft_putendl_fd(str, STDERR_FILENO);
 }
 
-int	cd(char **splited)
+int	cd(t_lst *commands)
 {
-	if (!ft_strncmp(splited[0], "cd", 2)) 
+	if (!commands->content[1])
 	{
-		if (!splited[1])
+		if (chdir(getenv("HOME")) == -1)
 		{
-			if (chdir(getenv("HOME")) == -1)
-			{
-				error_cd("HOME");
-				return (EXIT_FAILURE);
-			}
-		}
-		else
-		{
-			if (chdir(splited[1]) == -1)
-			{
-				error_cd(splited[1]);
-				return (EXIT_FAILURE);
-			}
+			error_cd("HOME");
+			return (EXIT_FAILURE);
 		}
 	}
+	else
+	{
+		if (chdir(commands->content[1]) == -1)
+		{
+			error_cd(commands->content[1]);
+			return (EXIT_FAILURE);
+		}
+	}
+	commands->job_done = 1;
 	return (EXIT_SUCCESS);
 }

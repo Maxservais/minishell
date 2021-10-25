@@ -17,29 +17,27 @@
 
 typedef struct s_data
 {
-    int exit;
-    int new_line;
-    int nb_of_commands;
-    int command_code;
-}		    	t_data;
+	int	exit;
+	int	new_line;
+	int	nb_of_commands;
+	int	command_code;
+}				t_data;
 
 t_data data;
 
 typedef struct s_lst
 {
-    struct s_lst   *prev;
-    int             type;
+	struct s_lst	*prev;
+	int				type;
 	char			**content;
-    int             index;
-    int             to_display;
-    int             job_done;
+	int				index;
+	int				to_display;
+	int				job_done;
 	struct s_lst	*next;
 }				t_lst;
 
 
 /* Mini_shell */
-void	ft_exit(t_lst *command);
-void	echo(t_lst *commands);
 char	**handle_dquote(char *line, char **commands, int *quote);
 char	**quote_remover(char **commands, char first_quote);
 int		count_occurence(char *str, char c);
@@ -56,9 +54,11 @@ char	find_first_quote(char *line);
 char	*remove_useless_quotes(char *line, char first_quote);
 
 /* Built-ins */
-int		pwd(char **splited);
-int		cd(char **splited);
-int		env(char **splited);
-int		export(char **splited);
+int		pwd(t_lst *commands);
+int		cd(t_lst *commands);
+int		env(t_lst *commands);
+int		export(t_lst *command);
+void	ft_exit(t_lst *command);
+void	echo(t_lst *commands);
 
 #endif
