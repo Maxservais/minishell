@@ -189,25 +189,9 @@ void	sighandler(int signum)
 int	main(void)
  {
 	char	*line;
-	// char	first_quote;
 
 	line = NULL;
 	test(line);
-	// data.exit = -1;
-	// while (data.exit == -1)
-	// {
-	// 	signal(SIGINT, sighandler);
-	// 	line = readline("bash-3.2$ ");
-	// 	if (ft_strlen(line))
-	// 	{
-	// 		first_quote = find_first_quote(line);
-	// 		while (count_occurence(line, first_quote) % 2 == 1)
-	// 			line = dquote(line);
-	// 		line = remove_useless_quotes(line, first_quote);
-	// 		parser_lst(line);
-	// 	}
-	// 	free(line);
-	// }
 	system("leaks minishell");
 	return (EXIT_SUCCESS);
 }
