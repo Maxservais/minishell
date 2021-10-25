@@ -38,7 +38,7 @@ typedef struct s_lst
 
 
 /* Mini_shell */
-void	ft_exit(t_lst command);
+void	ft_exit(t_lst *command);
 void	echo(t_lst *commands);
 char	**handle_dquote(char *line, char **commands, int *quote);
 char	**quote_remover(char **commands, char first_quote);

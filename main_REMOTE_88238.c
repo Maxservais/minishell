@@ -18,7 +18,6 @@ void	parser_lst(char *line)
 	char	**splited;
 	char	*temp;
 	int		x;
-	int		y;
 
 	data.nb_of_commands = 0;
 	splited = ft_split(line, '|');
@@ -38,9 +37,9 @@ void	parser_lst(char *line)
 		lstadd_back(&commands, lstnew(ft_split(splited[x], ' '), x + 1));
 		x++;
 	}
-	y = 0;
-	while (splited[y])
-		free(splited[y++]);
+	x = 0;
+	while (splited[x])
+		free(splited[x++]);
 	free(splited);
 	handle_command(commands);
 	lstclear(&commands);
