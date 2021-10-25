@@ -13,25 +13,23 @@ static void	error_env(char *str)
 	ft_putendl_fd(strerror(errno), STDERR_FILENO);
 }
 
-int	env(char **splited)
+int	env(t_lst *commands)
 {
 	int			i;
 	extern char	**environ;
 
 	i = 0;
-	if (!ft_strncmp(splited[0], "env", 3))
+	if (commands->content[1])
 	{
-		if (splited[1])
-		{
-			error_env(splited[1]);
-			return (127);
-		}
-		while (environ[i] != NULL)
-		{
-			ft_putendl_fd(environ[i], STDIN_FILENO);
-			i++;
-		}
+		error_env(commands->content[1]);
+		return (127);
 	}
+	while (environ[i] != NULL)
+	{
+		ft_putendl_fd(environ[i], STDIN_FILENO);
+		i++;
+	}
+	commands->job_done = 1;
 	return (EXIT_SUCCESS);
 }
 
