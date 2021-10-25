@@ -19,6 +19,8 @@ typedef struct s_data
 {
     int exit;
     int new_line;
+    int nb_of_commands;
+    int command_code;
 }		    	t_data;
 
 t_data data;
@@ -28,6 +30,9 @@ typedef struct s_lst
     struct s_lst   *prev;
     int             type;
 	char			**content;
+    int             index;
+    int             to_display;
+    int             job_done;
 	struct s_lst	*next;
 }				t_lst;
 
@@ -37,7 +42,7 @@ void	export(char **splited);
 void	env(char **splited);
 void 	pwd(char **splited);
 void	ft_exit(t_lst command);
-void	echo(t_lst commands);
+void	echo(t_lst *commands);
 char	**handle_dquote(char *line, char **commands, int *quote);
 char	**quote_remover(char **commands, char first_quote);
 int		count_occurence(char *str, char c);
@@ -47,8 +52,10 @@ int     lstsize(t_lst *lst);
 void	lstdelone(t_lst *lst);
 void	lstclear(t_lst **lst);
 void	lstadd_back(t_lst **lst, t_lst *new);
-t_lst	*lstnew(char **content);
+t_lst	*lstnew(char **content, int index);
 t_lst	*lstlast(t_lst *lst);
-
+char	*dquote(char *line);
+char	find_first_quote(char *line);
+char	*remove_useless_quotes(char *line, char first_quote);
 
 #endif

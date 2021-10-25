@@ -1,26 +1,55 @@
 #include "../minishell.h"
 
-int	occ_in_commands(char **commands, char c)
+char	find_first_quote(char *line)
 {
-	int	counter;
-	int	x;
-	int	y;
+	int		x;
 
-	counter = 0;
 	x = 0;
-	x = 0;
-	while (commands[x])
+	while (line[x])
 	{
-		while (commands[x][y])
-		{
-			if (commands[x][y] == c)
-				counter++;
-			y++;
-		}
-		y = 0; 
+		if (line[x] == '\'')
+			return ('\'');
+		if (line[x] == '\"')
+			return ('\"');
 		x++;
 	}
-	return (counter);
+	return (0);
+}
+
+char	*dquote(char *line)
+{
+	char	*new_line;
+	char	*temp;
+	char	*temp_2;
+
+	new_line = readline("> ");
+	temp_2 = ft_strjoin(line, "\n");
+	temp = ft_strjoin(temp_2, new_line);
+	free(temp_2);
+	free(line);
+	free(new_line);
+	return (temp);
+}
+
+char	*remove_useless_quotes(char *line, char first_quote)
+{
+	char	*new_line;
+	int		x;
+	int		y;
+
+	x = 0;
+	y = 0;
+	new_line = malloc(ft_strlen(line) - count_occurence(line, first_quote) + 1);
+	while (line[x])
+	{
+		if (line[x] == first_quote)
+			x++;
+		else
+			new_line[y++] = line[x++];
+	}
+	new_line[y] = '\0';
+	free(line);
+	return (new_line);
 }
 
 int	count_occurence(char *str, char c)
@@ -39,117 +68,40 @@ int	count_occurence(char *str, char c)
 	return (counter);
 }
 
-char	**quote_remover(char **commands, char first_quote)
+void	echo(t_lst *command)
 {
-	int		x;
-	int		y;
-	int		z;
-	int		occurences;
-	char	*temp;
+	int	x;
 
-	x = 0;
-	y = 0;
-	z = 0;
-	while (commands[x])
+	if (command->index < data.nb_of_commands)
+		return ;
+	if (!ft_strncmp(command->content[0], "echo", 4) && !command->content[1])
 	{
-		occurences = count_occurence(commands[x], '\"') + count_occurence(commands[x], '\'');
-		temp = malloc(ft_strlen(commands[x]) - occurences + 1);
-		// to be protected
-		while (commands[x][y])
-		{
-			if (commands[x][y] != first_quote)
-			{
-				temp[z] = commands[x][y];
-				z++;
-			}
-			y++;
-		}
-		temp[z] = '\0';
-		free(commands[x]);
-		commands[x] = temp;
-		z = 0;
-		y = 0;
-		x++;
+		printf("\n");
+		command->job_done = 1;
 	}
-	return (commands);
+	else if (!ft_strncmp(command->content[0], "echo", 4) && ft_strncmp(command->content[1], "-n", 2))
+	{
+		x = 1;
+		while (command->content[x])
+		{
+			if (command->content[x + 1])
+				printf("%s ", command->content[x++]);
+			else
+				printf("%s", command->content[x++]);
+		}
+		printf("\n");
+		command->job_done = 1;
+	}
+	else if (!ft_strncmp(command->content[0], "echo", 4) && !ft_strncmp(command->content[1], "-n", 2))
+	{
+		x = 2;
+		while (command->content[x])
+		{
+			if (command->content[x + 1])
+				printf("%s ", command->content[x++]);
+			else
+				printf("%s", command->content[x++]);
+		}
+		command->job_done = 1;
+	}
 }
-
-int	is_quote(char c)
-{
-	if (c == '\'' || c == '\"')
-		return (1);
-	return (0);
-}
-
-// void	echo(char **splited, int quote, int new_lines)
-// {
-// 	int		x;
-// 	int		y;
-
-// 	int z = 0;
-// 	while (splited[z])
-// 	{
-// 		printf("result == %s\n", splited[z]);
-// 		z++;
-// 	}
-// 	y = 0;
-// 	if (!ft_strncmp(splited[0], "echo", 4) && !splited[1])
-// 		printf("\n");
-// 	else if (!ft_strncmp(splited[0], "echo", 4) && ft_strncmp(splited[1], "-n", 2))
-// 	{
-// 		x = 1;
-// 		while (splited[x])
-// 		{
-// 			while (splited[x][y + quote])
-// 			{
-// 				if (y == (int)ft_strlen(splited[x]) - 1 && !(is_quote(splited[x][y])))
-// 					printf("%c ", splited[x][y++]);
-// 				else if (is_quote(splited[x][y]))
-// 					y++;
-// 				else
-// 					printf("%c", splited[x][y++]);
-// 			}
-// 			if (quote)
-// 				printf("\n");
-// 			while (splited[x][y])
-// 			{
-// 				if (is_quote(splited[x][y]))
-// 					y++;
-// 				else
-// 					printf("%c", splited[x][y++]);
-// 			}
-// 			x++;
-// 			y = 0;
-// 		}
-// 		printf("\n");
-// 	}
-// 	else if (!ft_strncmp(splited[0], "echo", 4) && !ft_strncmp(splited[1], "-n", 2))
-// 	{
-// 		x = 2;
-// 		while (splited[x])
-// 		{
-// 			while (splited[x][y + quote])
-// 			{
-// 				if (is_quote(splited[x][y]))
-// 					y++;
-// 				else
-// 					printf("%c", splited[x][y++]);
-// 			}
-// 			if (splited[x + 1])
-// 				printf(" ");
-// 			if (quote)
-// 				printf("\n");
-// 			while (splited[x][y])
-// 			{
-// 				if (is_quote(splited[x][y]))
-// 					y++;
-// 				else
-// 					printf("%c", splited[x][y++]);
-// 			}
-// 			x++;
-// 			y = 0;
-// 		}
-// }
-// 	if (new_lines)
-// 		printf("\n");
-// 	}

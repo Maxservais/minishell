@@ -13,7 +13,7 @@ int	lstsize(t_lst *lst)
 	return (i);
 }
 
-t_lst	*lstnew(char **content)
+t_lst	*lstnew(char **content, int index)
 {
 	t_lst	*node;
 
@@ -23,6 +23,8 @@ t_lst	*lstnew(char **content)
 	(*node).prev = NULL;
 	(*node).content = content;
 	(*node).type = 0;
+	(*node).index = index;
+	(*node).job_done = 0;
 	(*node).next = NULL;
 	return (node);
 }
