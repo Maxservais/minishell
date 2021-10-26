@@ -38,7 +38,7 @@ typedef struct s_lst
 	struct s_lst	*next;
 }				t_lst;
 
-/* Mini_shell */
+/* Minishell */
 char	**handle_dquote(char *line, char **commands, int *quote);
 char	**quote_remover(char **commands, char first_quote);
 int		count_occurence(char *str, char c);
@@ -64,7 +64,9 @@ void	ft_exit(t_lst *command);
 void	echo(t_lst *commands);
 void	error_cmd(char *bash, char *cmd_name, char *input);
 void	error_usage(char *cmd_name, char *str, char *usage);
-void	ft_ctrl_d();
+
+/* Signals */
 void	sighandler(int signum);
+void	ft_ctrl_d();
 
 #endif

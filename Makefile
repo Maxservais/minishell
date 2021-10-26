@@ -7,8 +7,8 @@ SRC_FILES 		=	main.c 				\
 					./builtins/cd.c		\
 					./builtins/unset.c	\
 					./builtins/error_handler.c \
-					./builtins/signal.c	\
-					lst.c 				\
+					./signals/signal.c	\
+					./utils/lst.c 		\
 
 OBJ_FILES		=	$(SRC_FILES:.c=.o)
 

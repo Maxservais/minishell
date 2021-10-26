@@ -213,5 +213,6 @@ int	main(void)
 	line = NULL;
 	minishell(line);
 	// system("leaks minishell");
+	// free envp before exit
 	return (EXIT_SUCCESS);
 }
