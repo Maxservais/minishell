@@ -31,7 +31,7 @@ int		pipex(char **envp, t_param *param, int left_pipe[]);
 int		main(int argc, char **argv, char **envp);
 
 /* Utils */
-int		open_file(char *file_name, int mode);
+
 char	**find_paths(char **envp);
 int		exec_cmd(char **cmd, char **envp);
 

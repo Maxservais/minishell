@@ -3,8 +3,7 @@
 - variables d'environnement doivent etre passées au child process grace à execve.
 Si j'export une variable, les enfants doivent en 'heriter'. Par contre l'inverse n'est pas vrai.
 Ici je travaille directement sur environ, peut-etre qu'il faut travailler sur une copie.
-
-Leak to be found
+- leaks to be found
 */
 
 #include "../minishell.h"

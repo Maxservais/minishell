@@ -65,6 +65,9 @@ void	echo(t_lst *commands);
 void	error_cmd(char *bash, char *cmd_name, char *input);
 void	error_usage(char *cmd_name, char *str, char *usage);
 
+/* Redirections */
+int		open_file(char *file_name, int mode);
+
 /* Signals */
 void	sighandler(int signum);
 void	ft_ctrl_d(void);
