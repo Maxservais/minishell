@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tuytters <tuytters@student.s19.be>         +#+  +:+       +#+        */
+/*   By: xauffray <xauffray@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/26 09:42:49 by tuytters          #+#    #+#             */
-/*   Updated: 2021/10/26 10:11:02 by tuytters         ###   ########.fr       */
+/*   Updated: 2021/10/26 12:09:40 by xauffray         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	sighandler(int signum)
 	}
 }
 
-void	ft_ctrl_d()
+void	ft_ctrl_d(void)
 {
 	printf("exit\n");
 	data.exit = 1;

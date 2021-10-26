@@ -67,6 +67,6 @@ void	error_usage(char *cmd_name, char *str, char *usage);
 
 /* Signals */
 void	sighandler(int signum);
-void	ft_ctrl_d();
+void	ft_ctrl_d(void);
 
 #endif

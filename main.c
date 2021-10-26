@@ -166,7 +166,7 @@ char	*add_env(char *line)
 	return (line);
 }
 
-char	*minishell1(char *line)
+char	*prompt1(char *line)
 {
 	char	first_quote;
 
@@ -179,7 +179,7 @@ char	*minishell1(char *line)
 	return (line);
 }
 
-int	minishell(char *line)
+int	prompt(char *line)
 {
 	copy_env(); // check if succesful execution or not
 	data.exit = -1;
@@ -195,15 +195,28 @@ int	minishell(char *line)
 			break;
 		}
 		else if (ft_strlen(line))
-			line = minishell1(line);
+			line = prompt1(line);
 		free(line);
 	}
 	if (data.exit == 1)
 	{
-		// system("leaks minishell");
+		system("leaks minishell");
 		exit (EXIT_SUCCESS);
 	}
 	return (0);
+}
+
+void	free_envp(void)
+{
+	int	x;
+
+	x = 0;
+	while (data.envp[x])
+	{
+		free(data.envp[x]);
+		x++;
+	}
+	free(data.envp);
 }
 
 int	main(void)
@@ -211,8 +224,8 @@ int	main(void)
 	char	*line;
 
 	line = NULL;
-	minishell(line);
-	// system("leaks minishell");
-	// free envp before exit
+	prompt(line);
+	system("leaks minishell");
+	free_envp();
 	return (EXIT_SUCCESS);
 }
