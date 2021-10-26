@@ -59,6 +59,35 @@ void	handle_command(t_lst *commands)
 	}
 }
 
+void	sub_parser(t_lst *commands)
+{
+	int	x;
+	int	y;
+
+	while (commands)
+	{
+		x = 0;
+		y = 0;
+		while (commands->content[x])
+		{
+			if (count_occurence(commands->content[x], '<') > 0)
+			{
+				commands->infile.name = commands->content[x + 1];
+				commands->infile.mode = 1;
+			}
+			if (count_occurence(commands->content[x], '>') > 0)
+			{
+				commands->outfile = malloc(sizeof(t_file) * count_occurence(commands->content[x], '>') + 1);
+				commands->outfile[y].name = commands->content[x + 1];
+				commands->outfile[y].mode = 2;
+				y++;
+			}
+			x++;
+		}
+		commands = commands->next;
+	}
+}
+
 void	parser_lst(char *line)
 {
 	t_lst	*commands;
@@ -88,6 +117,7 @@ void	parser_lst(char *line)
 	while (splited[x])
 		free(splited[x++]);
 	free(splited);
+	sub_parser(commands);
 	handle_command(commands);
 	lstclear(&commands);
 }
