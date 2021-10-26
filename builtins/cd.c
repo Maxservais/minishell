@@ -1,6 +1,4 @@
 /* Reminders:
-- Condition to check whether command is 'cd' or not can be removed
-once we check in the parsing which function should be called (cd, pwd, echo, etc.).
 - La commande 'cd' doit etre capable de gerer les variables qui ont été EXPORT.
 e.g. export test=Documents/minishell cd $test
 - the 'cd' command should update the PWD environment variable and create the OLDPWD env variable.
@@ -14,32 +12,42 @@ e.g	bash-3.2$ env | grep PWD
 
 #include "../minishell.h"
 
-static void	error_cd(char *str)
+static void	add_to_env(char *variable)
 {
-	ft_putstr_fd("cd: ", STDERR_FILENO);
-	ft_putstr_fd(strerror(errno), STDERR_FILENO);
-	ft_putstr_fd(": ", STDERR_FILENO);
-	ft_putendl_fd(str, STDERR_FILENO);
+	int			i;
+
+	i = 0;
+	while (data.envp[i] != NULL)
+			i++;
+	data.envp[i] = variable;
+	data.envp[i + 1] = NULL;
 }
 
 int	cd(t_lst *commands)
 {
+	char	current_path[PATH_MAX];
+
+	getcwd(current_path, sizeof(current_path));
 	if (!commands->content[1])
+		chdir(getenv("HOME"));
+	else if (!ft_strncmp(commands->content[1], "-", 1))
 	{
-		if (chdir(getenv("HOME")) == -1)
+		if (ft_strncmp(commands->content[1], "-L", 2)
+			&& ft_strncmp(commands->content[1], "-P", 2))
 		{
-			error_cd("HOME");
+			error_usage("cd: ", commands->content[1], "cd: usage: cd [-L|-P] [dir]");
+			commands->job_done = 1;
 			return (EXIT_FAILURE);
 		}
 	}
-	else
+	else if (chdir(commands->content[1]) == -1)
 	{
-		if (chdir(commands->content[1]) == -1)
-		{
-			error_cd(commands->content[1]);
-			return (EXIT_FAILURE);
-		}
+		error_cmd("bash: ", "cd: ", commands->content[1]);
+		commands->job_done = 1;
+		return (EXIT_FAILURE);
 	}
+	// need to unset first OLDPWD if there was one
+	add_to_env(ft_strjoin("OLDPWD=", current_path));
 	commands->job_done = 1;
 	return (EXIT_SUCCESS);
 }
