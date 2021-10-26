@@ -92,15 +92,6 @@ void	parser_lst(char *line)
 	lstclear(&commands);
 }
 
-void	sighandler(int signum)
-{
-	// printf("signum == %d\n", signum);
-	if (signum == 2)
-	{
-		return ;
-	}
-}
-
 int	char_position(char *line, char c)
 {
 	int	position;
@@ -134,7 +125,6 @@ int	space_position(char *line, char c, int start)
 
 char	*add_env(char *line)
 {
-	extern char	**environ;
 	int			x;
 	int			dollar;
 	int			space;
@@ -154,11 +144,11 @@ char	*add_env(char *line)
 		key = ft_substr(line, dollar + 1, space - dollar);
 		string_before = ft_substr(line, 0, dollar);
 		string_after = ft_substr(line, space, ft_strlen(line));
-		while (environ[x])
+		while (data.envp[x])
 		{
-			if (!ft_strncmp(environ[x], key, ft_strlen(key) - 1))
+			if (!ft_strncmp(data.envp[x], key, ft_strlen(key) - 1))
 			{
-				value = ft_substr(environ[x], ft_strlen(key) + 1, ft_strlen(environ[x]) - 1);
+				value = ft_substr(data.envp[x], ft_strlen(key) + 1, ft_strlen(data.envp[x]) - 1);
 				break ;
 			}
 			x++;
@@ -176,29 +166,52 @@ char	*add_env(char *line)
 	return (line);
 }
 
-int	main(void)
- {
-	char	*line;
+char	*minishell1(char *line)
+{
 	char	first_quote;
 
+	first_quote = find_first_quote(line);
+	while (count_occurence(line, first_quote) % 2 == 1)
+		line = dquote(line);
+	line = remove_useless_quotes(line, first_quote);
+	line = add_env(line);
+	parser_lst(line);
+	return (line);
+}
+
+int	minishell(char *line)
+{
 	copy_env(); // check if succesful execution or not
 	data.exit = -1;
 	while (data.exit == -1)
 	{
 		data.nb_of_commands = 0;
-		line = readline("bash-3.2$ ");
 		signal(SIGINT, sighandler);
-		if (ft_strlen(line))
+		signal(SIGQUIT, SIG_IGN);
+		line = readline("bash-3.2$ ");
+		if (!line)
 		{
-			first_quote = find_first_quote(line);
-			while (count_occurence(line, first_quote) % 2 == 1)
-				line = dquote(line);
-			line = remove_useless_quotes(line, first_quote);
-			line = add_env(line);
-			parser_lst(line);
+			ft_ctrl_d();
+			break;
 		}
+		else if (ft_strlen(line))
+			line = minishell1(line);
 		free(line);
 	}
-	system("leaks minishell");
+	if (data.exit == 1)
+	{
+		// system("leaks minishell");
+		exit (EXIT_SUCCESS);
+	}
+	return (0);
+}
+
+int	main(void)
+ {
+	char	*line;
+
+	line = NULL;
+	minishell(line);
+	// system("leaks minishell");
 	return (EXIT_SUCCESS);
 }

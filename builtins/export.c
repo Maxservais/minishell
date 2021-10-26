@@ -42,15 +42,15 @@ static int check_format(char *str)
 
 static void	print_env(void)
 {
-		int	i;
+	int	i;
 
-		i = 0;
-		while (data.envp[i] != NULL)
-		{
-			ft_putstr_fd("declare -x ", STDIN_FILENO);
-			ft_putendl_fd(data.envp[i], STDIN_FILENO);
-			i++;
-		}
+	i = 0;
+	while (data.envp[i] != NULL)
+	{
+		ft_putstr_fd("declare -x ", STDIN_FILENO);
+		ft_putendl_fd(data.envp[i], STDIN_FILENO);
+		i++;
+	}
 }
 
 int	export(t_lst *commands)

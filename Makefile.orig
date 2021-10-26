@@ -5,9 +5,12 @@ SRC_FILES 		=	main.c 				\
 					./builtins/env.c	\
 					./builtins/export.c	\
 					./builtins/cd.c		\
+<<<<<<< HEAD
 					./builtins/unset.c	\
 					./builtins/error_handler.c \
+=======
 					./builtins/signal.c	\
+>>>>>>> tuytters
 					lst.c 				\
 
 OBJ_FILES		=	$(SRC_FILES:.c=.o)
@@ -24,7 +27,6 @@ $(NAME): $(OBJ_FILES)
 	@$(MAKE) -s -C libft
 	@cp libft/libft.a .
 	@$(CC) $(CFLAGS) ${SRC_FILES} -lreadline libft.a -o $(NAME) -L /Users/$(USER)/.brew/opt/readline/lib
-	@./minishell
 
 %.o: %.c
 	$(CC) -c $(CFLAGS) -o $@ $<

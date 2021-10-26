@@ -64,5 +64,7 @@ void	ft_exit(t_lst *command);
 void	echo(t_lst *commands);
 void	error_cmd(char *bash, char *cmd_name, char *input);
 void	error_usage(char *cmd_name, char *str, char *usage);
+void	ft_ctrl_d();
+void	sighandler(int signum);
 
 #endif
