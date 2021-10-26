@@ -21,7 +21,6 @@ typedef struct s_data
 {
     int     exit;
     int     new_line;
-    char    *line;
 }		    	t_data;
 
 t_data data;
@@ -55,7 +54,9 @@ t_lst	*lstlast(t_lst *lst);
 void	sighandler(int signum);
 
 /* Built-ins */
-void 	pwd(char **splited);
+void	pwd(char **splited);
 void	cd(char **splited);
+void	ft_ctrl_d();
+void	sighandler(int signum);
 
 #endif
