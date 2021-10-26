@@ -41,7 +41,7 @@ typedef struct s_lst
 	int				index;
 	int				to_display;
 	int				job_done;
-	struct s_file	infile;
+	struct s_file	*infile;
 	struct s_file	*outfile;
 	struct s_lst	*next;
 }				t_lst;

@@ -49,6 +49,10 @@ void	lstdelone(t_lst *lst)
 		free(lst->content[x++]);
 	x = 0;
 	free(lst->content);
+	// if (lst->infile)
+	// 	free(lst->infile);
+	// if (lst->outfile)
+	// 	free(lst->outfile);
 	free(lst);
 }
 

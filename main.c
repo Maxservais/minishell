@@ -63,27 +63,38 @@ void	sub_parser(t_lst *commands)
 {
 	int	x;
 	int	y;
+	int	z;
 
 	while (commands)
 	{
 		x = 0;
 		y = 0;
+		z = 0;
+		commands->infile = malloc(sizeof(t_file) * count_occurence(commands->content[x], '<') + 1);
+		commands->outfile = malloc(sizeof(t_file) * count_occurence(commands->content[x], '>') + 1);
 		while (commands->content[x])
 		{
 			if (count_occurence(commands->content[x], '<') > 0)
 			{
-				commands->infile.name = commands->content[x + 1];
-				commands->infile.mode = 1;
+				commands->infile[y].name = commands->content[x + 1];
+				commands->infile[y].mode = 1;
+				y++;
 			}
 			if (count_occurence(commands->content[x], '>') > 0)
 			{
-				commands->outfile = malloc(sizeof(t_file) * count_occurence(commands->content[x], '>') + 1);
-				commands->outfile[y].name = commands->content[x + 1];
-				commands->outfile[y].mode = 2;
-				y++;
+				commands->outfile[z].name = commands->content[x + 1];
+				commands->outfile[z].mode = 2;
+				z++;
 			}
 			x++;
 		}
+		commands->infile[y].name = NULL;
+		// y = 0;
+		// while (commands->infile[y].name)
+		// {
+		// 	printf("%s\n", commands->infile[y].name);
+		// 	y++;
+		// }
 		commands = commands->next;
 	}
 }
@@ -117,7 +128,7 @@ void	parser_lst(char *line)
 	while (splited[x])
 		free(splited[x++]);
 	free(splited);
-	sub_parser(commands);
+	// sub_parser(commands);
 	handle_command(commands);
 	lstclear(&commands);
 }
@@ -209,7 +220,7 @@ char	*prompt1(char *line)
 	return (line);
 }
 
-int	prompt(char *line)
+void	prompt(char *line)
 {
 	copy_env(); // check if succesful execution or not
 	data.exit = -1;
@@ -233,7 +244,6 @@ int	prompt(char *line)
 		system("leaks minishell");
 		exit (EXIT_SUCCESS);
 	}
-	return (0);
 }
 
 void	free_envp(void)
