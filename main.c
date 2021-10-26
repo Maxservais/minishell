@@ -103,6 +103,8 @@ int	space_position(char *line, char c, int start)
 		if (line[position] == c)
 			return (position);
 		position++;
+		if (!line[position])
+			return (position);
 	}
 	return (-1);
 }
@@ -114,14 +116,39 @@ char	*add_env(char *line)
 	int			dollar;
 	int			space;
 	char		*key;
+	char		*string_before;
+	char		*string_after;
+	char		*value;
+	char		*temp;
+	char		*new_line;
 
 	x = 0;
+	value = NULL;
 	dollar = char_position(line, '$');
 	space = space_position(line, ' ', dollar);
 	if (dollar >= 0)
 	{
 		key = ft_substr(line, dollar + 1, space - dollar);
+		string_before = ft_substr(line, 0, dollar);
+		string_after = ft_substr(line, space, ft_strlen(line));
+		while (environ[x])
+		{
+			if (!ft_strncmp(environ[x], key, ft_strlen(key) - 1))
+			{
+				value = ft_substr(environ[x], ft_strlen(key) + 1, ft_strlen(environ[x]) - 1);
+				break ;
+			}
+			x++;
+		}
+		temp = ft_strjoin(string_before, value);
+		free(value);
+		free(string_before);
+		new_line = ft_strjoin(temp, string_after);
+		free(string_after);
+		free(temp);
 		free(key);
+		free(line);
+		return (new_line);
 	}
 	return (line);
 }
