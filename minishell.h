@@ -16,6 +16,24 @@
 # include "libft/libft.h"
 # include <termios.h>
 
+/* Macros */
+# define READ 0
+# define WRITE 1
+
+/* Custom structs */
+typedef struct s_lst
+{
+	struct s_lst	*prev;
+	int				type;
+	char			**content;
+	char			*infile;
+	char			**outfile;
+	int				index;
+	int				to_display;
+	int				job_done;
+	struct s_lst	*next;
+}				t_lst;
+
 typedef struct s_data
 {
 	int		exit;
@@ -25,18 +43,8 @@ typedef struct s_data
 	char	**envp;
 }				t_data;
 
+/* Global variable */
 t_data data;
-
-typedef struct s_lst
-{
-	struct s_lst	*prev;
-	int				type;
-	char			**content;
-	int				index;
-	int				to_display;
-	int				job_done;
-	struct s_lst	*next;
-}				t_lst;
 
 /* Minishell */
 char	**handle_dquote(char *line, char **commands, int *quote);
@@ -65,8 +73,19 @@ void	echo(t_lst *commands);
 void	error_cmd(char *bash, char *cmd_name, char *input);
 void	error_usage(char *cmd_name, char *str, char *usage);
 
+/* Execution */
+char	**find_paths(char **envp);
+int		exec_cmd(char **cmd, char **envp);
+
 /* Redirections */
-int		open_file(char *file_name, int mode);
+int		ft_open(char *file_name, int mode);
+int		open_files(char **files);
+
+/* Pipes */
+// int		pipex(char **envp, t_param *param, int left_pipe[]);
+// int		first_command(char **envp, int right_pipe[], t_param *param);
+// int		last_command(char **envp, int left_pipe[], int right_pipe[], t_param *param);
+// int		inter_command(char **envp, int l_pipe[], int r_pipe[], t_param *p);
 
 /* Signals */
 void	sighandler(int signum);

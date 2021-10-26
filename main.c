@@ -45,11 +45,13 @@ void	handle_command(t_lst *commands)
 {
 	while (commands)
 	{
+		// IF INPUT FILE(S)
+		// REDIRECT FROM LATEST INPUT FILE
 		execute_builtin(commands);
 		// execute_external_cmd(commands);
 		// execute pipe
-		// execute redirection
-		// ...
+		// execute redirection to last OUTPUT FILE
+		// IF NO REDIRECTION, SEND OUTPUT TO STDOUT_FILENO
 		if (!commands->job_done)
 		{
 			printf("bash: %s: command not found\n", commands->content[0]);
@@ -88,6 +90,7 @@ void	parser_lst(char *line)
 	while (splited[x])
 		free(splited[x++]);
 	free(splited);
+	// check if there is input file
 	handle_command(commands);
 	lstclear(&commands);
 }

@@ -1,4 +1,4 @@
-#include "pipex.h"
+#include "../minishell.h"
 
 char	**find_paths(char **envp)
 {
