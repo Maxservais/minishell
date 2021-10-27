@@ -45,13 +45,12 @@ void	handle_command(t_lst *commands)
 {
 	while (commands)
 	{
-		open_files(commands);
+		// open_files(commands);
 		// IF INPUT FILE(S)
 		// REDIRECT FROM LATEST INPUT FILE
 		execute_builtin(commands);
-		// exec_cmd(commands);
-		pipex(commands, STDIN_FILENO); // report error if -1
-		printf("HELLO\n");
+		exec_cmd(commands);
+		// pipex(commands, STDIN_FILENO); // report error if -1
 		// execute pipe
 		// execute redirection to last OUTPUT FILE
 		// IF NO REDIRECTION, SEND OUTPUT TO STDOUT_FILENO
@@ -229,7 +228,7 @@ void	prompt(char *line)
 	{
 		data.nb_of_commands = 0;
 		signal(SIGINT, sighandler);
-		signal(SIGQUIT, SIG_IGN);
+	//	signal(SIGQUIT, SIG_IGN);
 		line = readline("bash-3.2$ ");
 		if (!line)
 		{
