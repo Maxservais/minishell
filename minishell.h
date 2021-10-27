@@ -16,6 +16,38 @@
 # include "libft/libft.h"
 # include <termios.h>
 
+/* Macros */
+# define READ 0
+# define WRITE 1
+
+/* Custom structs */
+typedef struct s_file
+{
+	char	*name;
+	int		fd;
+	int		mode;
+}				t_file;
+
+typedef struct s_param
+{
+	char	***cmds;
+}				t_param;
+
+typedef struct s_lst
+{
+	struct s_lst	*prev;
+	int				type;
+	pid_t			pid; //MAYBE
+	int				status;
+	char			**content;
+	int				index;
+	int				to_display;
+	int				job_done;
+	struct s_file	*infile;
+	struct s_file	*outfile;
+	struct s_lst	*next;
+}				t_lst;
+
 typedef struct s_data
 {
 	int		exit;
@@ -25,26 +57,8 @@ typedef struct s_data
 	char	**envp;
 }				t_data;
 
+/* Global variable */
 t_data data;
-
-typedef struct s_file
-{
-	char	*name;
-	int		mode;
-}				t_file;
-
-typedef struct s_lst
-{
-	struct s_lst	*prev;
-	int				type;
-	char			**content;
-	int				index;
-	int				to_display;
-	int				job_done;
-	struct s_file	*infile;
-	struct s_file	*outfile;
-	struct s_lst	*next;
-}				t_lst;
 
 /* Minishell */
 char	**handle_dquote(char *line, char **commands, int *quote);
@@ -73,8 +87,23 @@ void	echo(t_lst *commands);
 void	error_cmd(char *bash, char *cmd_name, char *input);
 void	error_usage(char *cmd_name, char *str, char *usage);
 
+/* Execution */
+char	**find_paths(void);
+int		exec_cmd(t_lst *command);
+
 /* Redirections */
-int		open_file(char *file_name, int mode);
+int		ft_open(char *file_name, int mode);
+int		open_files(t_lst *command);
+
+/* Pipes */
+int		ft_err_return(char *error);
+int		ft_perror(void);
+int		report_error(void);
+int		ft_free(char ***argv);
+
+int	first_command(int right_pipe[], t_lst *command);
+int	last_command(int left_pipe[], int right_pipe[], t_lst *command);
+int	pipex(t_lst *command, int left_pipe[]);
 
 /* Signals */
 void	sighandler(int signum);

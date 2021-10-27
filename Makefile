@@ -9,6 +9,10 @@ SRC_FILES 		=	main.c 				\
 					./builtins/error_handler.c \
 					./signals/signal.c	\
 					./utils/lst.c 		\
+					./execution/exec.c	\
+					./pipes/pipex.c		\
+					./pipes/error.c		\
+					./redirections/redirection.c
 
 OBJ_FILES		=	$(SRC_FILES:.c=.o)
 
