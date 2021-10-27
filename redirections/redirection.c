@@ -4,7 +4,7 @@ int	ft_open(char *file_name, int mode)
 {
 	int	fd;
 
-	if (mode == 0)
+	if (mode == 1)
 	{
 		fd = open(file_name, O_RDONLY);
 		if (fd < 0)
@@ -20,21 +20,28 @@ int	ft_open(char *file_name, int mode)
 	return (fd);
 }
 
-int	open_files(char **files)
+int	open_files(t_lst *command)
 {
 	int	i;
-	int	mode;
-
-	// On ouvre tous les fichiers d'input et d'output
-	// param.fd1 = open_file(argv[1], 0);
-	// param.fd2 = open_file(argv[argc - 1], 1);
-	// if (param.fd1 == -1 || param.fd2 == -1)
-	// 	perror("Error");
+	
 	i = 0;
-	while (files[i])
+	while (command->infile[i].name)
 	{
-		if (ft_open(files[i], mode) == -1)
+		command->infile[i].fd = ft_open(command->infile[i].name, command->infile[i].mode);
+		if (command->infile[i].fd == -1)
 			return (-1);
+		// if (param.fd1 == -1 || param.fd2 == -1)
+		// 	perror("Error");
+		i++;
+	}
+	i = 0;
+	while (command->outfile[i].name)
+	{
+		command->outfile[i].fd = ft_open(command->outfile[i].name, command->outfile[i].mode);
+		if (command->outfile[i].fd == -1)
+			return (-1);
+		// if (param.fd1 == -1 || param.fd2 == -1)
+		// 	perror("Error");
 		i++;
 	}
 	return (EXIT_SUCCESS);

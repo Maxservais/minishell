@@ -21,16 +21,30 @@
 # define WRITE 1
 
 /* Custom structs */
+typedef struct s_file
+{
+	char	*name;
+	int		fd;
+	int		mode;
+}				t_file;
+
+typedef struct s_param
+{
+	char	***cmds;
+}				t_param;
+
 typedef struct s_lst
 {
 	struct s_lst	*prev;
 	int				type;
+	pid_t			pid; //MAYBE
+	int				status;
 	char			**content;
-	char			*infile;
-	char			**outfile;
 	int				index;
 	int				to_display;
 	int				job_done;
+	struct s_file	*infile;
+	struct s_file	*outfile;
 	struct s_lst	*next;
 }				t_lst;
 
@@ -75,17 +89,21 @@ void	error_usage(char *cmd_name, char *str, char *usage);
 
 /* Execution */
 char	**find_paths(void);
-int		exec_cmd(char **cmd);
+int		exec_cmd(t_lst *command);
 
 /* Redirections */
 int		ft_open(char *file_name, int mode);
-int		open_files(char **files);
+int		open_files(t_lst *command);
 
 /* Pipes */
-// int		pipex(char **envp, t_param *param, int left_pipe[]);
-// int		first_command(char **envp, int right_pipe[], t_param *param);
-// int		last_command(char **envp, int left_pipe[], int right_pipe[], t_param *param);
-// int		inter_command(char **envp, int l_pipe[], int r_pipe[], t_param *p);
+int		ft_err_return(char *error);
+int		ft_perror(void);
+int		report_error(void);
+int		ft_free(char ***argv);
+
+int	first_command(int right_pipe[], t_lst *command);
+int	last_command(int left_pipe[], int right_pipe[], t_lst *command);
+int	pipex(t_lst *command, int left_pipe[]);
 
 /* Signals */
 void	sighandler(int signum);

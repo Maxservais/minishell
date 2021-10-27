@@ -45,10 +45,13 @@ void	handle_command(t_lst *commands)
 {
 	while (commands)
 	{
+		open_files(commands);
 		// IF INPUT FILE(S)
 		// REDIRECT FROM LATEST INPUT FILE
 		execute_builtin(commands);
-		// execute_external_cmd(commands);
+		// exec_cmd(commands);
+		pipex(commands, STDIN_FILENO); // report error if -1
+		printf("HELLO\n");
 		// execute pipe
 		// execute redirection to last OUTPUT FILE
 		// IF NO REDIRECTION, SEND OUTPUT TO STDOUT_FILENO
@@ -57,6 +60,41 @@ void	handle_command(t_lst *commands)
 			printf("bash: %s: command not found\n", commands->content[0]);
 			data.command_code = 127;
 		}
+		commands = commands->next;
+	}
+}
+
+void	sub_parser(t_lst *commands)
+{
+	int	x;
+	int	y;
+	int	z;
+
+	while (commands)
+	{
+		x = 0;
+		y = 0;
+		z = 0;
+		commands->infile = malloc(sizeof(t_file) * count_occurence(commands->content[x], '<') + 1);
+		commands->outfile = malloc(sizeof(t_file) * count_occurence(commands->content[x], '>') + 1);
+		while (commands->content[x])
+		{
+			if (count_occurence(commands->content[x], '<') > 0)
+			{
+				commands->infile[y].name = commands->content[x + 1];
+				commands->infile[y].mode = 1;
+				y++;
+			}
+			if (count_occurence(commands->content[x], '>') > 0)
+			{
+				commands->outfile[z].name = commands->content[x + 1];
+				commands->outfile[z].mode = 2;
+				z++;
+			}
+			x++;
+		}
+		commands->infile[y].name = NULL;
+		commands->outfile[z].name = NULL;
 		commands = commands->next;
 	}
 }
@@ -90,6 +128,7 @@ void	parser_lst(char *line)
 	while (splited[x])
 		free(splited[x++]);
 	free(splited);
+	sub_parser(commands);
 	// check if there is input file
 	handle_command(commands);
 	lstclear(&commands);
@@ -182,7 +221,7 @@ char	*prompt1(char *line)
 	return (line);
 }
 
-int	prompt(char *line)
+void	prompt(char *line)
 {
 	copy_env(); // check if succesful execution or not
 	data.exit = -1;
@@ -206,7 +245,6 @@ int	prompt(char *line)
 		system("leaks minishell");
 		exit (EXIT_SUCCESS);
 	}
-	return (0);
 }
 
 void	free_envp(void)

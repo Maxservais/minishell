@@ -1,4 +1,4 @@
-#include "pipex.h"
+#include "../minishell.h"
 
 int	ft_err_return(char *error)
 {
@@ -8,13 +8,13 @@ int	ft_err_return(char *error)
 
 int	ft_perror(void)
 {
-	perror("Error");
+	perror("test2");
 	return (1);
 }
 
 int	report_error(void)
 {
-	perror("Error");
+	perror("test1");
 	return (-1);
 }
 
