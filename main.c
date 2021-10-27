@@ -1,23 +1,22 @@
 #include "minishell.h"
 
-int		execute_builtin(t_lst *commands)
+void		execute_builtin(t_lst *commands)
 {
 	if (!ft_strncmp(commands->content[0], "cd", 2))
-		cd(commands);
+		data.command_code = cd(commands);
 	else if (!ft_strncmp(commands->content[0], "echo", 4))
-		echo(commands);
+		data.command_code = echo(commands);
 	else if (!ft_strncmp(commands->content[0], "env", 3))
-		env(commands);
+		data.command_code = env(commands);
 	else if (!ft_strncmp(commands->content[0], "exit", 5))
-		ft_exit(commands);
+		data.command_code = ft_exit(commands);
 	else if (!ft_strncmp(commands->content[0], "export", 6))
-		export(commands);
+		data.command_code = export(commands);
 	else if (!ft_strncmp(commands->content[0], "pwd", 3))
-		pwd(commands);
+		data.command_code = pwd(commands);
 	else if (!ft_strncmp(commands->content[0], "unset", 5))
-		unset(commands);
+		data.command_code = unset(commands);
 	// Return Success if at least one builtin command got executed
-	return (0);
 }
 
 int		copy_env(void)
@@ -43,59 +42,97 @@ int		copy_env(void)
 
 void	handle_command(t_lst *commands)
 {
-	while (commands)
+	data.command_code = 1;
+	open_files();
+	if (data.nb_of_commands == 1)
 	{
-		// open_files(commands);
-		// IF INPUT FILE(S)
-		// REDIRECT FROM LATEST INPUT FILE
-		execute_builtin(commands);
-		exec_cmd(commands);
-		// pipex(commands, STDIN_FILENO); // report error if -1
-		// execute pipe
-		// execute redirection to last OUTPUT FILE
-		// IF NO REDIRECTION, SEND OUTPUT TO STDOUT_FILENO
-		if (!commands->job_done)
+		while (commands)
 		{
-			printf("bash: %s: command not found\n", commands->content[0]);
-			data.command_code = 127;
+			// IF INPUT FILE(S)
+			// REDIRECT FROM LATEST INPUT FILE
+			execute_builtin(commands);
+			if (data.command_code != 0)
+				exec_cmd(commands);
+			// execute pipe
+			// execute redirection to last OUTPUT FILE
+			// IF NO REDIRECTION, SEND OUTPUT TO STDOUT_FILENO
+			if (!commands->job_done)
+			{
+				printf("bash: %s: command not found\n", commands->content[0]);
+				data.command_code = 127;
+			}
+			commands = commands->next;
 		}
-		commands = commands->next;
+	}
+	else
+	{
+		pipex(commands, STDIN_FILENO); // report error if -1
 	}
 }
 
-void	sub_parser(t_lst *commands)
+int	space_position(char *line, char c, int start)
+{
+	int	position;
+
+	position = start;
+	while (line[position])
+	{
+		if (line[position] == c)
+			return (position);
+		position++;
+		if (!line[position])
+			return (position);
+	}
+	return (-1);
+}
+
+int	char_position(char *line, char c)
+{
+	int	position;
+
+	position = 0;
+	while (line[position])
+	{
+		if (line[position] == c)
+			return (position);
+		position++;
+	}
+	return (-1);
+
+}
+
+void	sub_parser(char *line)
 {
 	int	x;
 	int	y;
 	int	z;
+	char	**splited;
 
-	while (commands)
+	x = 0;
+	y = 0;
+	z = 0;
+	splited = ft_split(line, ' ');
+	data.infile = malloc(sizeof(t_file) * count_occurence(line, '<') + 1);
+	data.outfile = malloc(sizeof(t_file) * count_occurence(line, '>') + 1);
+	while (splited[x])
 	{
-		x = 0;
-		y = 0;
-		z = 0;
-		commands->infile = malloc(sizeof(t_file) * count_occurence(commands->content[x], '<') + 1);
-		commands->outfile = malloc(sizeof(t_file) * count_occurence(commands->content[x], '>') + 1);
-		while (commands->content[x])
+		if (count_occurence(splited[x], '<') > 0)
 		{
-			if (count_occurence(commands->content[x], '<') > 0)
-			{
-				commands->infile[y].name = commands->content[x + 1];
-				commands->infile[y].mode = 1;
-				y++;
-			}
-			if (count_occurence(commands->content[x], '>') > 0)
-			{
-				commands->outfile[z].name = commands->content[x + 1];
-				commands->outfile[z].mode = 2;
-				z++;
-			}
-			x++;
+			data.infile[y].name = splited[x + 1];
+			data.infile[y].mode = 1;
+			y++;
 		}
-		commands->infile[y].name = NULL;
-		commands->outfile[z].name = NULL;
-		commands = commands->next;
+		if (count_occurence(splited[x], '>') > 0)
+		{
+			data.outfile[z].name = splited[x + 1];
+			data.outfile[z].mode = 2;
+			z++;
+		}
+		x++;
 	}
+	data.infile[y].name = NULL;
+	data.outfile[z].name = NULL;
+	printf("%s\n", data.infile[0].name);
 }
 
 void	parser_lst(char *line)
@@ -127,42 +164,13 @@ void	parser_lst(char *line)
 	while (splited[x])
 		free(splited[x++]);
 	free(splited);
-	sub_parser(commands);
+	sub_parser(line);
 	// check if there is input file
 	handle_command(commands);
 	lstclear(&commands);
 }
 
-int	char_position(char *line, char c)
-{
-	int	position;
 
-	position = 0;
-	while (line[position])
-	{
-		if (line[position] == c)
-			return (position);
-		position++;
-	}
-	return (-1);
-
-}
-
-int	space_position(char *line, char c, int start)
-{
-	int	position;
-
-	position = start;
-	while (line[position])
-	{
-		if (line[position] == c)
-			return (position);
-		position++;
-		if (!line[position])
-			return (position);
-	}
-	return (-1);
-}
 
 char	*add_env(char *line)
 {
@@ -241,7 +249,7 @@ void	prompt(char *line)
 	}
 	if (data.exit == 1)
 	{
-		system("leaks minishell");
+		// system("leaks minishell");
 		exit (EXIT_SUCCESS);
 	}
 }
@@ -265,7 +273,7 @@ int	main(void)
 
 	line = NULL;
 	prompt(line);
-	system("leaks minishell");
+	// system("leaks minishell");
 	free_envp();
 	return (EXIT_SUCCESS);
 }

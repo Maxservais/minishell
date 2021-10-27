@@ -68,16 +68,17 @@ int	count_occurence(char *str, char c)
 	return (counter);
 }
 
-void	echo(t_lst *command)
+int	echo(t_lst *command)
 {
 	int	x;
 
-	if (command->index < data.nb_of_commands)
-		return ;
+	// if (command->index < data.nb_of_commands)
+	// 	return ;
 	if (!ft_strncmp(command->content[0], "echo", 4) && !command->content[1])
 	{
 		printf("\n");
 		command->job_done = 1;
+		return (0);
 	}
 	else if (!ft_strncmp(command->content[0], "echo", 4) && ft_strncmp(command->content[1], "-n", 2))
 	{
@@ -91,6 +92,7 @@ void	echo(t_lst *command)
 		}
 		printf("\n");
 		command->job_done = 1;
+		return (0);
 	}
 	else if (!ft_strncmp(command->content[0], "echo", 4) && !ft_strncmp(command->content[1], "-n", 2))
 	{
@@ -103,5 +105,7 @@ void	echo(t_lst *command)
 				printf("%s", command->content[x++]);
 		}
 		command->job_done = 1;
+		return (0);
 	}
+	return (1);
 }

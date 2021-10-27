@@ -20,25 +20,26 @@ int	ft_open(char *file_name, int mode)
 	return (fd);
 }
 
-int	open_files(t_lst *command)
+int	open_files(void)
 {
 	int	i;
 	
 	i = 0;
-	while (command->infile[i].name)
+	while (data.infile[i].name)
 	{
-		command->infile[i].fd = ft_open(command->infile[i].name, command->infile[i].mode);
-		if (command->infile[i].fd == -1)
+		data.infile[i].fd = ft_open(data.infile[i].name, data.infile[i].mode);
+		printf("fd == %d\n", data.infile[i].fd);
+		if (data.infile[i].fd == -1)
 			return (-1);
 		// if (param.fd1 == -1 || param.fd2 == -1)
 		// 	perror("Error");
 		i++;
 	}
 	i = 0;
-	while (command->outfile[i].name)
+	while (data.outfile[i].name)
 	{
-		command->outfile[i].fd = ft_open(command->outfile[i].name, command->outfile[i].mode);
-		if (command->outfile[i].fd == -1)
+		data.outfile[i].fd = ft_open(data.outfile[i].name, data.outfile[i].mode);
+		if (data.outfile[i].fd == -1)
 			return (-1);
 		// if (param.fd1 == -1 || param.fd2 == -1)
 		// 	perror("Error");

@@ -33,5 +33,5 @@ int	unset(t_lst *commands)
 	// 	}
 	// }
 	commands->job_done = 1;
-	return (EXIT_SUCCESS);
+	return (1); // a changer
 }

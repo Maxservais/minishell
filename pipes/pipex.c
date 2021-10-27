@@ -3,16 +3,18 @@
 int	first_command(int right_pipe[], t_lst *command)
 {
 	command->pid = fork();
+	if (data.infile[0].fd)
+		data.infile[0].fd = STDIN_FILENO;
 	if (command->pid < 0)
 		return (-1);
 	else if (command->pid == 0)
 	{
 		if (close(right_pipe[READ]) == -1
-			|| dup2(command->infile[0].fd, STDIN_FILENO) == -1)
-			return (-1);
-		if (close(command->infile[0].fd) == -1
+			|| dup2(data.infile[0].fd, STDIN_FILENO) == -1)
+				return (-1);
+		if (close(data.infile[0].fd) == -1
 			|| dup2(right_pipe[WRITE], STDOUT_FILENO) == -1)
-			return (-1);
+				return (-1);
 		if (exec_cmd(command) == -1)
 			return (-1);
 	}
@@ -22,7 +24,7 @@ int	first_command(int right_pipe[], t_lst *command)
 			return (-1);
 		if (close(right_pipe[WRITE]) == -1)
 			return (-1);
-		if (pipex(command, right_pipe) == -1)
+		if (pipex(command->next, right_pipe) == -1)
 			return (-1);
 	}
 	return (0);
@@ -31,14 +33,16 @@ int	first_command(int right_pipe[], t_lst *command)
 int	last_command(int left_pipe[], int right_pipe[], t_lst *command)
 {
 	command->pid = fork();
+	if (data.outfile[0].fd)
+		data.outfile[0].fd = STDOUT_FILENO;
 	if (command->pid < 0)
 		return (-1);
 	else if (command->pid == 0)
 	{
 		if (close(left_pipe[WRITE]) == -1
-			|| dup2(command->outfile[0].fd, STDOUT_FILENO) == -1)
+			|| dup2(data.outfile[0].fd, STDOUT_FILENO) == -1)
 			return (-1);
-		if (close(command->outfile[0].fd) == -1
+		if (close(data.outfile[0].fd) == -1
 			|| dup2(left_pipe[READ], STDIN_FILENO) == -1)
 			return (-1);
 		if (exec_cmd(command) == -1)
@@ -91,17 +95,15 @@ int	pipex(t_lst *command, int left_pipe[])
 	int		right_pipe[2];
 
 	if (pipe(right_pipe) == -1)
-		return (report_error());
+			return (report_error());
 	if (command->index == 1)
 	{
-		printf("HERE\n");
 		if (first_command(right_pipe, command) == -1)
 			return (report_error());
 	}
 	else if (command->index == data.nb_of_commands)
 	{
-		printf("hellooo\n");
-		if (last_command(left_pipe, right_pipe, command->next) == -1)
+		if (last_command(left_pipe, right_pipe, command) == -1)
 			return (report_error());
 	}
 	// else
