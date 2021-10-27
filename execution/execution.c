@@ -1,17 +1,17 @@
 #include "../minishell.h"
 
-char	**find_paths(char **envp)
+char	**find_paths(void)
 {
 	int		i;
 	char	*env;
 	char	**paths;
 
 	i = 0;
-	while (envp[i] != NULL)
+	while (data.envp[i] != NULL)
 	{
-		if (ft_strnstr(envp[i], "PATH=", ft_strlen("PATH=")) != NULL)
+		if (ft_strnstr(data.envp[i], "PATH=", ft_strlen("PATH=")) != NULL)
 		{
-			env = envp[i];
+			env = data.envp[i];
 			break ;
 		}
 		i++;
@@ -23,18 +23,18 @@ char	**find_paths(char **envp)
 	return (paths);
 }
 
-int	exec_cmd(char **cmd, char **envp)
+int	exec_cmd(char **cmd)
 {
 	int		i;
 	char	*part_path;
 	char	*path;
 	char	**paths;
 
-	paths = find_paths(envp);
+	paths = find_paths();
 	if (!paths)
 		return (-1);
 	i = 0;
-	while (paths[i] && access(paths[i], F_OK) != -1)
+	while (paths[i] && access(paths[i], F_OK) != -1) // Est-ce qu'on a droit à ACCESS
 	{
 		part_path = ft_strjoin(paths[i], "/");
 		path = ft_strjoin(part_path, cmd[0]);

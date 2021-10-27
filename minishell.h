@@ -74,8 +74,8 @@ void	error_cmd(char *bash, char *cmd_name, char *input);
 void	error_usage(char *cmd_name, char *str, char *usage);
 
 /* Execution */
-char	**find_paths(char **envp);
-int		exec_cmd(char **cmd, char **envp);
+char	**find_paths(void);
+int		exec_cmd(char **cmd);
 
 /* Redirections */
 int		ft_open(char *file_name, int mode);
