@@ -108,5 +108,6 @@ int	pipex(t_lst *command, int left_pipe[]);
 /* Signals */
 void	sighandler(int signum);
 void	ft_ctrl_d(void);
+void	sighandler_cmd(int signum);
 
 #endif

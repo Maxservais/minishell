@@ -228,8 +228,8 @@ void	prompt(char *line)
 	{
 		data.nb_of_commands = 0;
 		signal(SIGINT, sighandler);
-	//	signal(SIGQUIT, SIG_IGN);
-		line = readline("bash-3.2$ ");
+		// signal(SIGQUIT, SIG_IGN);
+		line = readline("Minishell> ");
 		if (!line)
 		{
 			ft_ctrl_d();

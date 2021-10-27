@@ -57,6 +57,8 @@ int	exec_cmd(t_lst *command)
 	char	**paths;
 
 	pid = fork();
+	signal(SIGINT, sighandler_cmd);
+	signal(SIGQUIT, sighandler_cmd);
 	if (pid < 0)
 		return (-1);
 	else if (pid == 0)
