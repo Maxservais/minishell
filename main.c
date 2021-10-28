@@ -46,28 +46,50 @@ void	handle_command(t_lst *commands)
 	open_files();
 	if (data.nb_of_commands == 1)
 	{
-		while (commands)
+		// if builtin
+		execute_builtin(commands);
+		// if not builtin, FORK
+		if (data.command_code != 0)
 		{
-			// IF INPUT FILE(S)
-			// REDIRECT FROM LATEST INPUT FILE
-			execute_builtin(commands);
-			if (data.command_code != 0)
-				exec_cmd(commands);
-			// execute pipe
-			// execute redirection to last OUTPUT FILE
-			// IF NO REDIRECTION, SEND OUTPUT TO STDOUT_FILENO
-			if (!commands->job_done)
+			commands->pid = fork();
+			if (commands->pid < 0)
+				return ; // RETURN ERROR
+			else if (commands->pid == 0)
 			{
-				printf("bash: %s: command not found\n", commands->content[0]);
-				data.command_code = 127;
+				// if input files, redirect
+				if (data.infile[0].fd)
+					if (dup2(data.infile[0].fd, STDIN_FILENO) == -1)
+							return ;
+
+			// if output files, redirect
+				if (data.outfile[0].fd)
+					if (dup2(data.outfile[0].fd, STDOUT_FILENO) == -1)
+							return ;
+			
+			// Execute command
+				if (exec_cmd(commands) == -1)
+					return ;
 			}
-			commands = commands->next;
+			else
+			{
+				printf("ye");
+				if (waitpid(0, &commands->status, 0) == -1)
+					return ;
+			}
 		}
+		// if (!commands->job_done)
+		// {
+		// 	printf("bash: %s: command not found\n", commands->content[0]);
+		// 	data.command_code = 127;
+		// }
 	}
-	else
-	{
-		pipex(commands, STDIN_FILENO); // report error if -1
-	}
+	// else
+	// {
+	// 	// execute pipe
+	// 	// execute redirection to last OUTPUT FILE
+	// 	// IF NO REDIRECTION, SEND OUTPUT TO STDOUT_FILENO
+	// 	// pipex(commands, STDIN_FILENO); // report error if -1
+	// }
 }
 
 int	space_position(char *line, char c, int start)
@@ -132,7 +154,6 @@ void	sub_parser(char *line)
 	}
 	data.infile[y].name = NULL;
 	data.outfile[z].name = NULL;
-	printf("%s\n", data.infile[0].name);
 }
 
 void	parser_lst(char *line)
@@ -215,36 +236,31 @@ char	*add_env(char *line)
 	return (line);
 }
 
-char	*prompt1(char *line)
+void	prompt(char *line)
 {
 	char	first_quote;
 
-	first_quote = find_first_quote(line);
-	while (count_occurence(line, first_quote) % 2 == 1)
-		line = dquote(line);
-	line = remove_useless_quotes(line, first_quote);
-	line = add_env(line);
-	parser_lst(line);
-	return (line);
-}
-
-void	prompt(char *line)
-{
-	copy_env(); // check if succesful execution or not
 	data.exit = -1;
 	while (data.exit == -1)
 	{
 		data.nb_of_commands = 0;
 		signal(SIGINT, sighandler);
-	//	signal(SIGQUIT, SIG_IGN);
+		// signal(SIGQUIT, SIG_IGN);
 		line = readline("bash-3.2$ ");
 		if (!line)
 		{
 			ft_ctrl_d();
 			break;
 		}
-		else if (ft_strlen(line))
-			line = prompt1(line);
+		if (ft_strlen(line))
+		{
+			first_quote = find_first_quote(line);
+			while (count_occurence(line, first_quote) % 2 == 1)
+				line = dquote(line);
+			line = remove_useless_quotes(line, first_quote);
+			line = add_env(line);
+			parser_lst(line);
+		}
 		free(line);
 	}
 	if (data.exit == 1)
@@ -271,6 +287,7 @@ int	main(void)
  {
 	char	*line;
 
+	copy_env(); // check if succesful execution or not
 	line = NULL;
 	prompt(line);
 	// system("leaks minishell");
