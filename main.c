@@ -228,7 +228,7 @@ void	prompt(char *line)
 	{
 		data.nb_of_commands = 0;
 		signal(SIGINT, sighandler);
-		// signal(SIGQUIT, SIG_IGN);
+		signal(SIGQUIT, SIG_IGN);
 		line = readline("Minishell> ");
 		if (!line)
 		{

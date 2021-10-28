@@ -6,7 +6,7 @@
 /*   By: tuytters <tuytters@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/26 09:42:49 by tuytters          #+#    #+#             */
-/*   Updated: 2021/10/27 15:44:55 by tuytters         ###   ########.fr       */
+/*   Updated: 2021/10/28 08:11:42 by tuytters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ void	ft_ctrl_d(void)
 
 void	sighandler_cmd(int signum)
 {
-	// printf("signum = %d\n", signum);
 	if (signum == SIGINT)
 	{
 		write(1, "\n", 1);
