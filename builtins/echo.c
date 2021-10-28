@@ -98,6 +98,7 @@ int	echo(t_lst *command)
 			}
 			write(1, " ", 1);
 		}
+		write(1, "\n", 1);
 
 		command->job_done = 1;
 		return (0);

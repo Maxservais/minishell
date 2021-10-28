@@ -61,34 +61,33 @@ int	last_command(int left_pipe[], int right_pipe[], t_lst *command)
 	return (0);
 }
 
-// int	inter_command(char **envp, int l_pipe[], int r_pipe[], t_command *p)
-// {
-// 	p->pid = fork();
-// 	if (p->pid < 0)
-// 		return (-1);
-// 	else if (p->pid == 0)
-// 	{
-// 		if (close(r_pipe[READ]) == -1 || dup2(l_pipe[READ], STDIN_FILENO) == -1)
-// 			return (-1);
-// 		if (dup2(r_pipe[WRITE], STDOUT_FILENO) == -1)
-// 			return (-1);
-// 		if (exec_cmd(p->cmds[p->pos], envp) == -1)
-// 			return (-1);
-// 	}
-// 	else
-// 	{
-// 		if (waitpid(-1, &p->status, 0) == -1)
-// 			return (-1);
-// 		if (close(r_pipe[WRITE]) == -1)
-// 			return (-1);
-// 		if (close(l_pipe[READ]) == -1)
-// 			return (-1);
-// 		p->pos++;
-// 		if (pipex(envp, p, r_pipe) == -1)
-// 			return (-1);
-// 	}
-// 	return (0);
-// }
+int	inter_command(int l_pipe[], int r_pipe[], t_lst *command)
+{
+	command->pid = fork();
+	if (command->pid < 0)
+		return (-1);
+	else if (command->pid == 0)
+	{
+		if (close(r_pipe[READ]) == -1 || dup2(l_pipe[READ], STDIN_FILENO) == -1)
+			return (-1);
+		if (dup2(r_pipe[WRITE], STDOUT_FILENO) == -1)
+			return (-1);
+		if (exec_cmd(command) == -1)
+			return (-1);
+	}
+	else
+	{
+		if (waitpid(-1, &command->status, 0) == -1)
+			return (-1);
+		if (close(r_pipe[WRITE]) == -1)
+			return (-1);
+		if (close(l_pipe[READ]) == -1)
+			return (-1);
+		if (pipex(command->next, r_pipe) == -1)
+			return (-1);
+	}
+	return (0);
+}
 
 int	pipex(t_lst *command, int left_pipe[])
 {
@@ -106,10 +105,10 @@ int	pipex(t_lst *command, int left_pipe[])
 		if (last_command(left_pipe, right_pipe, command) == -1)
 			return (report_error());
 	}
-	// else
-	// {
-	// 	if (inter_command(left_pipe, right_pipe, command) == -1)
-	// 		return (report_error());
-	// }
+	else
+	{
+		if (inter_command(left_pipe, right_pipe, command) == -1)
+			return (report_error());
+	}
 	return (0);
 }

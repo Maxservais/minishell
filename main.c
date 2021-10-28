@@ -58,13 +58,19 @@ void	handle_command(t_lst *commands)
 			{
 				// if input files, redirect
 				if (data.infile[0].fd)
+				{
 					if (dup2(data.infile[0].fd, STDIN_FILENO) == -1)
 							return ;
+					close(data.infile[0].fd);
+				}
 
 			// if output files, redirect
 				if (data.outfile[0].fd)
+				{
 					if (dup2(data.outfile[0].fd, STDOUT_FILENO) == -1)
 							return ;
+					close(data.outfile[0].fd);
+				}
 			
 			// Execute command
 				if (exec_cmd(commands) == -1)
@@ -72,28 +78,25 @@ void	handle_command(t_lst *commands)
 			}
 			else
 			{
-				printf("ye");
 				if (waitpid(0, &commands->status, 0) == -1)
 					return ;
-				write(2, "bash: ", 6);
-				write(2, commands->content[0], ft_strlen(commands->content[0]));
-				write(2, ": command not found", 19);
-				data.command_code = 127;
 			}
 		}
 		// if (!commands->job_done)
 		// {
-		// 	printf("bash: %s: command not found\n", commands->content[0]);
+		// 	write(2, "bash: ", 6);
+		// 	write(2, commands->content[0], ft_strlen(commands->content[0]));
+		// 	write(2, ": command not found", 19);
 		// 	data.command_code = 127;
 		// }
 	}
-	// else
-	// {
-	// 	// execute pipe
-	// 	// execute redirection to last OUTPUT FILE
-	// 	// IF NO REDIRECTION, SEND OUTPUT TO STDOUT_FILENO
-	// 	// pipex(commands, STDIN_FILENO); // report error if -1
-	// }
+	else
+	{
+		// execute pipe
+		// execute redirection to last OUTPUT FILE
+		// IF NO REDIRECTION, SEND OUTPUT TO STDOUT_FILENO
+		pipex(commands, STDIN_FILENO); // report error if -1
+	}
 }
 
 int	space_position(char *line, char c, int start)
@@ -250,7 +253,7 @@ void	prompt(char *line)
 		data.nb_of_commands = 0;
 		signal(SIGINT, sighandler);
 		// signal(SIGQUIT, SIG_IGN);
-		line = readline("bash-3.2$ ");
+		line = readline("tamere-3.2$ ");
 		if (!line)
 		{
 			ft_ctrl_d();
