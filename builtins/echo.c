@@ -76,7 +76,7 @@ int	echo(t_lst *command)
 	// 	return ;
 	if (!ft_strncmp(command->content[0], "echo", 4) && !command->content[1])
 	{
-		printf("\n");
+		write(1, "\n", 1);
 		command->job_done = 1;
 		return (0);
 	}
@@ -86,11 +86,19 @@ int	echo(t_lst *command)
 		while (command->content[x])
 		{
 			if (command->content[x + 1])
-				printf("%s ", command->content[x++]);
+			{
+				write(1, command->content[x], ft_strlen(command->content[x]));
+				write(1, " ", 1);
+				x++;
+			}
 			else
-				printf("%s", command->content[x++]);
+			{
+				write(1, command->content[x], ft_strlen(command->content[x]));
+				x++;
+			}
+			write(1, " ", 1);
 		}
-		printf("\n");
+
 		command->job_done = 1;
 		return (0);
 	}
@@ -100,9 +108,16 @@ int	echo(t_lst *command)
 		while (command->content[x])
 		{
 			if (command->content[x + 1])
-				printf("%s ", command->content[x++]);
+			{
+				write(1, command->content[x], ft_strlen(command->content[x]));
+				write(1, " ", 1);
+				x++;
+			}
 			else
-				printf("%s", command->content[x++]);
+			{
+				write(1, command->content[x], ft_strlen(command->content[x]));
+				x++;
+			}
 		}
 		command->job_done = 1;
 		return (0);

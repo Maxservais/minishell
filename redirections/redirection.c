@@ -28,7 +28,6 @@ int	open_files(void)
 	while (data.infile[i].name)
 	{
 		data.infile[i].fd = ft_open(data.infile[i].name, data.infile[i].mode);
-		printf("fd == %d\n", data.infile[i].fd);
 		if (data.infile[i].fd == -1)
 			return (-1);
 		// if (param.fd1 == -1 || param.fd2 == -1)

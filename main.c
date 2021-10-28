@@ -58,7 +58,9 @@ void	handle_command(t_lst *commands)
 			// IF NO REDIRECTION, SEND OUTPUT TO STDOUT_FILENO
 			if (!commands->job_done)
 			{
-				printf("bash: %s: command not found\n", commands->content[0]);
+				write(2, "bash: ", 6);
+				write(2, commands->content[0], ft_strlen(commands->content[0]));
+				write(2, ": command not found", 19);
 				data.command_code = 127;
 			}
 			commands = commands->next;
@@ -132,7 +134,6 @@ void	sub_parser(char *line)
 	}
 	data.infile[y].name = NULL;
 	data.outfile[z].name = NULL;
-	printf("%s\n", data.infile[0].name);
 }
 
 void	parser_lst(char *line)
