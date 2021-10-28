@@ -75,6 +75,10 @@ void	handle_command(t_lst *commands)
 				printf("ye");
 				if (waitpid(0, &commands->status, 0) == -1)
 					return ;
+				write(2, "bash: ", 6);
+				write(2, commands->content[0], ft_strlen(commands->content[0]));
+				write(2, ": command not found", 19);
+				data.command_code = 127;
 			}
 		}
 		// if (!commands->job_done)

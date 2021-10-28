@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   signal.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mservais <mservais@student.s19.be >        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/26 09:42:49 by tuytters          #+#    #+#             */
-/*   Updated: 2021/10/28 14:04:13 by mservais         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../minishell.h"
 
 void	sighandler(int signum)
@@ -25,6 +13,6 @@ void	sighandler(int signum)
 
 void	ft_ctrl_d(void)
 {
-	printf("exittamere\n");
+	write(1, "exit\n", 5);
 	data.exit = 1;
 }
