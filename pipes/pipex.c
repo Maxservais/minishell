@@ -1,3 +1,5 @@
+/* Il faut check avant d'executer une commande si on est face à un built-in ou non */
+
 #include "../minishell.h"
 
 int	first_command(int right_pipe[], t_lst *command)
