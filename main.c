@@ -60,6 +60,7 @@ void	handle_command(t_lst *commands)
 			data.command_code = 127;
 		}
 		commands = commands->next;
+		tcsetattr(STDIN_FILENO, TCSAFLUSH, &data.termios_p);
 	}
 }
 
@@ -233,6 +234,7 @@ void	prompt(char *line)
 		if (!line)
 		{
 			ft_ctrl_d();
+			//printf("line = %s\n", line);
 			break;
 		}
 		else if (ft_strlen(line))
@@ -264,8 +266,12 @@ int	main(void)
 	char	*line;
 
 	line = NULL;
+	tcgetattr(STDIN_FILENO, &data.termios_p);
 	prompt(line);
 	system("leaks minishell");
 	free_envp();
-	return (EXIT_SUCCESS);
+	if (data.command_code != 0)
+		return (data.command_code);
+	else
+		return (EXIT_SUCCESS);
 }

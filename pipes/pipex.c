@@ -90,7 +90,6 @@ int	pipex(t_lst *command, int left_pipe[])
 {
 	int		right_pipe[2];
 
-	// signal(SIGINT, sighandler_pipe);
 	if (pipe(right_pipe) == -1)
 		return (report_error());
 	if (command->index == 1)

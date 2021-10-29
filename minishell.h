@@ -55,6 +55,7 @@ typedef struct s_data
 	int		nb_of_commands;
 	int		command_code;
 	char	**envp;
+	struct termios	termios_p;
 }				t_data;
 
 /* Global variable */

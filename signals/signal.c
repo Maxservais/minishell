@@ -6,7 +6,7 @@
 /*   By: tuytters <tuytters@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/26 09:42:49 by tuytters          #+#    #+#             */
-/*   Updated: 2021/10/28 08:11:42 by tuytters         ###   ########.fr       */
+/*   Updated: 2021/10/28 15:46:36 by tuytters         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	sighandler(int signum)
 		write(1, "\n", 1);
 		rl_on_new_line();
 		rl_redisplay();
-		//code exit 130
+		data.command_code = 130;
 	}
 }
 
