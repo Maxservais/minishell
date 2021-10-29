@@ -1,23 +1,22 @@
 #include "minishell.h"
 
-int		execute_builtin(t_lst *commands)
+void		execute_builtin(t_lst *commands)
 {
 	if (!ft_strncmp(commands->content[0], "cd", 2))
-		cd(commands);
+		data.command_code = cd(commands);
 	else if (!ft_strncmp(commands->content[0], "echo", 4))
-		echo(commands);
+		data.command_code = echo(commands);
 	else if (!ft_strncmp(commands->content[0], "env", 3))
-		env(commands);
+		data.command_code = env(commands);
 	else if (!ft_strncmp(commands->content[0], "exit", 5))
-		ft_exit(commands);
+		data.command_code = ft_exit(commands);
 	else if (!ft_strncmp(commands->content[0], "export", 6))
-		export(commands);
+		data.command_code = export(commands);
 	else if (!ft_strncmp(commands->content[0], "pwd", 3))
-		pwd(commands);
+		data.command_code = pwd(commands);
 	else if (!ft_strncmp(commands->content[0], "unset", 5))
-		unset(commands);
+		data.command_code = unset(commands);
 	// Return Success if at least one builtin command got executed
-	return (0);
 }
 
 int		copy_env(void)
@@ -43,17 +42,60 @@ int		copy_env(void)
 
 void	handle_command(t_lst *commands)
 {
-	while (commands)
+	data.command_code = 1;
+	open_files();
+	if (data.nb_of_commands == 1)
 	{
-		// open_files(commands);
-		// IF INPUT FILE(S)
-		// REDIRECT FROM LATEST INPUT FILE
+		// if builtin
 		execute_builtin(commands);
-		exec_cmd(commands);
-		// pipex(commands, STDIN_FILENO); // report error if -1
+		// if not builtin, FORK
+		if (data.command_code != 0)
+		{
+			commands->pid = fork();
+			if (commands->pid < 0)
+				return ; // RETURN ERROR
+			else if (commands->pid == 0)
+			{
+				// if input files, redirect
+				if (data.infile[0].fd)
+				{
+					if (dup2(data.infile[0].fd, STDIN_FILENO) == -1)
+							return ;
+					close(data.infile[0].fd);
+				}
+
+			// if output files, redirect
+				if (data.outfile[0].fd)
+				{
+					if (dup2(data.outfile[0].fd, STDOUT_FILENO) == -1)
+							return ;
+					close(data.outfile[0].fd);
+				}
+			
+			// Execute command
+				if (exec_cmd(commands) == -1)
+					return ;
+			}
+			else
+			{
+				if (waitpid(0, &commands->status, 0) == -1)
+					return ;
+			}
+		}
+		// if (!commands->job_done)
+		// {
+		// 	write(2, "bash: ", 6);
+		// 	write(2, commands->content[0], ft_strlen(commands->content[0]));
+		// 	write(2, ": command not found", 19);
+		// 	data.command_code = 127;
+		// }
+	}
+	else
+	{
 		// execute pipe
 		// execute redirection to last OUTPUT FILE
 		// IF NO REDIRECTION, SEND OUTPUT TO STDOUT_FILENO
+<<<<<<< HEAD
 		if (!commands->job_done)
 		{
 			printf("bash: %s: command not found\n", commands->content[0]);
@@ -61,42 +103,74 @@ void	handle_command(t_lst *commands)
 		}
 		commands = commands->next;
 		tcsetattr(STDIN_FILENO, TCSAFLUSH, &data.termios_p);
+=======
+		pipex(commands, STDIN_FILENO); // report error if -1
 	}
 }
 
-void	sub_parser(t_lst *commands)
+int	space_position(char *line, char c, int start)
+{
+	int	position;
+
+	position = start;
+	while (line[position])
+	{
+		if (line[position] == c)
+			return (position);
+		position++;
+		if (!line[position])
+			return (position);
+>>>>>>> mservais
+	}
+	return (-1);
+}
+
+int	char_position(char *line, char c)
+{
+	int	position;
+
+	position = 0;
+	while (line[position])
+	{
+		if (line[position] == c)
+			return (position);
+		position++;
+	}
+	return (-1);
+
+}
+
+void	sub_parser(char *line)
 {
 	int	x;
 	int	y;
 	int	z;
+	char	**splited;
 
-	while (commands)
+	x = 0;
+	y = 0;
+	z = 0;
+	splited = ft_split(line, ' ');
+	data.infile = malloc(sizeof(t_file) * count_occurence(line, '<') + 1);
+	data.outfile = malloc(sizeof(t_file) * count_occurence(line, '>') + 1);
+	while (splited[x])
 	{
-		x = 0;
-		y = 0;
-		z = 0;
-		commands->infile = malloc(sizeof(t_file) * count_occurence(commands->content[x], '<') + 1);
-		commands->outfile = malloc(sizeof(t_file) * count_occurence(commands->content[x], '>') + 1);
-		while (commands->content[x])
+		if (count_occurence(splited[x], '<') > 0)
 		{
-			if (count_occurence(commands->content[x], '<') > 0)
-			{
-				commands->infile[y].name = commands->content[x + 1];
-				commands->infile[y].mode = 1;
-				y++;
-			}
-			if (count_occurence(commands->content[x], '>') > 0)
-			{
-				commands->outfile[z].name = commands->content[x + 1];
-				commands->outfile[z].mode = 2;
-				z++;
-			}
-			x++;
+			data.infile[y].name = splited[x + 1];
+			data.infile[y].mode = 1;
+			y++;
 		}
-		commands->infile[y].name = NULL;
-		commands->outfile[z].name = NULL;
-		commands = commands->next;
+		if (count_occurence(splited[x], '>') > 0)
+		{
+			data.outfile[z].name = splited[x + 1];
+			data.outfile[z].mode = 2;
+			z++;
+		}
+		x++;
 	}
+	data.infile[y].name = NULL;
+	data.outfile[z].name = NULL;
 }
 
 void	parser_lst(char *line)
@@ -128,42 +202,13 @@ void	parser_lst(char *line)
 	while (splited[x])
 		free(splited[x++]);
 	free(splited);
-	sub_parser(commands);
+	sub_parser(line);
 	// check if there is input file
 	handle_command(commands);
 	lstclear(&commands);
 }
 
-int	char_position(char *line, char c)
-{
-	int	position;
 
-	position = 0;
-	while (line[position])
-	{
-		if (line[position] == c)
-			return (position);
-		position++;
-	}
-	return (-1);
-
-}
-
-int	space_position(char *line, char c, int start)
-{
-	int	position;
-
-	position = start;
-	while (line[position])
-	{
-		if (line[position] == c)
-			return (position);
-		position++;
-		if (!line[position])
-			return (position);
-	}
-	return (-1);
-}
 
 char	*add_env(char *line)
 {
@@ -208,42 +253,42 @@ char	*add_env(char *line)
 	return (line);
 }
 
-char	*prompt1(char *line)
+void	prompt(char *line)
 {
 	char	first_quote;
 
-	first_quote = find_first_quote(line);
-	while (count_occurence(line, first_quote) % 2 == 1)
-		line = dquote(line);
-	line = remove_useless_quotes(line, first_quote);
-	line = add_env(line);
-	parser_lst(line);
-	return (line);
-}
-
-void	prompt(char *line)
-{
-	copy_env(); // check if succesful execution or not
 	data.exit = -1;
 	while (data.exit == -1)
 	{
 		data.nb_of_commands = 0;
 		signal(SIGINT, sighandler);
+<<<<<<< HEAD
 		signal(SIGQUIT, SIG_IGN);
 		line = readline("Minishell> ");
+=======
+		// signal(SIGQUIT, SIG_IGN);
+		line = readline("tamere-3.2$ ");
+>>>>>>> mservais
 		if (!line)
 		{
 			ft_ctrl_d();
 			//printf("line = %s\n", line);
 			break;
 		}
-		else if (ft_strlen(line))
-			line = prompt1(line);
+		if (ft_strlen(line))
+		{
+			first_quote = find_first_quote(line);
+			while (count_occurence(line, first_quote) % 2 == 1)
+				line = dquote(line);
+			line = remove_useless_quotes(line, first_quote);
+			line = add_env(line);
+			parser_lst(line);
+		}
 		free(line);
 	}
 	if (data.exit == 1)
 	{
-		system("leaks minishell");
+		// system("leaks minishell");
 		exit (EXIT_SUCCESS);
 	}
 }
@@ -265,10 +310,11 @@ int	main(void)
  {
 	char	*line;
 
+	copy_env(); // check if succesful execution or not
 	line = NULL;
 	tcgetattr(STDIN_FILENO, &data.termios_p);
 	prompt(line);
-	system("leaks minishell");
+	// system("leaks minishell");
 	free_envp();
 	if (data.command_code != 0)
 		return (data.command_code);

@@ -8,13 +8,13 @@ int	ft_err_return(char *error)
 
 int	ft_perror(void)
 {
-	perror("test2");
+	perror("error");
 	return (1);
 }
 
 int	report_error(void)
 {
-	perror("test1");
+	perror("error");
 	return (-1);
 }
 

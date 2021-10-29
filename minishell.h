@@ -43,18 +43,18 @@ typedef struct s_lst
 	int				index;
 	int				to_display;
 	int				job_done;
-	struct s_file	*infile;
-	struct s_file	*outfile;
 	struct s_lst	*next;
 }				t_lst;
 
 typedef struct s_data
 {
-	int		exit;
-	int		new_line;
-	int		nb_of_commands;
-	int		command_code;
-	char	**envp;
+	int				exit;
+	int				new_line;
+	int				nb_of_commands;
+	int				command_code;
+	char			**envp;
+	struct s_file	*infile;
+	struct s_file	*outfile;
 	struct termios	termios_p;
 }				t_data;
 
@@ -83,8 +83,8 @@ int		cd(t_lst *commands);
 int		env(t_lst *commands);
 int		export(t_lst *command);
 int		unset(t_lst *commands);
-void	ft_exit(t_lst *command);
-void	echo(t_lst *commands);
+int		ft_exit(t_lst *command);
+int		echo(t_lst *commands);
 void	error_cmd(char *bash, char *cmd_name, char *input);
 void	error_usage(char *cmd_name, char *str, char *usage);
 
@@ -94,7 +94,7 @@ int		exec_cmd(t_lst *command);
 
 /* Redirections */
 int		ft_open(char *file_name, int mode);
-int		open_files(t_lst *command);
+int		open_files(void);
 
 /* Pipes */
 int		ft_err_return(char *error);
@@ -102,9 +102,9 @@ int		ft_perror(void);
 int		report_error(void);
 int		ft_free(char ***argv);
 
-int	first_command(int right_pipe[], t_lst *command);
-int	last_command(int left_pipe[], int right_pipe[], t_lst *command);
-int	pipex(t_lst *command, int left_pipe[]);
+int		first_command(int right_pipe[], t_lst *command);
+int		last_command(int left_pipe[], int right_pipe[], t_lst *command);
+int		pipex(t_lst *command, int left_pipe[]);
 
 /* Signals */
 void	sighandler(int signum);

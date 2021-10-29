@@ -23,66 +23,66 @@ char	**find_paths(void)
 	return (paths);
 }
 
-// int	exec_cmd(t_lst *command)
-// {
-// 	int		i;
-// 	char	*part_path;
-// 	char	*path;
-// 	char	**paths;
-
-// 	paths = find_paths();
-// 	if (!paths)
-// 		return (-1);
-// 	i = 0;
-// 	while (paths[i] && access(paths[i], F_OK) != -1) // Est-ce qu'on a droit à ACCESS
-// 	{
-// 		part_path = ft_strjoin(paths[i], "/");
-// 		path = ft_strjoin(part_path, command->content[0]);
-// 		free(part_path);
-// 		free(paths[i]);
-// 		i++;
-// 		execve(path, command->content, paths);
-// 	}
-// 	command->job_done = 1;
-// 	return (-1);
-// }
-
 int	exec_cmd(t_lst *command)
 {
-	pid_t	pid;
-	int		status;
 	int		i;
 	char	*part_path;
 	char	*path;
 	char	**paths;
 
-	pid = fork();
+	paths = find_paths();
 	signal(SIGINT, sighandler_cmd);
 	signal(SIGQUIT, sighandler_cmd);
-	if (pid < 0)
+	if (!paths)
 		return (-1);
-	else if (pid == 0)
+	i = 0;
+	while (paths[i])
 	{
-		paths = find_paths();
-		if (!paths)
-			return (-1);
-		i = 0;
-		while (paths[i] && access(paths[i], F_OK) != -1) // Est-ce qu'on a droit à ACCESS
-		{
-			part_path = ft_strjoin(paths[i], "/");
-			path = ft_strjoin(part_path, command->content[0]);
-			free(part_path);
-			free(paths[i]);
-			i++;
-			execve(path, command->content, paths);
-		}
-		return (-1);
-	}
-	else
-	{
-		if (waitpid(-1, &status, 0) == -1)
-			return (-1);
+		part_path = ft_strjoin(paths[i], "/");
+		path = ft_strjoin(part_path, command->content[0]);
+		free(part_path);
+		free(paths[i]);
+		i++;
+		execve(path, command->content, paths);
 	}
 	command->job_done = 1;
-	return (0);
+	return (-1);
 }
+
+// int	exec_cmd(t_lst *command)
+// {
+// 	pid_t	pid;
+// 	int		status;
+// 	int		i;
+// 	char	*part_path;
+// 	char	*path;
+// 	char	**paths;
+
+// 	pid = fork();
+// 	if (pid < 0)
+// 		return (-1);
+// 	else if (pid == 0)
+// 	{
+// 		paths = find_paths();
+// 		if (!paths)
+// 			return (-1);
+// 		i = 0;
+// 		while (paths[i]) 
+// 		{
+// 			part_path = ft_strjoin(paths[i], "/");
+// 			path = ft_strjoin(part_path, command->content[0]);
+// 			free(part_path);
+// 			free(paths[i]);
+// 			i++;
+// 			execve(path, command->content, paths);
+// 		}
+// 		return (-1);
+// 	}
+// 	else
+// 	{
+// 		if (waitpid(-1, &status, 0) == -1)
+// 			return (-1);
+// 	}
+// 	command->job_done = 1;
+// 	return (0);
+// }
