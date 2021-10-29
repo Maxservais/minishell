@@ -44,6 +44,8 @@ void	handle_command(t_lst *commands)
 {
 	data.command_code = 1;
 	open_files();
+	signal(SIGINT, sighandler_cmd);
+	signal(SIGQUIT, sighandler_cmd);
 	if (data.nb_of_commands == 1)
 	{
 		// if builtin
@@ -96,8 +98,9 @@ void	handle_command(t_lst *commands)
 		// execute redirection to last OUTPUT FILE
 		// IF NO REDIRECTION, SEND OUTPUT TO STDOUT_FILENO
 		pipex(commands, STDIN_FILENO); // report error if -1
-		tcsetattr(STDIN_FILENO, TCSAFLUSH, &data.termios_p);
+	
 	}
+	tcsetattr(STDIN_FILENO, TCSAFLUSH, &data.termios_p);
 }
 
 int	space_position(char *line, char c, int start)
@@ -174,6 +177,7 @@ void	parser_lst(char *line)
 	data.nb_of_commands = 0;
 	splited = ft_split(line, '|');
 	x = 0;
+	add_history(line);
 	while (splited[x])
 	{
 		data.nb_of_commands++;
@@ -261,7 +265,7 @@ void	prompt(char *line)
 			//printf("line = %s\n", line);
 			break;
 		}
-		if (ft_strlen(line))
+		else if (ft_strlen(line))
 		{
 			first_quote = find_first_quote(line);
 			while (count_occurence(line, first_quote) % 2 == 1)

@@ -31,8 +31,6 @@ int	exec_cmd(t_lst *command)
 	char	**paths;
 
 	paths = find_paths();
-	signal(SIGINT, sighandler_cmd);
-	signal(SIGQUIT, sighandler_cmd);
 	if (!paths)
 		return (-1);
 	i = 0;
