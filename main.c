@@ -95,16 +95,8 @@ void	handle_command(t_lst *commands)
 		// execute pipe
 		// execute redirection to last OUTPUT FILE
 		// IF NO REDIRECTION, SEND OUTPUT TO STDOUT_FILENO
-<<<<<<< HEAD
-		if (!commands->job_done)
-		{
-			printf("bash: %s: command not found\n", commands->content[0]);
-			data.command_code = 127;
-		}
-		commands = commands->next;
-		tcsetattr(STDIN_FILENO, TCSAFLUSH, &data.termios_p);
-=======
 		pipex(commands, STDIN_FILENO); // report error if -1
+		tcsetattr(STDIN_FILENO, TCSAFLUSH, &data.termios_p);
 	}
 }
 
@@ -120,7 +112,6 @@ int	space_position(char *line, char c, int start)
 		position++;
 		if (!line[position])
 			return (position);
->>>>>>> mservais
 	}
 	return (-1);
 }
@@ -262,13 +253,8 @@ void	prompt(char *line)
 	{
 		data.nb_of_commands = 0;
 		signal(SIGINT, sighandler);
-<<<<<<< HEAD
 		signal(SIGQUIT, SIG_IGN);
 		line = readline("Minishell> ");
-=======
-		// signal(SIGQUIT, SIG_IGN);
-		line = readline("tamere-3.2$ ");
->>>>>>> mservais
 		if (!line)
 		{
 			ft_ctrl_d();
