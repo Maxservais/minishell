@@ -12,13 +12,15 @@ SRC_FILES 		=	main.c 				\
 					./execution/exec.c	\
 					./pipes/pipex.c		\
 					./pipes/error.c		\
-					./redirections/redirection.c
+					./redirections/redirection.c \
+					./utils/ft_split_pipe.c		\
+					test.c
 
 OBJ_FILES		=	$(SRC_FILES:.c=.o)
 
 NAME			=	minishell
 
-CC				=	gcc
+CC				=	gcc 
 
 CFLAGS			=	-Wall -Wextra -Werror -I /Users/$(USER)/.brew/opt/readline/include
 

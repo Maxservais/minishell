@@ -36,6 +36,7 @@ typedef struct s_param
 typedef struct s_lst
 {
 	struct s_lst	*prev;
+	struct s_lst	*next;
 	int				type;
 	pid_t			pid; //MAYBE
 	int				status;
@@ -43,7 +44,8 @@ typedef struct s_lst
 	int				index;
 	int				to_display;
 	int				job_done;
-	struct s_lst	*next;
+	struct s_file	*infile;
+	struct s_file	*outfile;
 }				t_lst;
 
 typedef struct s_data
@@ -56,6 +58,13 @@ typedef struct s_data
 	struct s_file	*infile;
 	struct s_file	*outfile;
 }				t_data;
+
+typedef struct s_token
+{
+	int		index;
+	char	token;
+	int		to_ignore;
+}				t_token;
 
 /* Global variable */
 t_data data;
@@ -75,6 +84,8 @@ t_lst	*lstlast(t_lst *lst);
 char	*dquote(char *line);
 char	find_first_quote(char *line);
 char	*remove_useless_quotes(char *line, char first_quote);
+char	**ft_split_pipe(char const *line, t_token *tokens);
+char	**ft_test(char *s, t_token *tokens);
 
 /* Built-ins */
 int		pwd(t_lst *commands);
@@ -93,7 +104,7 @@ int		exec_cmd(t_lst *command);
 
 /* Redirections */
 int		ft_open(char *file_name, int mode);
-int		open_files(void);
+int		open_files(t_lst *commands);
 
 /* Pipes */
 int		ft_err_return(char *error);

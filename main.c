@@ -43,60 +43,64 @@ int		copy_env(void)
 void	handle_command(t_lst *commands)
 {
 	data.command_code = 1;
-	open_files();
-	if (data.nb_of_commands == 1)
-	{
-		// if builtin
-		execute_builtin(commands);
-		// if not builtin, FORK
-		if (data.command_code != 0)
-		{
-			commands->pid = fork();
-			if (commands->pid < 0)
-				return ; // RETURN ERROR
-			else if (commands->pid == 0)
-			{
-				// if input files, redirect
-				if (data.infile[0].fd)
-				{
-					if (dup2(data.infile[0].fd, STDIN_FILENO) == -1)
-							return ;
-					close(data.infile[0].fd);
-				}
+	open_files(commands);
+	execute_builtin(commands);
 
-			// if output files, redirect
-				if (data.outfile[0].fd)
-				{
-					if (dup2(data.outfile[0].fd, STDOUT_FILENO) == -1)
-							return ;
-					close(data.outfile[0].fd);
-				}
+	
+	// if (data.nb_of_commands == 1)
+	// {
+	// 	// if builtin
+	// 	execute_builtin(commands);
+	// 	// if not builtin, FORK
+	// 	if (data.command_code != 0)
+	// 	{
+	// 		commands->pid = fork();
+	// 		printf("here\n");
+	// 		if (commands->pid < 0)
+	// 			return ; // RETURN ERROR
+	// 		else if (commands->pid == 0)
+	// 		{
+	// 			// if input files, redirect
+	// 			if (commands->infile[0].fd != -1)
+	// 			{
+	// 				if (dup2(commands->infile[0].fd, STDIN_FILENO) == -1)
+	// 					return ;
+	// 				close(commands->infile[0].fd);
+	// 			}
+
+	// 		// if output files, redirect
+	// 			if (commands->outfile[0].fd)
+	// 			{
+	// 				if (dup2(commands->outfile[0].fd, STDOUT_FILENO) == -1)
+	// 					return ;
+	// 				close(commands->outfile[0].fd);
+	// 			}
 			
-			// Execute command
-				if (exec_cmd(commands) == -1)
-					return ;
-			}
-			else
-			{
-				if (waitpid(0, &commands->status, 0) == -1)
-					return ;
-			}
-		}
-		// if (!commands->job_done)
+	// 		// Execute command
+	// 			if (exec_cmd(commands) == -1)
+	// 				return ;
+	// 		}
+	// 		else
+	// 		{
+	// 			if (waitpid(0, &commands->status, 0) == -1)
+	// 				return ;
+	// 		}
+	// 	}
+	// 	// if (!commands->job_done)
 		// {
 		// 	write(2, "bash: ", 6);
 		// 	write(2, commands->content[0], ft_strlen(commands->content[0]));
 		// 	write(2, ": command not found", 19);
 		// 	data.command_code = 127;
 		// }
-	}
-	else
-	{
+	// }
+	// else
+	// {
 		// execute pipe
 		// execute redirection to last OUTPUT FILE
 		// IF NO REDIRECTION, SEND OUTPUT TO STDOUT_FILENO
-		pipex(commands, STDIN_FILENO); // report error if -1
-	}
+	// 	pipex(commands, STDIN_FILENO); // report error if -1
+	// }
 }
 
 int	space_position(char *line, char c, int start)
@@ -130,73 +134,101 @@ int	char_position(char *line, char c)
 
 }
 
-void	sub_parser(char *line)
+int	count_chevrons_left(t_lst command)
 {
 	int	x;
-	int	y;
-	int	z;
-	char	**splited;
+	int	counter;
 
-	x = 0;
-	y = 0;
-	z = 0;
-	splited = ft_split(line, ' ');
-	data.infile = malloc(sizeof(t_file) * count_occurence(line, '<') + 1);
-	data.outfile = malloc(sizeof(t_file) * count_occurence(line, '>') + 1);
-	while (splited[x])
+	x = 0;	
+	counter = 0;
+	while (command.content[x])
 	{
-		if (count_occurence(splited[x], '<') > 0)
-		{
-			data.infile[y].name = splited[x + 1];
-			data.infile[y].mode = 1;
-			y++;
-		}
-		if (count_occurence(splited[x], '>') > 0)
-		{
-			data.outfile[z].name = splited[x + 1];
-			data.outfile[z].mode = 2;
-			z++;
-		}
+		if (command.content[x][0] == '<')
+			counter++;
 		x++;
 	}
-	data.infile[y].name = NULL;
-	data.outfile[z].name = NULL;
+	return (counter);
 }
 
-void	parser_lst(char *line)
+int	count_chevrons_right(t_lst command)
 {
-	t_lst	*commands;
-	char	**splited;
-	char	*temp;
-	int		x;
+	int	x;
+	int	counter;
 
-	data.nb_of_commands = 0;
-	splited = ft_split(line, '|');
-	x = 0;
-	while (splited[x])
+	x = 0;	
+	counter = 0;
+	while (command.content[x])
 	{
-		data.nb_of_commands++;
-		temp = ft_strtrim(splited[x], " ");
-		free(splited[x]);
-		splited[x++] = temp;
-	}
-	x = 0;
-	commands = lstnew(ft_split(splited[x], ' '), x + 1);
-	x++;
-	while (splited[x])
-	{
-		lstadd_back(&commands, lstnew(ft_split(splited[x], ' '), x + 1));
+		if (command.content[x][0] == '>')
+			counter++;
 		x++;
 	}
-	x = 0;
-	while (splited[x])
-		free(splited[x++]);
-	free(splited);
-	sub_parser(line);
-	// check if there is input file
-	handle_command(commands);
-	lstclear(&commands);
+	return (counter);
 }
+
+void	add_files(t_lst **commands)
+{
+	t_lst	*trav;
+	int		x;
+	int		y;
+	int		z;
+
+	trav = *commands;
+	while (trav)
+	{
+		(trav)->infile = malloc(sizeof(t_file) * count_chevrons_left(*trav) + 1);
+		(trav)->outfile = malloc(sizeof(t_file) * count_chevrons_right(*trav) + 1);
+		x = 0;
+		y = 0;
+		z = 0;
+		while ((trav)->content[x])
+		{
+			if (!ft_strncmp((trav)->content[x], "<", 1))
+				(trav)->infile[y++].name = (trav)->content[x + 1];
+			if (!ft_strncmp((trav)->content[x], ">", 1))
+				(trav)->outfile[z++].name = (trav)->content[x + 1];
+			x++;
+		}
+		(trav)->infile[y].name = NULL;
+		(trav)->outfile[z].name = NULL;
+		trav = (trav)->next;
+	}
+}
+
+// void	parser_lst(char *line)
+// {
+// 	t_lst	*commands;
+// 	char	**splited;
+// 	char	*temp;
+// 	int		x;
+
+// 	data.nb_of_commands = 0;
+// 	splited = ft_split(line, '|');
+// 	x = 0;
+// 	while (splited[x])
+// 	{
+// 		data.nb_of_commands++;
+// 		temp = ft_strtrim(splited[x], " ");
+// 		free(splited[x]);
+// 		splited[x++] = temp;
+// 	}
+// 	x = 0;
+// 	commands = lstnew(ft_split(splited[x], ' '), x + 1);
+// 	x++;
+// 	while (splited[x])
+// 	{
+// 		lstadd_back(&commands, lstnew(ft_split(splited[x], ' '), x + 1));
+// 		x++;
+// 	}
+// 	x = 0;
+// 	while (splited[x])
+// 		free(splited[x++]);
+// 	free(splited);
+// 	// sub_parser(line);
+// 	// check if there is input file
+// 	// handle_command(commands);
+// 	lstclear(&commands);
+// }
 
 
 
@@ -243,39 +275,39 @@ char	*add_env(char *line)
 	return (line);
 }
 
-void	prompt(char *line)
-{
-	char	first_quote;
+// void	prompt(char *line)
+// {
+// 	char	first_quote;
 
-	data.exit = -1;
-	while (data.exit == -1)
-	{
-		data.nb_of_commands = 0;
-		signal(SIGINT, sighandler);
-		// signal(SIGQUIT, SIG_IGN);
-		line = readline("tamere-3.2$ ");
-		if (!line)
-		{
-			ft_ctrl_d();
-			break;
-		}
-		if (ft_strlen(line))
-		{
-			first_quote = find_first_quote(line);
-			while (count_occurence(line, first_quote) % 2 == 1)
-				line = dquote(line);
-			line = remove_useless_quotes(line, first_quote);
-			line = add_env(line);
-			parser_lst(line);
-		}
-		free(line);
-	}
-	if (data.exit == 1)
-	{
-		// system("leaks minishell");
-		exit (EXIT_SUCCESS);
-	}
-}
+// 	data.exit = -1;
+// 	while (data.exit == -1)
+// 	{
+// 		data.nb_of_commands = 0;
+// 		signal(SIGINT, sighandler);
+// 		// signal(SIGQUIT, SIG_IGN);
+// 		line = readline("tamere-3.2$ ");
+// 		if (!line)
+// 		{
+// 			ft_ctrl_d();
+// 			break;
+// 		}
+// 		if (ft_strlen(line))
+// 		{
+// 			first_quote = find_first_quote(line);
+// 			while (count_occurence(line, first_quote) % 2 == 1)
+// 				line = dquote(line);
+// 			line = remove_useless_quotes(line, first_quote);
+// 			line = add_env(line);
+// 			parser_lst(line);
+// 		}
+// 		free(line);
+// 	}
+// 	if (data.exit == 1)
+// 	{
+// 		// system("leaks minishell");
+// 		exit (EXIT_SUCCESS);
+// 	}
+// }
 
 void	free_envp(void)
 {
@@ -290,13 +322,125 @@ void	free_envp(void)
 	free(data.envp);
 }
 
+int	check_occurence(char c, char *to_find)
+{
+	int	x;
+
+	x = 0;
+	while (to_find[x])
+	{
+		if (to_find[x] == c)
+			return (1);
+		x++;
+	}
+	return (0);
+}
+
+int	count_token(char *line)
+{
+	int	counter;
+	int	x;
+
+	counter = 0;
+	x = 0;
+	while (line[x])
+	{
+		if (check_occurence(line[x], "<>()\'\"|$"))
+			counter++;
+		x++;
+	}
+	return (counter);
+}
+
+t_token	*token_finder(char *line)
+{
+	int			token_counter;
+	t_token		*tokens;
+	int			x;
+	int			y;
+
+	token_counter = count_token(line);
+	tokens = malloc(sizeof(t_token) * token_counter + 1);
+	x = 0;
+	y = 0;
+	while (line[x])
+	{
+		if (check_occurence(line[x], "<>()\'\"|$"))
+		{
+			tokens[y].index = x;
+			tokens[y].token = line[x];
+			y++;
+		}
+		x++;
+	}
+	tokens[y].token = 0;
+	return (tokens);
+}
+
+t_lst	*put_in_list(char **splited)
+{
+	t_lst	*commands;
+	int		x;
+	char	*temp;
+
+	x = 0;
+	while (splited[x])
+	{
+		data.nb_of_commands++;
+		temp = ft_strtrim(splited[x], " ");
+		free(splited[x]);
+		splited[x++] = temp;
+	}
+	x = 0;
+	commands = lstnew(ft_split(splited[x], ' '), x + 1);
+	x++;
+	while (splited[x])
+	{
+		lstadd_back(&commands, lstnew(ft_split(splited[x], ' '), x + 1));
+		x++;
+	}
+	x = 0;
+	while (splited[x])
+		free(splited[x++]);
+	free(splited);
+	return (commands);
+}
+
+void	parser_test(char *line)
+{
+	t_token		*tokens;
+	char		**splited;
+	t_lst		*commands;
+
+	tokens = token_finder(line);
+	// enlever "" inutiles 
+	splited = ft_test(line, tokens);
+	commands = put_in_list(splited);
+	add_files(&commands);
+	handle_command(commands);
+	free(tokens);
+}
+
+void	prompt_test(char *line)
+{
+	data.exit = -1;
+	while (data.exit == -1)
+	{
+		line = readline("test$ ");
+		add_history(line);
+		if (ft_strlen(line))
+			parser_test(line);
+		free(line);
+	}
+}
+
 int	main(void)
  {
 	char	*line;
 
-	copy_env(); // check if succesful execution or not
+	// copy_env(); // check if succesful execution or not
 	line = NULL;
-	prompt(line);
+	prompt_test(line);
 	// system("leaks minishell");
 	free_envp();
 	return (EXIT_SUCCESS);

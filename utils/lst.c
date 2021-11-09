@@ -81,4 +81,5 @@ void	lstadd_back(t_lst **lst, t_lst *new)
 		return ;
 	}
 	lstlast(*lst)->next = new;
+	lstlast(*lst)->prev = *lst;
 }

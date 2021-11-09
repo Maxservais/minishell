@@ -20,29 +20,35 @@ int	ft_open(char *file_name, int mode)
 	return (fd);
 }
 
-int	open_files(void)
+int	open_files(t_lst *commands)
 {
-	int	i;
+	int		i;
+	t_lst	*trav;
 	
 	i = 0;
-	while (data.infile[i].name)
+	trav = commands;
+	while (trav)
 	{
-		data.infile[i].fd = ft_open(data.infile[i].name, data.infile[i].mode);
-		if (data.infile[i].fd == -1)
-			return (-1);
-		// if (param.fd1 == -1 || param.fd2 == -1)
-		// 	perror("Error");
-		i++;
-	}
-	i = 0;
-	while (data.outfile[i].name)
-	{
-		data.outfile[i].fd = ft_open(data.outfile[i].name, data.outfile[i].mode);
-		if (data.outfile[i].fd == -1)
-			return (-1);
-		// if (param.fd1 == -1 || param.fd2 == -1)
-		// 	perror("Error");
-		i++;
+		while (commands->infile[i].name)
+		{
+			commands->infile[i].fd = ft_open(commands->infile[i].name, commands->infile[i].mode);
+			if (commands->infile[i].fd == -1)
+				return (-1);
+			// if (param.fd1 == -1 || param.fd2 == -1)
+			// 	perror("Error");
+			i++;
+		}
+		i = 0;
+		while (commands->outfile[i].name)
+		{
+			commands->outfile[i].fd = ft_open(commands->outfile[i].name, commands->outfile[i].mode);
+			if (commands->outfile[i].fd == -1)
+				return (-1);
+			// if (param.fd1 == -1 || param.fd2 == -1)
+			// 	perror("Error");
+			i++;
+		}
+		trav = trav->next;
 	}
 	return (EXIT_SUCCESS);
 }
