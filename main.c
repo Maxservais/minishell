@@ -42,65 +42,61 @@ int		copy_env(void)
 
 void	handle_command(t_lst *commands)
 {
+	t_pid	pid;
+
 	data.command_code = 1;
 	open_files(commands);
-	execute_builtin(commands);
+	if (data.nb_of_commands == 1)
+	{
+		execute_builtin(commands);
+		if (data.command_code != 0)
+		{
+			pid = fork();
+			if (pid < 0)
+				return ; // RETURN ERROR
+			else if (pid == 0)
+			{
+				// if input files, redirect
+				if (commands->infile[0].fd != -1)
+				{
+					if (dup2(commands->infile[0].fd, STDIN_FILENO) == -1)
+						return ;
+					close(commands->infile[0].fd);
+				}
 
-	
-	// if (data.nb_of_commands == 1)
-	// {
-	// 	// if builtin
-	// 	execute_builtin(commands);
-	// 	// if not builtin, FORK
-	// 	if (data.command_code != 0)
-	// 	{
-	// 		commands->pid = fork();
-	// 		printf("here\n");
-	// 		if (commands->pid < 0)
-	// 			return ; // RETURN ERROR
-	// 		else if (commands->pid == 0)
-	// 		{
-	// 			// if input files, redirect
-	// 			if (commands->infile[0].fd != -1)
-	// 			{
-	// 				if (dup2(commands->infile[0].fd, STDIN_FILENO) == -1)
-	// 					return ;
-	// 				close(commands->infile[0].fd);
-	// 			}
-
-	// 		// if output files, redirect
-	// 			if (commands->outfile[0].fd)
-	// 			{
-	// 				if (dup2(commands->outfile[0].fd, STDOUT_FILENO) == -1)
-	// 					return ;
-	// 				close(commands->outfile[0].fd);
-	// 			}
+			// if output files, redirect
+				if (commands->outfile[0].fd)
+				{
+					if (dup2(commands->outfile[0].fd, STDOUT_FILENO) == -1)
+						return ;
+					close(commands->outfile[0].fd);
+				}
 			
-	// 		// Execute command
-	// 			if (exec_cmd(commands) == -1)
-	// 				return ;
-	// 		}
-	// 		else
-	// 		{
-	// 			if (waitpid(0, &commands->status, 0) == -1)
-	// 				return ;
-	// 		}
-	// 	}
-	// 	// if (!commands->job_done)
+			// Execute command
+				if (exec_cmd(commands) == -1)
+					return ;
+			}
+			else
+			{
+				if (waitpid(0, &commands->status, 0) == -1)
+					return ;
+			}
+		}
+		// if (!commands->job_done)
 		// {
 		// 	write(2, "bash: ", 6);
 		// 	write(2, commands->content[0], ft_strlen(commands->content[0]));
 		// 	write(2, ": command not found", 19);
 		// 	data.command_code = 127;
 		// }
-	// }
-	// else
-	// {
+	}
+	else
+	{
 		// execute pipe
 		// execute redirection to last OUTPUT FILE
 		// IF NO REDIRECTION, SEND OUTPUT TO STDOUT_FILENO
-	// 	pipex(commands, STDIN_FILENO); // report error if -1
-	// }
+		pipex(commands, STDIN_FILENO); // report error if -1
+	}
 }
 
 int	space_position(char *line, char c, int start)
@@ -384,6 +380,7 @@ t_lst	*put_in_list(char **splited)
 	char	*temp;
 
 	x = 0;
+	data.nb_of_commands = 0;
 	while (splited[x])
 	{
 		data.nb_of_commands++;
@@ -397,6 +394,7 @@ t_lst	*put_in_list(char **splited)
 	while (splited[x])
 	{
 		lstadd_back(&commands, lstnew(ft_split(splited[x], ' '), x + 1));
+		data.nb_of_commands++;
 		x++;
 	}
 	x = 0;
