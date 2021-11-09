@@ -75,6 +75,7 @@ t_lst	*lstlast(t_lst *lst);
 char	*dquote(char *line);
 char	find_first_quote(char *line);
 char	*remove_useless_quotes(char *line, char first_quote);
+void	execute_builtin(t_lst *commands);
 
 /* Built-ins */
 int		pwd(t_lst *commands);

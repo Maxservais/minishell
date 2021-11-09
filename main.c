@@ -91,12 +91,8 @@ void	handle_command(t_lst *commands)
 		// }
 	}
 	else
-	{
-		// execute pipe
-		// execute redirection to last OUTPUT FILE
-		// IF NO REDIRECTION, SEND OUTPUT TO STDOUT_FILENO
-		pipex(commands, STDIN_FILENO); // report error if -1
-	}
+		if (pipex(commands, STDIN_FILENO) == -1)
+			return ; // report error
 }
 
 int	space_position(char *line, char c, int start)
@@ -173,6 +169,7 @@ void	parser_lst(char *line)
 	data.nb_of_commands = 0;
 	splited = ft_split(line, '|');
 	x = 0;
+	add_history(line);
 	while (splited[x])
 	{
 		data.nb_of_commands++;
