@@ -10,7 +10,7 @@ e.g	bash-3.2$ env | grep PWD
 	OLDPWD=/Users/mservais/Documents/minishell
 */
 
-#include "../minishell.h"
+#include "../../minishell.h"
 
 static void	add_to_env(char *variable)
 {

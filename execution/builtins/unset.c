@@ -5,7 +5,7 @@
 2) remove a shell variable
 */
 
-#include "../minishell.h"
+#include "../../minishell.h"
 
 static void	find_var(char *variable)
 {

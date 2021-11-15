@@ -1,5 +1,40 @@
 #include "../minishell.h"
 
+void	add_files(t_lst **commands)
+{
+	t_lst	*trav;
+	int		x;
+	int		y;
+	int		z;
+
+	trav = *commands;
+	while (trav)
+	{
+		trav->infile = malloc(sizeof(t_file) * (count_chevrons(*trav, '<') + 1));
+		trav->outfile = malloc(sizeof(t_file) * (count_chevrons(*trav, '>') + 1));
+		x = 0;
+		y = 0;
+		z = 0;
+		while (trav->content[x])
+		{
+			if (!ft_strncmp(trav->content[x], "<", 1))
+			{
+				trav->infile[y].mode = 1;
+				trav->infile[y++].name = trav->content[x + 1];
+			}
+			if (!ft_strncmp(trav->content[x], ">", 1))
+			{
+				trav->outfile[z].mode = 2;
+				trav->outfile[z++].name = trav->content[x + 1];
+			}
+			x++;
+		}
+		trav->infile[y].name = NULL;
+		trav->outfile[z].name = NULL;
+		trav = trav->next;
+	}
+}
+
 int	ft_open(char *file_name, int mode)
 {
 	int	fd;

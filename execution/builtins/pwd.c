@@ -2,7 +2,7 @@
 - Is return value the right one - 0 or 1?
 */
 
-#include "../minishell.h"
+#include "../../minishell.h"
 
 int	pwd(t_lst *commands)
 {

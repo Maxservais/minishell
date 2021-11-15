@@ -96,24 +96,21 @@ int	pipex(t_lst *command, int left_pipe[])
 	int		right_pipe[2];
 
 	if (pipe(right_pipe) == -1)
-			return (report_error());
+			return (-1); // RETURN ERROR MESSAGE
 	if (command->index == 1)
 	{
-		printf("GOT HERE 1\n");
 		if (first_command(right_pipe, command) == -1)
-			return (report_error());
+			return (-1); // RETURN ERROR MESSAGE
 	}
 	else if (command->index == data.nb_of_commands)
 	{
-		printf("GOT HERE 2 \n");
 		if (last_command(left_pipe, right_pipe, command) == -1)
-			return (report_error());
+			return (-1); // RETURN ERROR MESSAGE
 	}
 	else
 	{
-		printf("GOT HERE 3\n");
 		if (inter_command(left_pipe, right_pipe, command) == -1)
-			return (report_error());
+			return (-1); // RETURN ERROR MESSAGE
 	}
 	return (0);
 }

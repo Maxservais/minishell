@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 
 static int	in_quotes(t_token *tokens, int pos)
 {

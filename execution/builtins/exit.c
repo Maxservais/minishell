@@ -3,7 +3,7 @@
 once we check in the parsing which function should be called (cd, pwd, echo, etc.).
 */
 
-#include "../minishell.h"
+#include "../../minishell.h"
 
 int	ft_exit(t_lst *commands)
 {
