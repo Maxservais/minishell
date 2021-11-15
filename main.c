@@ -42,8 +42,6 @@ int		copy_env(void)
 
 void	handle_command(t_lst *commands)
 {
-	t_pid	pid;
-
 	data.command_code = 1;
 	open_files(commands);
 	if (data.nb_of_commands == 1)
@@ -51,10 +49,10 @@ void	handle_command(t_lst *commands)
 		execute_builtin(commands);
 		if (data.command_code != 0)
 		{
-			pid = fork();
-			if (pid < 0)
+			commands->pid = fork();
+			if (commands->pid < 0)
 				return ; // RETURN ERROR
-			else if (pid == 0)
+			else if (commands->pid == 0)
 			{
 				// if input files, redirect
 				if (commands->infile[0].fd != -1)
@@ -130,7 +128,7 @@ int	char_position(char *line, char c)
 
 }
 
-int	count_chevrons_left(t_lst command)
+int	count_chevrons(t_lst command, char chevron)
 {
 	int	x;
 	int	counter;
@@ -139,23 +137,7 @@ int	count_chevrons_left(t_lst command)
 	counter = 0;
 	while (command.content[x])
 	{
-		if (command.content[x][0] == '<')
-			counter++;
-		x++;
-	}
-	return (counter);
-}
-
-int	count_chevrons_right(t_lst command)
-{
-	int	x;
-	int	counter;
-
-	x = 0;	
-	counter = 0;
-	while (command.content[x])
-	{
-		if (command.content[x][0] == '>')
+		if (command.content[x][0] == chevron)
 			counter++;
 		x++;
 	}
@@ -172,59 +154,24 @@ void	add_files(t_lst **commands)
 	trav = *commands;
 	while (trav)
 	{
-		(trav)->infile = malloc(sizeof(t_file) * count_chevrons_left(*trav) + 1);
-		(trav)->outfile = malloc(sizeof(t_file) * count_chevrons_right(*trav) + 1);
+		trav->infile = malloc(sizeof(t_file) * (count_chevrons(*trav, '<') + 1));
+		trav->outfile = malloc(sizeof(t_file) * (count_chevrons(*trav, '>') + 1));
 		x = 0;
 		y = 0;
 		z = 0;
-		while ((trav)->content[x])
+		while (trav->content[x])
 		{
-			if (!ft_strncmp((trav)->content[x], "<", 1))
-				(trav)->infile[y++].name = (trav)->content[x + 1];
-			if (!ft_strncmp((trav)->content[x], ">", 1))
-				(trav)->outfile[z++].name = (trav)->content[x + 1];
+			if (!ft_strncmp(trav->content[x], "<", 1))
+				trav->infile[y++].name = trav->content[x + 1];
+			if (!ft_strncmp(trav->content[x], ">", 1))
+				trav->outfile[z++].name = trav->content[x + 1];
 			x++;
 		}
-		(trav)->infile[y].name = NULL;
-		(trav)->outfile[z].name = NULL;
-		trav = (trav)->next;
+		trav->infile[y].name = NULL;
+		trav->outfile[z].name = NULL;
+		trav = trav->next;
 	}
 }
-
-// void	parser_lst(char *line)
-// {
-// 	t_lst	*commands;
-// 	char	**splited;
-// 	char	*temp;
-// 	int		x;
-
-// 	data.nb_of_commands = 0;
-// 	splited = ft_split(line, '|');
-// 	x = 0;
-// 	while (splited[x])
-// 	{
-// 		data.nb_of_commands++;
-// 		temp = ft_strtrim(splited[x], " ");
-// 		free(splited[x]);
-// 		splited[x++] = temp;
-// 	}
-// 	x = 0;
-// 	commands = lstnew(ft_split(splited[x], ' '), x + 1);
-// 	x++;
-// 	while (splited[x])
-// 	{
-// 		lstadd_back(&commands, lstnew(ft_split(splited[x], ' '), x + 1));
-// 		x++;
-// 	}
-// 	x = 0;
-// 	while (splited[x])
-// 		free(splited[x++]);
-// 	free(splited);
-// 	// sub_parser(line);
-// 	// check if there is input file
-// 	// handle_command(commands);
-// 	lstclear(&commands);
-// }
 
 
 
@@ -271,45 +218,13 @@ char	*add_env(char *line)
 	return (line);
 }
 
-// void	prompt(char *line)
-// {
-// 	char	first_quote;
-
-// 	data.exit = -1;
-// 	while (data.exit == -1)
-// 	{
-// 		data.nb_of_commands = 0;
-// 		signal(SIGINT, sighandler);
-// 		// signal(SIGQUIT, SIG_IGN);
-// 		line = readline("tamere-3.2$ ");
-// 		if (!line)
-// 		{
-// 			ft_ctrl_d();
-// 			break;
-// 		}
-// 		if (ft_strlen(line))
-// 		{
-// 			first_quote = find_first_quote(line);
-// 			while (count_occurence(line, first_quote) % 2 == 1)
-// 				line = dquote(line);
-// 			line = remove_useless_quotes(line, first_quote);
-// 			line = add_env(line);
-// 			parser_lst(line);
-// 		}
-// 		free(line);
-// 	}
-// 	if (data.exit == 1)
-// 	{
-// 		// system("leaks minishell");
-// 		exit (EXIT_SUCCESS);
-// 	}
-// }
 
 void	free_envp(void)
 {
 	int	x;
 
 	x = 0;
+	// printf("here\n");
 	while (data.envp[x])
 	{
 		free(data.envp[x]);
@@ -350,13 +265,11 @@ int	count_token(char *line)
 
 t_token	*token_finder(char *line)
 {
-	int			token_counter;
 	t_token		*tokens;
 	int			x;
 	int			y;
 
-	token_counter = count_token(line);
-	tokens = malloc(sizeof(t_token) * token_counter + 1);
+	tokens = malloc(sizeof(t_token) * (count_token(line) + 1));
 	x = 0;
 	y = 0;
 	while (line[x])
@@ -404,6 +317,26 @@ t_lst	*put_in_list(char **splited)
 	return (commands);
 }
 
+void	free_splited(char **splited)
+{
+	int	x;
+
+	x = 0;
+	while (splited[x])
+	{
+		free(splited[x]);
+		x++;
+	}
+	free(splited);
+}
+
+void	clean_all(t_token *tokens, char **splited, t_lst **commands)
+{
+	free(tokens);
+	free_splited(splited);
+	lstclear(commands);
+}
+
 void	parser_test(char *line)
 {
 	t_token		*tokens;
@@ -411,12 +344,12 @@ void	parser_test(char *line)
 	t_lst		*commands;
 
 	tokens = token_finder(line);
-	// enlever "" inutiles 
+	// remove "" useless 
 	splited = ft_test(line, tokens);
 	commands = put_in_list(splited);
 	add_files(&commands);
-	handle_command(commands);
-	free(tokens);
+	// handle_command(commands);
+	clean_all(tokens, splited, &commands);
 }
 
 void	prompt_test(char *line)
@@ -424,11 +357,12 @@ void	prompt_test(char *line)
 	data.exit = -1;
 	while (data.exit == -1)
 	{
-		line = readline("test$ ");
+		line = readline("ta_mère$ ");
 		add_history(line);
 		if (ft_strlen(line))
 			parser_test(line);
 		free(line);
+		// data.exit = 1;
 	}
 }
 
@@ -440,6 +374,79 @@ int	main(void)
 	line = NULL;
 	prompt_test(line);
 	// system("leaks minishell");
-	free_envp();
+
+	// raises an error;
+	// -->>
+	// free_envp();
+	system("leaks minishell");
 	return (EXIT_SUCCESS);
 }
+
+// void	parser_lst(char *line)
+// {
+// 	t_lst	*commands;
+// 	char	**splited;
+// 	char	*temp;
+// 	int		x;
+
+// 	data.nb_of_commands = 0;
+// 	splited = ft_split(line, '|');
+// 	x = 0;
+// 	while (splited[x])
+// 	{
+// 		data.nb_of_commands++;
+// 		temp = ft_strtrim(splited[x], " ");
+// 		free(splited[x]);
+// 		splited[x++] = temp;
+// 	}
+// 	x = 0;
+// 	commands = lstnew(ft_split(splited[x], ' '), x + 1);
+// 	x++;
+// 	while (splited[x])
+// 	{
+// 		lstadd_back(&commands, lstnew(ft_split(splited[x], ' '), x + 1));
+// 		x++;
+// 	}
+// 	x = 0;
+// 	while (splited[x])
+// 		free(splited[x++]);
+// 	free(splited);
+// 	// sub_parser(line);
+// 	// check if there is input file
+// 	// handle_command(commands);
+// 	lstclear(&commands);
+// }
+
+// void	prompt(char *line)
+// {
+// 	char	first_quote;
+
+// 	data.exit = -1;
+// 	while (data.exit == -1)
+// 	{
+// 		data.nb_of_commands = 0;
+// 		signal(SIGINT, sighandler);
+// 		// signal(SIGQUIT, SIG_IGN);
+// 		line = readline("tamere-3.2$ ");
+// 		if (!line)
+// 		{
+// 			ft_ctrl_d();
+// 			break;
+// 		}
+// 		if (ft_strlen(line))
+// 		{
+// 			first_quote = find_first_quote(line);
+// 			while (count_occurence(line, first_quote) % 2 == 1)
+// 				line = dquote(line);
+// 			line = remove_useless_quotes(line, first_quote);
+// 			line = add_env(line);
+// 			parser_lst(line);
+// 		}
+// 		free(line);
+// 	}
+// 	if (data.exit == 1)
+// 	{
+// 		// system("leaks minishell");
+// 		exit (EXIT_SUCCESS);
+// 	}
+// }
