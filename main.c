@@ -348,7 +348,7 @@ void	parser_test(char *line)
 	splited = ft_test(line, tokens);
 	commands = put_in_list(splited);
 	add_files(&commands);
-	// handle_command(commands);
+	handle_command(commands);
 	clean_all(tokens, splited, &commands);
 }
 

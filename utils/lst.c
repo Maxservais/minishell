@@ -47,8 +47,8 @@ void	lstdelone(t_lst *lst)
 		return ;
 	while (lst->content[x])
 		free(lst->content[x++]);
-	x = 0;
 	free(lst->content);
+	x = 0;
 	// free(lst->outfile);
 	// free(lst->infile);
 	free(lst);
