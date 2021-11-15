@@ -2,6 +2,7 @@
 
 void		execute_builtin(t_lst *commands)
 {
+	// IL FAUT GERER LES REDIRECTIONS!!!!
 	if (!ft_strncmp(commands->content[0], "cd", 2))
 		data.command_code = cd(commands);
 	else if (!ft_strncmp(commands->content[0], "echo", 4))
@@ -29,7 +30,7 @@ int		copy_env(void)
 	counter = 0;
 	while (environ[counter] != NULL)
 		counter++;
-	data.envp = malloc(sizeof(char *) * counter + 1);
+	data.envp = malloc(sizeof(char *) * (counter + 1));
 	while (environ[i] != NULL)
 	{
 		data.envp[i] = strdup(environ[i]);
@@ -55,28 +56,26 @@ void	handle_command(t_lst *commands)
 			else if (commands->pid == 0)
 			{
 				// if input files, redirect
-				if (commands->infile[0].fd != -1)
+				if (commands->infile[0].fd)
 				{
 					if (dup2(commands->infile[0].fd, STDIN_FILENO) == -1)
 						return ;
 					close(commands->infile[0].fd);
 				}
-
-			// if output files, redirect
+				// if output files, redirect
 				if (commands->outfile[0].fd)
 				{
 					if (dup2(commands->outfile[0].fd, STDOUT_FILENO) == -1)
 						return ;
 					close(commands->outfile[0].fd);
 				}
-			
-			// Execute command
+				// Execute command
 				if (exec_cmd(commands) == -1)
 					return ;
 			}
 			else
 			{
-				if (waitpid(0, &commands->status, 0) == -1)
+				if (waitpid(-1, &commands->status, 0) == -1)
 					return ;
 			}
 		}
@@ -162,9 +161,15 @@ void	add_files(t_lst **commands)
 		while (trav->content[x])
 		{
 			if (!ft_strncmp(trav->content[x], "<", 1))
+			{
+				trav->infile[y].mode = 1;
 				trav->infile[y++].name = trav->content[x + 1];
+			}
 			if (!ft_strncmp(trav->content[x], ">", 1))
+			{
+				trav->infile[y].mode = 2;
 				trav->outfile[z++].name = trav->content[x + 1];
+			}
 			x++;
 		}
 		trav->infile[y].name = NULL;
@@ -348,7 +353,7 @@ void	parser_test(char *line)
 	splited = ft_test(line, tokens);
 	commands = put_in_list(splited);
 	add_files(&commands);
-	// handle_command(commands);
+	handle_command(commands);
 	clean_all(tokens, splited, &commands);
 }
 
@@ -370,7 +375,8 @@ int	main(void)
  {
 	char	*line;
 
-	// copy_env(); // check if succesful execution or not
+	// FIX SEGV ERROR
+	copy_env(); // check if succesful execution or not
 	line = NULL;
 	prompt_test(line);
 	// system("leaks minishell");
