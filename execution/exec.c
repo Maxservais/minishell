@@ -35,14 +35,14 @@ void	handle_command(t_lst *commands)
 			else if (commands->pid == 0)
 			{
 				// if input files, redirect
-				if (commands->infile[last_infile(commands)].fd)
+				if (commands->infile->name && commands->infile[last_infile(commands)].fd)
 				{
 					if (dup2(commands->infile[last_infile(commands)].fd, STDIN_FILENO) == -1)
 						return ;
 					close(commands->infile[last_infile(commands)].fd);
 				}
 				// if output files, redirect
-				if (commands->outfile[last_outfile(commands)].fd)
+				if (commands->infile->name && commands->outfile[last_outfile(commands)].fd)
 				{
 					if (dup2(commands->outfile[last_outfile(commands)].fd, STDOUT_FILENO) == -1)
 						return ;

@@ -46,8 +46,17 @@ void	remove_files(t_lst **commands)
 		while (trav->content[x][0] == '<')
 			x += 2;
 		while (trav->content[x] && trav->content[x][0] != '<' && trav->content[x][0] != '>')
-				trav->cmd[y++] = ft_strdup(trav->content[x++]);
+			trav->cmd[y++] = ft_strdup(trav->content[x++]);
 		trav->cmd[y] = NULL;
+		// trav = *commands;
+		// int z;
+		// while (trav)
+		// {
+		// 	z = 0;
+		// 	while (trav->cmd[z])
+		// 		printf("cmd = %s\n", trav->cmd[z++]);
+		// 	trav = trav->next;
+		// }
 		trav = trav->next;
 	}
 }
