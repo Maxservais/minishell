@@ -89,10 +89,8 @@ void	handle_command(t_lst *commands)
 	}
 	else
 	{
-		// execute pipe
-		// execute redirection to last OUTPUT FILE
-		// IF NO REDIRECTION, SEND OUTPUT TO STDOUT_FILENO
-		pipex(commands, STDIN_FILENO); // report error if -1
+		if (pipex(commands, STDIN_FILENO) == -1)
+			return ; // report error
 	}
 }
 
@@ -167,13 +165,14 @@ void	add_files(t_lst **commands)
 			}
 			if (!ft_strncmp(trav->content[x], ">", 1))
 			{
-				trav->infile[y].mode = 2;
+				trav->outfile[z].mode = 2;
 				trav->outfile[z++].name = trav->content[x + 1];
 			}
 			x++;
 		}
 		trav->infile[y].name = NULL;
 		trav->outfile[z].name = NULL;
+		trav->content[x - 2] = NULL;
 		trav = trav->next;
 	}
 }
@@ -229,7 +228,6 @@ void	free_envp(void)
 	int	x;
 
 	x = 0;
-	// printf("here\n");
 	while (data.envp[x])
 	{
 		free(data.envp[x]);
@@ -291,6 +289,20 @@ t_token	*token_finder(char *line)
 	return (tokens);
 }
 
+void	add_index(t_lst **commands)
+{
+	int		index;
+	t_lst	*trav;
+
+	index = 1;
+	trav = *commands;
+	while (trav)
+	{
+		trav->index = index++;
+		trav = trav->next;
+	}
+}
+
 t_lst	*put_in_list(char **splited)
 {
 	t_lst	*commands;
@@ -298,10 +310,9 @@ t_lst	*put_in_list(char **splited)
 	char	*temp;
 
 	x = 0;
-	data.nb_of_commands = 0;
+	data.nb_of_commands = 1;
 	while (splited[x])
 	{
-		data.nb_of_commands++;
 		temp = ft_strtrim(splited[x], " ");
 		free(splited[x]);
 		splited[x++] = temp;
@@ -316,6 +327,7 @@ t_lst	*put_in_list(char **splited)
 		x++;
 	}
 	x = 0;
+	add_index(&commands);
 	while (splited[x])
 		free(splited[x++]);
 	free(splited);
@@ -354,7 +366,7 @@ void	parser_test(char *line)
 	commands = put_in_list(splited);
 	add_files(&commands);
 	handle_command(commands);
-	clean_all(tokens, splited, &commands);
+	// clean_all(tokens, splited, &commands);
 }
 
 void	prompt_test(char *line)

@@ -55,8 +55,6 @@ typedef struct s_data
 	int				nb_of_commands;
 	int				command_code;
 	char			**envp;
-	struct s_file	*infile;
-	struct s_file	*outfile;
 }				t_data;
 
 typedef struct s_token
@@ -86,6 +84,7 @@ char	find_first_quote(char *line);
 char	*remove_useless_quotes(char *line, char first_quote);
 char	**ft_split_pipe(char const *line, t_token *tokens);
 char	**ft_test(char *s, t_token *tokens);
+void	execute_builtin(t_lst *commands);
 
 /* Built-ins */
 int		pwd(t_lst *commands);
