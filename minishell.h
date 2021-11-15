@@ -41,6 +41,8 @@ typedef struct s_lst
 	pid_t			pid; //MAYBE
 	int				status;
 	char			**content;
+	char			**cmd;
+	int				args;
 	int				index;
 	int				to_display;
 	int				job_done;

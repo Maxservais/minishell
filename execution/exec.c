@@ -37,23 +37,23 @@ int	exec_cmd(t_lst *command)
 	if (!paths)
 		return (-1);
 	i = 0;
-	execve(command->content[0], command->content, data.envp);
+	execve(command->cmd[0], command->cmd, data.envp);
 	// int x;
 	// while (command)
 	// {
 	// 	x = 0;
-	// 	while (command->content[x])
-	// 		printf("content: %s\n", command->content[x++]);
+	// 	while (command->cmd[x])
+	// 		printf("cmd: %s\n", command->cmd[x++]);
 	// 	command = command->next;
 	// }
 	while (paths[i])
 	{
 		part_path = ft_strjoin(paths[i], "/");
-		path = ft_strjoin(part_path, command->content[0]);
+		path = ft_strjoin(part_path, command->cmd[0]);
 		free(part_path);
 		free(paths[i]);
 		i++;
-		execve(path, command->content, data.envp);
+		execve(path, command->cmd, data.envp);
 	}
 	command->job_done = 1;
 	return (-1);

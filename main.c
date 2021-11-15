@@ -41,6 +41,26 @@ int		copy_env(void)
 	return (EXIT_SUCCESS);
 }
 
+int	last_infile(t_lst *command)
+{
+	int	x;
+
+	x = 0;
+	while (command->infile[x + 1].name)
+		x++;
+	return (x);
+}
+
+int	last_outfile(t_lst *command)
+{
+	int	x;
+
+	x = 0;
+	while (command->outfile[x + 1].name)
+		x++;
+	return (x);
+}
+
 void	handle_command(t_lst *commands)
 {
 	data.command_code = 1;
@@ -56,18 +76,18 @@ void	handle_command(t_lst *commands)
 			else if (commands->pid == 0)
 			{
 				// if input files, redirect
-				if (commands->infile[0].fd)
+				if (commands->infile[last_infile(commands)].fd)
 				{
-					if (dup2(commands->infile[0].fd, STDIN_FILENO) == -1)
+					if (dup2(commands->infile[last_infile(commands)].fd, STDIN_FILENO) == -1)
 						return ;
-					close(commands->infile[0].fd);
+					close(commands->infile[last_infile(commands)].fd);
 				}
 				// if output files, redirect
-				if (commands->outfile[0].fd)
+				if (commands->outfile[last_outfile(commands)].fd)
 				{
-					if (dup2(commands->outfile[0].fd, STDOUT_FILENO) == -1)
+					if (dup2(commands->outfile[last_outfile(commands)].fd, STDOUT_FILENO) == -1)
 						return ;
-					close(commands->outfile[0].fd);
+					close(commands->outfile[last_outfile(commands)].fd);
 				}
 				// Execute command
 				if (exec_cmd(commands) == -1)
@@ -172,7 +192,6 @@ void	add_files(t_lst **commands)
 		}
 		trav->infile[y].name = NULL;
 		trav->outfile[z].name = NULL;
-		trav->content[x - 2] = NULL;
 		trav = trav->next;
 	}
 }
@@ -293,11 +312,16 @@ void	add_index(t_lst **commands)
 {
 	int		index;
 	t_lst	*trav;
+	int		x;
 
 	index = 1;
 	trav = *commands;
 	while (trav)
 	{
+		x = 0;
+		trav->args = 0;
+		while (trav->content[x++])
+			trav->args++;
 		trav->index = index++;
 		trav = trav->next;
 	}
@@ -354,6 +378,27 @@ void	clean_all(t_token *tokens, char **splited, t_lst **commands)
 	lstclear(commands);
 }
 
+void	remove_files(t_lst **commands)
+{
+	t_lst	*trav;
+	int		x;
+	int		y;
+
+	trav = *commands;
+	while (trav)
+	{
+		trav->cmd = malloc(sizeof(char *) * (trav->args + 1));
+		x = 0;
+		y = 0;
+		while (trav->content[x][0] == '<')
+			x += 2;
+		while (trav->content[x] && trav->content[x][0] != '<' && trav->content[x][0] != '>')
+				trav->cmd[y++] = ft_strdup(trav->content[x++]);
+		trav->cmd[y] = NULL;
+		trav = trav->next;
+	}
+}
+
 void	parser_test(char *line)
 {
 	t_token		*tokens;
@@ -365,6 +410,7 @@ void	parser_test(char *line)
 	splited = ft_test(line, tokens);
 	commands = put_in_list(splited);
 	add_files(&commands);
+	remove_files(&commands);
 	handle_command(commands);
 	// clean_all(tokens, splited, &commands);
 }
