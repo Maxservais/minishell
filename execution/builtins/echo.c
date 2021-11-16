@@ -85,6 +85,8 @@ int	echo(t_lst *command)
 		x = 1;
 		while (command->content[x])
 		{
+			if (ft_strncmp(command->content[x], "$?", 2))
+				printf("coucou\n");
 			if (command->content[x + 1])
 			{
 				write(1, command->content[x], ft_strlen(command->content[x]));
