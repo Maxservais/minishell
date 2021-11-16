@@ -33,7 +33,6 @@ $(NAME): $(OBJ_FILES)
 	@$(MAKE) -s -C libft
 	@cp libft/libft.a .
 	@$(CC) $(CFLAGS) ${SRC_FILES} -lreadline libft.a -o $(NAME) -L /Users/$(USER)/.brew/opt/readline/lib
-	#@./minishell
 
 %.o: %.c
 	$(CC) -c $(CFLAGS) -o $@ $<

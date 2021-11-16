@@ -20,12 +20,18 @@ void	add_files(t_lst **commands)
 			if (!ft_strncmp(trav->content[x], "<", 1))
 			{
 				trav->infile[y].mode = 1;
-				trav->infile[y++].name = trav->content[x + 1];
+				if (ft_strlen(trav->content[x]) == 1)
+					trav->infile[y++].name = trav->content[x + 1];
+				else
+					trav->infile[y++].name = ft_substr(trav->content[x], 1, ft_strlen(trav->content[x]));
 			}
 			if (!ft_strncmp(trav->content[x], ">", 1))
 			{
 				trav->outfile[z].mode = 2;
-				trav->outfile[z++].name = trav->content[x + 1];
+				if (ft_strlen(trav->content[x]) == 1)
+					trav->outfile[z++].name = trav->content[x + 1];
+				else
+					trav->outfile[z++].name = ft_substr(trav->content[x], 1, ft_strlen(trav->content[x]));
 			}
 			x++;
 		}
