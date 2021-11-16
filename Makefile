@@ -41,6 +41,7 @@ $(NAME): $(OBJ_FILES)
 clean:
 	@rm -f $(OBJ_FILES)
 	@$(MAKE) clean -C libft
+	@rm -rf *.dSYM
 
 fclean: clean
 	@rm -f $(NAME)
