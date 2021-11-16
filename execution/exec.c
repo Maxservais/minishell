@@ -44,7 +44,7 @@ void	handle_command(t_lst *commands)
 					close(commands->infile[last_infile(commands)].fd);
 				}
 				// if output files, redirect
-				if (commands->infile->name && commands->outfile[last_outfile(commands)].fd)
+				if (commands->outfile->name && commands->outfile[last_outfile(commands)].fd)
 				{
 					if (dup2(commands->outfile[last_outfile(commands)].fd, STDOUT_FILENO) == -1)
 						return ;

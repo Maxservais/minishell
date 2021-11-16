@@ -74,7 +74,12 @@ int	echo(t_lst *command)
 
 	// if (command->index < data.nb_of_commands)
 	// 	return ;
-	if (!ft_strncmp(command->content[0], "echo", 4) && !command->content[1])
+	if (!ft_strncmp(command->content[0], "echo", 4) && !ft_strncmp(command->content[1], "$?", 2))
+	{
+		printf("%d\n", data.exit_code);
+		return (0);
+	}
+	else if (!ft_strncmp(command->content[0], "echo", 4) && !command->content[1])
 	{
 		write(1, "\n", 1);
 		command->job_done = 1;
@@ -99,7 +104,6 @@ int	echo(t_lst *command)
 			write(1, " ", 1);
 		}
 		write(1, "\n", 1);
-
 		command->job_done = 1;
 		return (0);
 	}

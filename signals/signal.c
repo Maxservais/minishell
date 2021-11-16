@@ -8,7 +8,7 @@ void	sighandler(int signum)
 		write(1, "\n", 1);
 		rl_on_new_line();
 		rl_redisplay();
-		data.command_code = 1; // doit rester 1 pour le code de sortie
+		data.exit_code = 1; // doit rester 1 pour le code de sortie
 	}
 }
 
@@ -24,12 +24,21 @@ void	sighandler_cmd(int signum)
 	{
 		write(1, "\n", 1);
 		rl_on_new_line();
-		data.command_code = 2; // doit devenir 130 pour le code de sortie
+		data.exit_code = 2; // doit devenir 130 pour le code de sortie
 	}
 	else if (signum == SIGQUIT)
 	{
 		write(1, "Quit: 3\n", 8);
 		rl_on_new_line();
-		data.command_code = 3; // doit devenir 131 pour le code de sortie
+		data.exit_code = 3; // doit devenir 131 pour le code de sortie
 	}
 }
+
+
+
+/*
+ON GERE FORK ET PID
+wait(&data->exit_code);
+if (WIFSIGNALED(data->exit_code))
+	data->exit_code = 128 + WTERMSIG(data->exit_code);
+*/
