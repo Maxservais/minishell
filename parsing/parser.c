@@ -23,11 +23,7 @@ t_lst	*put_in_list(char **splited)
 		data.nb_of_commands++;
 		x++;
 	}
-	x = 0;
 	add_index(&commands);
-	while (splited[x])
-		free(splited[x++]);
-	free(splited);
 	return (commands);
 }
 
