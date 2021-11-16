@@ -4,9 +4,27 @@
 Si j'export une variable, les enfants doivent en 'heriter'. Par contre l'inverse n'est pas vrai.
 Ici je travaille directement sur environ, peut-etre qu'il faut travailler sur une copie.
 - leaks to be found
+- export coucou=hey = bonjour=y a gerer!!! Il faut renvoyer erreur mais qd meme
+- Faut gerer export QQCHOSE+=qqchose !!!
+- si export d'un truc qui existe deja, ca le remplace, ca n'ajoute pas un nouveau
+
+Some tests to run:
+export coucou=hey=
+export coucou=56 = hey=42
+export coucou=56 =
+export = coucou=12
+export =
+export bonjour=bon = holla=56
+export =coucou=hey
+export "A= 2"
+export C=c CWI=2
+export C=c B=b C=l
+export " C=c"
+export "D C=c"
+export "D C=c" B=b
 */
 
-#include "../minishell.h"
+#include "../../minishell.h"
 
 static void	error_usage_export(char *str)
 {

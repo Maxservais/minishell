@@ -47,12 +47,10 @@ void	lstdelone(t_lst *lst)
 		return ;
 	while (lst->content[x])
 		free(lst->content[x++]);
-	x = 0;
 	free(lst->content);
-	// if (lst->infile)
-	// 	free(lst->infile);
-	// if (lst->outfile)
-	// 	free(lst->outfile);
+	x = 0;
+	// free(lst->outfile);
+	// free(lst->infile);
 	free(lst);
 }
 
@@ -81,4 +79,5 @@ void	lstadd_back(t_lst **lst, t_lst *new)
 		return ;
 	}
 	lstlast(*lst)->next = new;
+	lstlast(*lst)->prev = *lst;
 }

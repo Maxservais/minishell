@@ -1,24 +1,29 @@
-SRC_FILES 		=	main.c 				\
-					./builtins/echo.c	\
-					./builtins/exit.c	\
-					./builtins/pwd.c	\
-					./builtins/env.c	\
-					./builtins/export.c	\
-					./builtins/cd.c		\
-					./builtins/unset.c	\
-					./builtins/error_handler.c \
-					./signals/signal.c	\
-					./utils/lst.c 		\
-					./execution/exec.c	\
-					./pipes/pipex.c		\
-					./pipes/error.c		\
-					./redirections/redirection.c
+SRC_FILES 		=	main.c 					\
+					./parsing/parser.c		\
+					./parsing/split_pipes.c \
+					./parsing/tokenizer.c	\
+					./parsing/utils1.c		\
+					./parsing/utils2.c		\
+					./parsing/free.c		\
+					./execution/builtins/echo.c		\
+					./execution/builtins/exit.c		\
+					./execution/builtins/pwd.c		\
+					./execution/builtins/env.c		\
+					./execution/builtins/export.c	\
+					./execution/builtins/cd.c		\
+					./execution/builtins/unset.c	\
+					./execution/builtins/error_handler.c \
+					./execution/exec.c				\
+					./execution/pipex.c				\
+					./execution/redirection.c 		\
+					./signals/signal.c				\
+					./utils/lst.c 					\
 
 OBJ_FILES		=	$(SRC_FILES:.c=.o)
 
 NAME			=	minishell
 
-CC				=	gcc
+CC				=	gcc 
 
 CFLAGS			=	-Wall -Wextra -Werror -I /Users/$(USER)/.brew/opt/readline/include
 

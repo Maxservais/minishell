@@ -1,6 +1,8 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+/* 0. EXTERNAL LIBRARIES */
+
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -16,11 +18,13 @@
 # include "libft/libft.h"
 # include <termios.h>
 
-/* Macros */
+/* 1. MACROS */
+
 # define READ 0
 # define WRITE 1
 
-/* Custom structs */
+/* 2. CUSTOM STRUCTS */
+
 typedef struct s_file
 {
 	char	*name;
@@ -36,14 +40,18 @@ typedef struct s_param
 typedef struct s_lst
 {
 	struct s_lst	*prev;
+	struct s_lst	*next;
 	int				type;
-	pid_t			pid; //MAYBE
+	pid_t			pid;
 	int				status;
 	char			**content;
+	char			**cmd;
+	int				args;
 	int				index;
 	int				to_display;
 	int				job_done;
-	struct s_lst	*next;
+	struct s_file	*infile;
+	struct s_file	*outfile;
 }				t_lst;
 
 typedef struct s_data
@@ -53,33 +61,55 @@ typedef struct s_data
 	int				nb_of_commands;
 	int				command_code;
 	char			**envp;
-	struct s_file	*infile;
-	struct s_file	*outfile;
-	struct termios	termios_p;
 }				t_data;
 
-/* Global variable */
+typedef struct s_token
+{
+	int		index;
+	char	token;
+	int		to_ignore;
+}				t_token;
+
+/* 3. GLOBAL VARIABLE */
+
 t_data data;
 
-/* Minishell */
-char	**handle_dquote(char *line, char **commands, int *quote);
-char	**quote_remover(char **commands, char first_quote);
-int		count_occurence(char *str, char c);
-int		occ_in_commands(char **commands, char c);
-char	*ft_strnljoin(char const *s1, char const *s2);
-int     lstsize(t_lst *lst);
-void	lstdelone(t_lst *lst);
-void	lstclear(t_lst **lst);
-void	lstadd_back(t_lst **lst, t_lst *new);
-t_lst	*lstnew(char **content, int index);
-t_lst	*lstlast(t_lst *lst);
-char	*dquote(char *line);
-char	find_first_quote(char *line);
-char	*remove_useless_quotes(char *line, char first_quote);
+/* 4. MAIN FUNCTIONS */
 
-/* Built-ins */
+void	parser_test(char *line);
+void	prompt_test(char *line);
+
+/* 5. PARSER */
+
+/* 5.0 Parser */
+t_lst	*put_in_list(char **splited);
+void	remove_files(t_lst **commands);
+char	**ft_test(char *s, t_token *tokens);
+
+/* 5.1 Tokenizer */
+t_token	*token_finder(char *line);
+
+/* 5.2 Utils */
+int		check_occurence(char c, char *to_find);
+int		space_position(char *line, char c, int start);
+int		char_position(char *line, char c);
+int		count_chevrons(t_lst command, char chevron);
+int		last_infile(t_lst *command);
+int		last_outfile(t_lst *command);
+void	add_index(t_lst **commands);
+char	*add_env(char *line);
+
+/* 5.3 Free Memory */
+void	free_splited(char **splited);
+void	clean_all(t_token *tokens, char **splited, t_lst **commands);
+void	free_envp(void);
+
+/* 6. EXECUTOR */
+
+/* 6.0 Builtins */
 int		pwd(t_lst *commands);
 int		cd(t_lst *commands);
+int		copy_env(void);
 int		env(t_lst *commands);
 int		export(t_lst *command);
 int		unset(t_lst *commands);
@@ -88,27 +118,33 @@ int		echo(t_lst *commands);
 void	error_cmd(char *bash, char *cmd_name, char *input);
 void	error_usage(char *cmd_name, char *str, char *usage);
 
-/* Execution */
+/* 6.1 Execution */
+void	execute_builtin(t_lst *commands);
+void	handle_command(t_lst *commands);
 char	**find_paths(void);
 int		exec_cmd(t_lst *command);
 
-/* Redirections */
-int		ft_open(char *file_name, int mode);
-int		open_files(void);
-
-/* Pipes */
-int		ft_err_return(char *error);
-int		ft_perror(void);
-int		report_error(void);
-int		ft_free(char ***argv);
-
+/* 6.2 Piping */
 int		first_command(int right_pipe[], t_lst *command);
 int		last_command(int left_pipe[], int right_pipe[], t_lst *command);
-int		pipex(t_lst *command, int left_pipe[]);
+int		inter_command(int l_pipe[], int r_pipe[], t_lst *command);
 
-/* Signals */
+int		pipex(t_lst *command, int left_pipe[]);
+/* 6.3 Redirections */
+void	add_files(t_lst **commands);
+int		ft_open(char *file_name, int mode);
+int		open_files(t_lst *commands);
+
+/* 7. SIGNALS */
 void	sighandler(int signum);
 void	ft_ctrl_d(void);
 void	sighandler_cmd(int signum);
+
+/* 8. LIST MANIPULATION */
+int		lstsize(t_lst *lst);
+t_lst	*lstnew(char **content, int index);
+void	lstdelone(t_lst *lst);
+void	lstclear(t_lst **lst);
+void	lstadd_back(t_lst **lst, t_lst *new);
 
 #endif

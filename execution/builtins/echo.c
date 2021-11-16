@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "../../minishell.h"
 
 char	find_first_quote(char *line)
 {
@@ -31,6 +31,22 @@ char	*dquote(char *line)
 	return (temp);
 }
 
+int	count_occurence(char *str, char c)
+{
+	int counter;
+	int	x;
+
+	x = 0;
+	counter = 0;
+	while (str[x])
+	{
+		if (str[x] == c)
+			counter++;
+		x++;
+	}
+	return (counter);
+}
+
 char	*remove_useless_quotes(char *line, char first_quote)
 {
 	char	*new_line;
@@ -50,22 +66,6 @@ char	*remove_useless_quotes(char *line, char first_quote)
 	new_line[y] = '\0';
 	free(line);
 	return (new_line);
-}
-
-int	count_occurence(char *str, char c)
-{
-	int counter;
-	int	x;
-
-	x = 0;
-	counter = 0;
-	while (str[x])
-	{
-		if (str[x] == c)
-			counter++;
-		x++;
-	}
-	return (counter);
 }
 
 int	echo(t_lst *command)

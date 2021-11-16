@@ -2,7 +2,7 @@
 - Improve Return codes
 */
 
-#include "../minishell.h"
+#include "../../minishell.h"
 
 static void	error_env(char *str)
 {
@@ -22,6 +22,27 @@ static void	error_usage_env(char *str)
 	ft_putendl_fd("usage: env [-iv] [-P utilpath] [-S string] [-u name]", STDERR_FILENO);
 	ft_putendl_fd("\t [name=value ...] [utility [argument ...]]", STDERR_FILENO);
 	free((void *)option);
+}
+
+int		copy_env(void)
+{
+	int			i;
+	int			counter;
+	extern char	**environ;
+
+	i = 0;
+	counter = 0;
+	while (environ[counter] != NULL)
+		counter++;
+	data.envp = malloc(sizeof(char *) * (counter + 1));
+	while (environ[i] != NULL)
+	{
+		data.envp[i] = strdup(environ[i]);
+		// check for errors and free
+		i++;
+	}
+	data.envp[i] = NULL;
+	return (EXIT_SUCCESS);
 }
 
 int	env(t_lst *commands)
