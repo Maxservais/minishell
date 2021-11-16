@@ -44,6 +44,8 @@ typedef struct s_lst
 	int				type;
 	pid_t			pid;
 	int				status;
+	int				save_stdin;
+	int				save_stdout;
 	char			**content;
 	char			**cmd;
 	int				args;
@@ -119,21 +121,26 @@ void	error_cmd(char *bash, char *cmd_name, char *input);
 void	error_usage(char *cmd_name, char *str, char *usage);
 
 /* 6.1 Execution */
-void	execute_builtin(t_lst *commands);
 void	handle_command(t_lst *commands);
-char	**find_paths(void);
-int		exec_cmd(t_lst *command);
+int		handle_one_command(t_lst *commands);
+void	execute_builtin(t_lst *commands);
 
 /* 6.2 Piping */
 int		first_command(int right_pipe[], t_lst *command);
 int		last_command(int left_pipe[], int right_pipe[], t_lst *command);
 int		inter_command(int l_pipe[], int r_pipe[], t_lst *command);
-
 int		pipex(t_lst *command, int left_pipe[]);
+
 /* 6.3 Redirections */
 void	add_files(t_lst **commands);
 int		ft_open(char *file_name, int mode);
 int		open_files(t_lst *commands);
+int		redirect_files(t_lst *commands);
+int		redirect_standard(t_lst *commands);
+
+/* 6.4 Utils */
+char	**find_paths(void);
+int		exec_cmd(t_lst *command);
 
 /* 7. SIGNALS */
 void	sighandler(int signum);

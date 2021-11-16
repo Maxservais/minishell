@@ -87,3 +87,38 @@ int	open_files(t_lst *commands)
 	}
 	return (EXIT_SUCCESS);
 }
+
+int	redirect_files(t_lst *commands)
+{
+	if (commands->infile->name && commands->infile[last_infile(commands)].fd)
+	{
+		if (dup2(commands->infile[last_infile(commands)].fd, STDIN_FILENO) == -1)
+			return (-1);
+		close(commands->infile[last_infile(commands)].fd);
+	}
+	if (commands->outfile->name && commands->outfile[last_outfile(commands)].fd)
+	{
+		if (dup2(commands->outfile[last_outfile(commands)].fd, STDOUT_FILENO) == -1)
+			return (-1);
+		close(commands->outfile[last_outfile(commands)].fd);
+	}
+	return (0);
+}
+
+int	redirect_standard(t_lst *commands)
+{
+	if (commands->infile->name)
+	{
+		if (dup2(commands->save_stdin, STDIN_FILENO) == -1)
+			return (-1);
+		close(commands->save_stdin);
+	}
+	if (commands->outfile->name)
+	{
+		if (dup2(commands->save_stdout, STDOUT_FILENO) == -1)
+			return (-1);
+		close(commands->save_stdout);
+	}
+	return (0);
+}
+

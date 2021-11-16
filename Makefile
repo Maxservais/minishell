@@ -16,6 +16,7 @@ SRC_FILES 		=	main.c 					\
 					./execution/exec.c				\
 					./execution/pipex.c				\
 					./execution/redirection.c 		\
+					./execution/utils.c				\
 					./signals/signal.c				\
 					./utils/lst.c 					\
 
