@@ -3,6 +3,8 @@
 void	handle_command(t_lst *commands)
 {
 	data.command_code = 1;
+	commands->save_stdin = dup(STDIN_FILENO);
+	commands->save_stdout = dup(STDOUT_FILENO);
 	open_files(commands);
 	signal(SIGINT, sighandler_cmd);
 	signal(SIGQUIT, sighandler_cmd);
@@ -20,8 +22,6 @@ void	handle_command(t_lst *commands)
 
 int	handle_one_command(t_lst *commands)
 {
-	commands->save_stdin = dup(STDIN_FILENO);
-	commands->save_stdout = dup(STDOUT_FILENO);
 	if (redirect_files(commands) == -1)
 		return (-1); // GERER ERREUR
 	execute_builtin(commands);
@@ -44,13 +44,6 @@ int	handle_one_command(t_lst *commands)
 		}
 	}
 	return (0);
-		// if (!commands->job_done)
-		// {
-		// 	write(2, "bash: ", 6);
-		// 	write(2, commands->content[0], ft_strlen(commands->content[0]));
-		// 	write(2, ": command not found", 19);
-		// 	data.command_code = 127;
-		// }
 }
 
 void	execute_builtin(t_lst *commands)
@@ -73,3 +66,11 @@ void	execute_builtin(t_lst *commands)
 	if (data.command_code == 0)
 		redirect_standard(commands);
 }
+
+// if (!commands->job_done)
+// {
+// 	write(2, "bash: ", 6);
+// 	write(2, commands->content[0], ft_strlen(commands->content[0]));
+// 	write(2, ": command not found", 19);
+// 	data.command_code = 127;
+// }

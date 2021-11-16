@@ -67,23 +67,24 @@ int	open_files(t_lst *commands)
 	t_lst	*trav;
 	
 	i = 0;
-	trav = commands;
+	trav = commands; // TRAV IS A BIT UNNECCESSARY
 	while (trav)
 	{
-		while (commands->infile[i].name)
+		while (trav->infile[i].name)
 		{
-			commands->infile[i].fd = ft_open(commands->infile[i].name, commands->infile[i].mode);
-			if (commands->infile[i].fd == -1)
+			trav->infile[i].fd = ft_open(trav->infile[i].name, trav->infile[i].mode);
+			if (trav->infile[i].fd == -1)
 				return (-1);
-			// if (param.fd1 == -1 || param.fd2 == -1)
+			// GERER LES ERREURS !!!!!!!!!!!!!!!!
+			// if (param.fd1 == -1 || param.fd2 == -1) 
 			// 	perror("Error");
 			i++;
 		}
 		i = 0;
-		while (commands->outfile[i].name)
+		while (trav->outfile[i].name)
 		{
-			commands->outfile[i].fd = ft_open(commands->outfile[i].name, commands->outfile[i].mode);
-			if (commands->outfile[i].fd == -1)
+			trav->outfile[i].fd = ft_open(trav->outfile[i].name, trav->outfile[i].mode);
+			if (trav->outfile[i].fd == -1)
 				return (-1);
 			// if (param.fd1 == -1 || param.fd2 == -1)
 			// 	perror("Error");
