@@ -7,13 +7,13 @@ void	parser_test(char *line)
 	t_lst		*commands;
 
 	tokens = token_finder(line);
-	// remove "" useless 
+	// remove useless ""
 	splited = ft_test(line, tokens);
 	commands = put_in_list(splited);
 	add_files(&commands);
 	remove_files(&commands);
 	handle_command(commands);
-	// clean_all(tokens, splited, &commands);
+	clean_all(tokens, splited, &commands);
 }
 
 void	prompt_test(char *line)
@@ -38,7 +38,6 @@ int	main(void)
 	copy_env(); // check if succesful execution or not
 	line = NULL;
 	prompt_test(line);
-	// system("leaks minishell");
 
 	// raises an error;
 	// -->>

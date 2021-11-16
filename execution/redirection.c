@@ -10,6 +10,8 @@ void	add_files(t_lst **commands)
 	trav = *commands;
 	while (trav)
 	{
+		// printf("< == %d\n", count_chevrons(*trav, '<') + 1);
+		// printf("> == %d\n", count_chevrons(*trav, '>') + 1);
 		trav->infile = malloc(sizeof(t_file) * (count_chevrons(*trav, '<') + 1));
 		trav->outfile = malloc(sizeof(t_file) * (count_chevrons(*trav, '>') + 1));
 		x = 0;
