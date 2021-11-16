@@ -42,14 +42,19 @@ void	lstdelone(t_lst *lst)
 {
 	int	x;
 
-	x = 0;
 	if (!lst)
 		return ;
+	x = 0;
 	while (lst->content[x])
 		free(lst->content[x++]);
 	free(lst->content);
 	x = 0;
-	// free(lst->outfile);
+	while (lst->cmd[x])
+		free(lst->cmd[x++]);
+	free(lst->cmd);
+	x = 0;
+	// ?????????????????????? //
+	free(lst->outfile);
 	// free(lst->infile);
 	free(lst);
 }

@@ -7,13 +7,21 @@ void	parser_test(char *line)
 	t_lst		*commands;
 
 	tokens = token_finder(line);
+<<<<<<< HEAD
 	// remove "" useless 
+=======
+	// remove useless ""
+>>>>>>> 919c8015d7faef9c1728b4eba5fde19ac4f12a1e
 	splited = ft_test(line, tokens);
 	commands = put_in_list(splited);
 	add_files(&commands);
 	remove_files(&commands);
 	handle_command(commands);
+<<<<<<< HEAD
 	// clean_all(tokens, splited, &commands);
+=======
+	clean_all(tokens, splited, &commands);
+>>>>>>> 919c8015d7faef9c1728b4eba5fde19ac4f12a1e
 }
 
 void	prompt_test(char *line)
@@ -23,6 +31,7 @@ void	prompt_test(char *line)
 	// signal(SIGQUIT, SIG_IGN);
 	while (data.exit == -1)
 	{
+<<<<<<< HEAD
 		signal(SIGINT, sighandler);
 		signal(SIGQUIT, SIG_IGN);
 		line = readline("ta_mère$ ");
@@ -31,6 +40,9 @@ void	prompt_test(char *line)
 			ft_ctrl_d();
 			break;
 		}
+=======
+		line = readline("ta_mère$ ");
+>>>>>>> 919c8015d7faef9c1728b4eba5fde19ac4f12a1e
 		add_history(line);
 		if (ft_strlen(line))
 			parser_test(line);
@@ -47,7 +59,10 @@ int	main(void)
 	copy_env(); // check if succesful execution or not
 	line = NULL;
 	prompt_test(line);
+<<<<<<< HEAD
 	// system("leaks minishell");
+=======
+>>>>>>> 919c8015d7faef9c1728b4eba5fde19ac4f12a1e
 
 	// raises an error;
 	// -->>

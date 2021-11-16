@@ -24,8 +24,11 @@ void	handle_command(t_lst *commands)
 {
 	data.command_code = 1;
 	open_files(commands);
+<<<<<<< HEAD
 	signal(SIGINT, sighandler_cmd);
 	signal(SIGQUIT, sighandler_cmd);
+=======
+>>>>>>> 919c8015d7faef9c1728b4eba5fde19ac4f12a1e
 	if (data.nb_of_commands == 1)
 	{
 		execute_builtin(commands);

@@ -147,4 +147,11 @@ void	lstdelone(t_lst *lst);
 void	lstclear(t_lst **lst);
 void	lstadd_back(t_lst **lst, t_lst *new);
 
+/* 8. LIST MANIPULATION */
+int		lstsize(t_lst *lst);
+t_lst	*lstnew(char **content, int index);
+void	lstdelone(t_lst *lst);
+void	lstclear(t_lst **lst);
+void	lstadd_back(t_lst **lst, t_lst *new);
+
 #endif
