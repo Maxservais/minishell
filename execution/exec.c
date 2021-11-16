@@ -44,7 +44,7 @@ void	handle_command(t_lst *commands)
 					close(commands->infile[last_infile(commands)].fd);
 				}
 				// if output files, redirect
-				if (commands->infile->name && commands->outfile[last_outfile(commands)].fd)
+				if (commands->outfile->name && commands->outfile[last_outfile(commands)].fd)
 				{
 					if (dup2(commands->outfile[last_outfile(commands)].fd, STDOUT_FILENO) == -1)
 						return ;
@@ -105,7 +105,7 @@ int	exec_cmd(t_lst *command)
 	char	*path;
 	char	**paths;
 
-	execute_builtin(command);
+	// execute_builtin(command);
 	if (data.command_code == 0)
 		return (0);
 	paths = find_paths();
@@ -130,6 +130,7 @@ int	exec_cmd(t_lst *command)
 		i++;
 		execve(path, command->cmd, data.envp);
 	}
+	exit(127);
 	command->job_done = 1;
 	return (-1);
 }

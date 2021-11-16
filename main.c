@@ -19,8 +19,6 @@ void	parser_test(char *line)
 void	prompt_test(char *line)
 {
 	data.exit = -1;
-	// signal(SIGINT, sighandler);
-	// signal(SIGQUIT, SIG_IGN);
 	while (data.exit == -1)
 	{
 		signal(SIGINT, sighandler);
