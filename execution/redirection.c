@@ -66,10 +66,10 @@ int	open_files(t_lst *commands)
 	int		i;
 	t_lst	*trav;
 	
-	i = 0;
 	trav = commands; // TRAV IS A BIT UNNECCESSARY
 	while (trav)
 	{
+		i = 0;
 		while (trav->infile[i].name)
 		{
 			trav->infile[i].fd = ft_open(trav->infile[i].name, trav->infile[i].mode);

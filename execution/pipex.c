@@ -55,7 +55,6 @@ int	last_command(int left_pipe[], int right_pipe[], t_lst *command)
 		return (-1);
 	else if (command->pid == 0)
 	{
-		printf("input file: %s\n", command->infile->name);
 		/* Only read from pipe if there was no input file */
 		if (!command->infile->name)
 		{
@@ -63,11 +62,11 @@ int	last_command(int left_pipe[], int right_pipe[], t_lst *command)
 				return (-1);
 		}
 		else
-		{
 			close(left_pipe[READ]);
-		}
+		if (close(left_pipe[WRITE]) == -1)
+			return (-1);
 		/* Read from last input file if there is one, otherwise read from pipe */
-		if (command->infile->name && command->infile[last_infile(command)].fd)
+		if (command->infile->name && command->infile[1].fd)
 		{
 			if (dup2(command->infile[last_infile(command)].fd, STDIN_FILENO) == -1)
 				return (-1);
@@ -80,8 +79,6 @@ int	last_command(int left_pipe[], int right_pipe[], t_lst *command)
 				return (-1);
 			close(command->outfile[last_outfile(command)].fd);
 		}
-		if (close(left_pipe[WRITE]) == -1)
-			return (-1);
 		execute_builtin(command);
 		if (data.command_code != 0)
 		{
