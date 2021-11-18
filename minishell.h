@@ -72,6 +72,12 @@ typedef struct s_token
 	int		to_ignore;
 }				t_token;
 
+typedef struct	s_operations
+{
+	char	*operation;
+	int		size;
+}				t_operation;
+
 /* 3. GLOBAL VARIABLE */
 
 t_data data;
