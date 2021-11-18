@@ -47,9 +47,6 @@ static void	error_args(char *str)
 
 static int check_format(char *str)
 {
-	int	count;
-
-	count = 0;
 	while (str && *str)
 	{
 		if (*str == '=')

@@ -53,7 +53,7 @@ static int	count_words(char *str, t_operation *o)
 				str++;
 			counter++;
 		}
-	}	
+	}
 	return (counter);
 }
 
@@ -133,10 +133,10 @@ int	main(void)
 	int					x = 0;
 	t_operation			o[14] =
 	{
-		{"<", 1},
-		{">", 1},
 		{">>", 2},
 		{"<<", 2},
+		{"<", 1},
+		{">", 1},
 		{"\'", 1},
 		{"\"", 1},
 		{"$", 1},
@@ -148,9 +148,14 @@ int	main(void)
 		{"\f", 1},
 		{NULL, 1}
 	};
-	result = split_token("  < infile<main.c   cat  >outfile", o);
+	result = split_token("  < infile<main.c   cat  >outfile $xav >> test <<yo", o);
+	// result = split_token("test >> oui << non", o);
 	while (result[x])
-	    printf("--%s\n", result[x++]);
+	{
+	    printf("%s\n", result[x]);
+	    free(result[x++]);
+	}
+	free(result);
 	// system("leaks a.out");
 	return (0);
 }
