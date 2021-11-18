@@ -27,7 +27,7 @@ void	prompt_test(char *line)
 		if (!line)
 		{
 			ft_ctrl_d();
-			break;
+			break ;
 		}
 		add_history(line);
 		if (ft_strlen(line))
