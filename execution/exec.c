@@ -25,7 +25,9 @@ int	handle_one_command(t_lst *commands)
 	if (redirect_files(commands) == -1)
 		return (-1); // GERER ERREUR
 	execute_builtin(commands);
-	if (data.command_code != 0)
+	if (data.command_code == 0)
+		redirect_standard(commands);
+	else
 	{
 		commands->pid = fork();
 		if (commands->pid < 0)
@@ -62,9 +64,6 @@ void	execute_builtin(t_lst *commands)
 		data.command_code = pwd(commands);
 	else if (!ft_strncmp(commands->content[0], "unset", 5))
 		data.command_code = unset(commands);
-	// Return Success if at least one builtin command got executed
-	if (data.command_code == 0)
-		redirect_standard(commands);
 }
 
 // if (!commands->job_done)

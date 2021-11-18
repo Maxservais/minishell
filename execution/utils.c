@@ -30,32 +30,34 @@ int	exec_cmd(t_lst *command)
 	char	*path;
 	char	**paths;
 
-	// execute_builtin(command);
-	if (data.command_code == 0)
+	// // execute_builtin(command);
+	if (data.command_code == 0) // EST-CE VRAIMENT NECESSAIRE???
 		return (0);
 	paths = find_paths();
 	if (!paths)
 		return (-1);
 	i = 0;
-	execve(command->cmd[0], command->cmd, data.envp);
-	// int x;
-	// while (command)
-	// {
-	// 	x = 0;
-	// 	while (command->cmd[x])
-	// 		printf("cmd: %s\n", command->cmd[x++]);
-	// 	command = command->next;
-	// }
-	while (paths[i])
+	if (execve(command->cmd[0], command->cmd, data.envp) == -1)
 	{
-		part_path = ft_strjoin(paths[i], "/");
-		path = ft_strjoin(part_path, command->cmd[0]);
-		free(part_path);
-		free(paths[i]);
-		i++;
-		execve(path, command->cmd, data.envp);
+		// int x;
+		// while (command)
+		// {
+		// 	x = 0;
+		// 	while (command->cmd[x])
+		// 		printf("cmd: %s\n", command->cmd[x++]);
+		// 	command = command->next;
+		// }
+		while (paths[i])
+		{
+			part_path = ft_strjoin(paths[i], "/");
+			path = ft_strjoin(part_path, command->cmd[0]);
+			free(part_path);
+			free(paths[i]);
+			i++;
+			execve(path, command->cmd, data.envp);
+		}
 	}
 	exit(127);
-	command->job_done = 1;
-	return (-1);
+	command->job_done = 1; // IS THAT NECESSARY ?
+	return (-1); // DO I NEED THIS IF WE EXIT ALREADY ?
 }
