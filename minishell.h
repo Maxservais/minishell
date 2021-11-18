@@ -99,6 +99,8 @@ int		last_infile(t_lst *command);
 int		last_outfile(t_lst *command);
 void	add_index(t_lst **commands);
 char	*add_env(char *line);
+int		strisdigit(char *str);
+int		ft_strcmp(char *str, char *end);
 
 /* 5.3 Free Memory */
 void	free_splited(char **splited);

@@ -84,3 +84,31 @@ void	lstadd_back(t_lst **lst, t_lst *new)
 	lstlast(*lst)->next = new;
 	lstlast(*lst)->prev = *lst;
 }
+
+int	strisdigit(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] != '\0')
+	{
+		if (str[i] <= '0' || str[i] >= '9')
+			return (-1);
+		i++;
+	}
+	return (0);
+}
+
+int	ft_strcmp(char *str, char *end)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] != end[i])
+			return (1);
+		i++;
+	}
+	return (0);
+}

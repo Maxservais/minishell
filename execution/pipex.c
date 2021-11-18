@@ -29,9 +29,6 @@ int	first_command(int right_pipe[], t_lst *command)
 		if (pipex(command->next, right_pipe) == -1)
 			return (-1);
 	}
-	wait(&data.exit_code);
-	if (WIFSIGNALED(data.exit_code))
-		data.exit_code = 128 + WTERMSIG(data.exit_code);
 	return (0);
 }
 
@@ -63,6 +60,10 @@ int	last_command(int left_pipe[], int right_pipe[], t_lst *command)
 			return (-1);
 		return (0);
 	}
+//	command->pid
+	// wait(&data->status);
+	// if (WIFSIGNALED(data->status))
+	// 	data->exit_code = WEXITSTATUS(status);128 + WTERMSIG(data->status);
 	return (0);
 }
 

@@ -1,72 +1,77 @@
 #include "../../minishell.h"
 
-char	find_first_quote(char *line)
-{
-	int		x;
+// char	find_first_quote(char *line)
+// {
+// 	int		x;
 
-	x = 0;
-	while (line[x])
-	{
-		if (line[x] == '\'')
-			return ('\'');
-		if (line[x] == '\"')
-			return ('\"');
-		x++;
-	}
-	return (0);
-}
+// 	x = 0;
+// 	while (line[x])
+// 	{
+// 		if (line[x] == '\'')
+// 			return ('\'');
+// 		if (line[x] == '\"')
+// 			return ('\"');
+// 		x++;
+// 	}
+// 	return (0);
+// }
 
-char	*dquote(char *line)
-{
-	char	*new_line;
-	char	*temp;
-	char	*temp_2;
+// char	*dquote(char *line)
+// {
+// 	char	*new_line;
+// 	char	*temp;
+// 	char	*temp_2;
 
-	new_line = readline("> ");
-	temp_2 = ft_strjoin(line, "\n");
-	temp = ft_strjoin(temp_2, new_line);
-	free(temp_2);
-	free(line);
-	free(new_line);
-	return (temp);
-}
+// 	new_line = readline("> ");
+// 	temp_2 = ft_strjoin(line, "\n");
+// 	temp = ft_strjoin(temp_2, new_line);
+// 	free(temp_2);
+// 	free(line);
+// 	free(new_line);
+// 	return (temp);
+// }
 
-int	count_occurence(char *str, char c)
-{
-	int counter;
-	int	x;
+// int	count_occurence(char *str, char c)
+// {
+// 	int counter;
+// 	int	x;
 
-	x = 0;
-	counter = 0;
-	while (str[x])
-	{
-		if (str[x] == c)
-			counter++;
-		x++;
-	}
-	return (counter);
-}
+// 	x = 0;
+// 	counter = 0;
+// 	while (str[x])
+// 	{
+// 		if (str[x] == c)
+// 			counter++;
+// 		x++;
+// 	}
+// 	return (counter);
+// }
 
-char	*remove_useless_quotes(char *line, char first_quote)
-{
-	char	*new_line;
-	int		x;
-	int		y;
+// char	*remove_useless_quotes(char *line, char first_quote)
+// {
+// 	char	*new_line;
+// 	int		x;
+// 	int		y;
 
-	x = 0;
-	y = 0;
-	new_line = malloc(ft_strlen(line) - count_occurence(line, first_quote) + 1);
-	while (line[x])
-	{
-		if (line[x] == first_quote)
-			x++;
-		else
-			new_line[y++] = line[x++];
-	}
-	new_line[y] = '\0';
-	free(line);
-	return (new_line);
-}
+// 	x = 0;
+// 	y = 0;
+// 	new_line = malloc(ft_strlen(line) - count_occurence(line, first_quote) + 1);
+// 	while (line[x])
+// 	{
+// 		if (line[x] == first_quote)
+// 			x++;
+// 		else
+// 			new_line[y++] = line[x++];
+// 	}
+// 	new_line[y] = '\0';
+// 	free(line);
+// 	return (new_line);
+// }
+
+// int	bad_char(t_lst *command)
+// {
+// 	if ()
+// }
 
 int	echo(t_lst *command)
 {
@@ -74,23 +79,29 @@ int	echo(t_lst *command)
 
 	// if (command->index < data.nb_of_commands)
 	// 	return ;
-	if (!ft_strncmp(command->content[0], "echo", 4) && !ft_strncmp(command->content[1], "$?", 2))
+	
+	if (ft_strcmp(command->content[0], "echo") && !ft_strcmp(command->content[1], "$?"))
 	{
-		printf("%d\n", data.exit_code);
-		return (0);
-	}
-	else if (!ft_strncmp(command->content[0], "echo", 4) && !command->content[1])
-	{
+		ft_putnbr(data.command_code);
 		write(1, "\n", 1);
+		data.exit_code = 0;
 		command->job_done = 1;
 		return (0);
 	}
-	else if (!ft_strncmp(command->content[0], "echo", 4) && ft_strncmp(command->content[1], "-n", 2))
+	else if (!ft_strcmp(command->content[0], "echo") && !command->content[1])
+	{
+		write(1, "\n", 1);
+		data.exit_code = 0;
+		command->job_done = 1;
+		return (0);
+	}
+	else if (!ft_strcmp(command->content[0], "echo") && ft_strcmp(command->content[1], "-n"))
 	{
 		x = 1;
+		data.exit_code = 0;
 		while (command->content[x])
 		{
-			if (!ft_strncmp(command->content[x], "$?", 2))
+			if (!ft_strcmp(command->content[x], "$?"))
 			{
 				ft_putnbr(data.command_code);
 				x++;
@@ -112,9 +123,10 @@ int	echo(t_lst *command)
 		command->job_done = 1;
 		return (0);
 	}
-	else if (!ft_strncmp(command->content[0], "echo", 4) && !ft_strncmp(command->content[1], "-n", 2))
+	else if (!ft_strcmp(command->content[0], "echo") && !ft_strcmp(command->content[1], "-n"))
 	{
 		x = 2;
+		data.exit_code = 0;
 		while (command->content[x])
 		{
 			if (command->content[x + 1])

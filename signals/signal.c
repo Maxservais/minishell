@@ -4,10 +4,10 @@ void	sighandler(int signum)
 {
 	if (signum == SIGINT)
 	{
-		rl_replace_line("", 0);
+		rl_replace_line("", 0); //remet la line a zero
 		write(1, "\n", 1);
-		rl_on_new_line();
-		rl_redisplay();
+		rl_on_new_line();		//relance le prompt
+		rl_redisplay();			//reaffiche la ligne precedente
 		data.exit_code = 1; // doit rester 1 pour le code de sortie
 	}
 }
@@ -24,13 +24,13 @@ void	sighandler_cmd(int signum)
 	{
 		write(1, "\n", 1);
 		rl_on_new_line();
-		data.exit_code = 2; // doit devenir 130 pour le code de sortie
+		//data.exit_code = 130; // doit devenir 130 pour le code de sortie
 	}
 	else if (signum == SIGQUIT)
 	{
 		write(1, "Quit: 3\n", 8);
 		rl_on_new_line();
-		data.exit_code = 3; // doit devenir 131 pour le code de sortie
+		//data.exit_code = 131; // doit devenir 131 pour le code de sortie
 	}
 }
 

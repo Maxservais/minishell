@@ -3,19 +3,19 @@
 void		execute_builtin(t_lst *commands)
 {
 	// IL FAUT GERER LES REDIRECTIONS!!!!
-	if (!ft_strncmp(commands->content[0], "cd", 2))
+	if (!ft_strcmp(commands->content[0], "cd"))
 		data.command_code = cd(commands);
-	else if (!ft_strncmp(commands->content[0], "echo", 4))
+	else if (!ft_strcmp(commands->content[0], "echo"))
 		data.command_code = echo(commands);
-	else if (!ft_strncmp(commands->content[0], "env", 3))
+	else if (!ft_strcmp(commands->content[0], "env"))
 		data.command_code = env(commands);
-	else if (!ft_strncmp(commands->content[0], "exit", 5))
+	else if (!ft_strcmp(commands->content[0], "exit"))
 		data.command_code = ft_exit(commands);
-	else if (!ft_strncmp(commands->content[0], "export", 6))
+	else if (!ft_strcmp(commands->content[0], "export"))
 		data.command_code = export(commands);
-	else if (!ft_strncmp(commands->content[0], "pwd", 3))
+	else if (!ft_strcmp(commands->content[0], "pwd"))
 		data.command_code = pwd(commands);
-	else if (!ft_strncmp(commands->content[0], "unset", 5))
+	else if (!ft_strcmp(commands->content[0], "unset"))
 		data.command_code = unset(commands);
 	// Return Success if at least one builtin command got executed
 }
@@ -31,6 +31,9 @@ void	handle_command(t_lst *commands)
 		execute_builtin(commands);
 		if (data.command_code != 0)
 		{
+			//printf("command = %s\n",commands->content[0]);
+			if (!ft_strcmp(commands->content[0], "cat") || !ft_strcmp(commands->content[0], "ls"))
+				commands->job_done = 1;
 			commands->pid = fork();
 			if (commands->pid < 0)
 				return ; // RETURN ERROR
@@ -59,14 +62,17 @@ void	handle_command(t_lst *commands)
 				if (waitpid(-1, &commands->status, 0) == -1)
 					return ;
 			}
+			// wait(&data.exit_code);
+			// if (WIFSIGNALED(data.exit_code))
+			// 	data.exit_code = 128 + WTERMSIG(data.exit_code);
 		}
-		// if (!commands->job_done)
-		// {
-		// 	write(2, "bash: ", 6);
-		// 	write(2, commands->content[0], ft_strlen(commands->content[0]));
-		// 	write(2, ": command not found", 19);
-		// 	data.command_code = 127;
-		// }
+		if (!commands->job_done && ft_strcmp(commands->content[0], "test")) // REGLER POUR CAT VIDE ETC
+		{
+			write(2, "bash: ", 6);
+			write(2, commands->content[0], ft_strlen(commands->content[0]));
+			write(2, ": command not found\n", 20);
+			data.exit_code = 127;
+		}
 	}
 	else
 	{

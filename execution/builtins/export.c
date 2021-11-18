@@ -78,6 +78,7 @@ int	export(t_lst *commands)
 	char		*env;
 
 	i = 0;
+	data.exit_code = 0;
 	if (!commands->content[1])
 		print_env();
 	else if (!check_format(commands->content[1]))

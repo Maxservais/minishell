@@ -27,9 +27,12 @@ int	cd(t_lst *commands)
 {
 	char	current_path[PATH_MAX];
 
+	data.exit_code = 0;
 	getcwd(current_path, sizeof(current_path));
 	if (!commands->content[1])
 		chdir(getenv("HOME"));
+	else if (!ft_strncmp(commands->content[1], "\"\"", 2)) //en cas de cd "" il doit simplement retourner a la ligne
+		rl_on_new_line();
 	else if (!ft_strncmp(commands->content[1], "-", 1))
 	{
 		if (ft_strncmp(commands->content[1], "-L", 2)

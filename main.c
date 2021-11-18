@@ -50,7 +50,7 @@ int	main(void)
 	// raises an error;
 	// -->>
 	// free_envp();
-	system("leaks minishell");
+	//system("leaks minishell");
 	return (EXIT_SUCCESS);
 }
 

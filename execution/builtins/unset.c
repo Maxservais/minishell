@@ -20,12 +20,13 @@ static void	find_var(char *variable)
 
 int	unset(t_lst *commands)
 {
+	data.exit_code = 0;
 	if (commands->content[1])
 		find_var(commands->content[1]);
 	// else if (!ft_strncmp(commands->content[1], "-", 1))
 	// {
-	// 	if (ft_strncmp(commands->content[1], "-L", 2)
-	// 		&& ft_strncmp(commands->content[1], "-P", 2))
+	// 	if (ft_strncmp(commands->content[1], "-f")
+	// 		&& ft_strncmp(commands->content[1], "-v"))
 	// 	{
 	// 		error_usage("cd: ", commands->content[1], "cd: usage: cd [-L|-P] [dir]");
 	// 		commands->job_done = 1;

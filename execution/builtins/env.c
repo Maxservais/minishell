@@ -22,6 +22,7 @@ static void	error_usage_env(char *str)
 	ft_putendl_fd("usage: env [-iv] [-P utilpath] [-S string] [-u name]", STDERR_FILENO);
 	ft_putendl_fd("\t [name=value ...] [utility [argument ...]]", STDERR_FILENO);
 	free((void *)option);
+	printf("test\n");
 }
 
 int		copy_env(void)
@@ -50,6 +51,7 @@ int	env(t_lst *commands)
 	int			i;
 	extern char	**environ;
 
+	data.exit_code = 0;
 	i = 0;
 	if (commands->content[1] && !ft_strncmp(commands->content[1], "-", 1))
 	{
