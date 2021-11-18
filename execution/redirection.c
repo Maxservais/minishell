@@ -66,24 +66,25 @@ int	open_files(t_lst *commands)
 	int		i;
 	t_lst	*trav;
 	
-	i = 0;
-	trav = commands;
+	trav = commands; // TRAV IS A BIT UNNECCESSARY
 	while (trav)
 	{
-		while (commands->infile[i].name)
+		i = 0;
+		while (trav->infile[i].name)
 		{
-			commands->infile[i].fd = ft_open(commands->infile[i].name, commands->infile[i].mode);
-			if (commands->infile[i].fd == -1)
+			trav->infile[i].fd = ft_open(trav->infile[i].name, trav->infile[i].mode);
+			if (trav->infile[i].fd == -1)
 				return (-1);
-			// if (param.fd1 == -1 || param.fd2 == -1)
+			// GERER LES ERREURS !!!!!!!!!!!!!!!!
+			// if (param.fd1 == -1 || param.fd2 == -1) 
 			// 	perror("Error");
 			i++;
 		}
 		i = 0;
-		while (commands->outfile[i].name)
+		while (trav->outfile[i].name)
 		{
-			commands->outfile[i].fd = ft_open(commands->outfile[i].name, commands->outfile[i].mode);
-			if (commands->outfile[i].fd == -1)
+			trav->outfile[i].fd = ft_open(trav->outfile[i].name, trav->outfile[i].mode);
+			if (trav->outfile[i].fd == -1)
 				return (-1);
 			// if (param.fd1 == -1 || param.fd2 == -1)
 			// 	perror("Error");
@@ -93,3 +94,38 @@ int	open_files(t_lst *commands)
 	}
 	return (EXIT_SUCCESS);
 }
+
+int	redirect_files(t_lst *commands)
+{
+	if (commands->infile->name && commands->infile[last_infile(commands)].fd)
+	{
+		if (dup2(commands->infile[last_infile(commands)].fd, STDIN_FILENO) == -1)
+			return (-1);
+		close(commands->infile[last_infile(commands)].fd);
+	}
+	if (commands->outfile->name && commands->outfile[last_outfile(commands)].fd)
+	{
+		if (dup2(commands->outfile[last_outfile(commands)].fd, STDOUT_FILENO) == -1)
+			return (-1);
+		close(commands->outfile[last_outfile(commands)].fd);
+	}
+	return (0);
+}
+
+int	redirect_standard(t_lst *commands)
+{
+	if (commands->infile->name)
+	{
+		if (dup2(commands->save_stdin, STDIN_FILENO) == -1)
+			return (-1);
+		close(commands->save_stdin);
+	}
+	if (commands->outfile->name)
+	{
+		if (dup2(commands->save_stdout, STDOUT_FILENO) == -1)
+			return (-1);
+		close(commands->save_stdout);
+	}
+	return (0);
+}
+

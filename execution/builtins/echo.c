@@ -79,31 +79,22 @@ int	echo(t_lst *command)
 
 	// if (command->index < data.nb_of_commands)
 	// 	return ;
-	
-	if (ft_strcmp(command->content[0], "echo") && !ft_strcmp(command->content[1], "$?"))
-	{
-		ft_putnbr(data.command_code);
-		write(1, "\n", 1);
-		data.exit_code = 0;
-		command->job_done = 1;
-		return (0);
-	}
-	else if (!ft_strcmp(command->content[0], "echo") && !command->content[1])
+
+	if (!ft_strcmp(command->content[0], "echo") && !command->content[1])
 	{
 		write(1, "\n", 1);
-		data.exit_code = 0;
 		command->job_done = 1;
-		return (0);
+		return (EXIT_SUCCESS);
 	}
 	else if (!ft_strcmp(command->content[0], "echo") && ft_strcmp(command->content[1], "-n"))
 	{
 		x = 1;
-		data.exit_code = 0;
 		while (command->content[x])
 		{
 			if (!ft_strcmp(command->content[x], "$?"))
 			{
-				ft_putnbr(data.command_code);
+				ft_putnbr(data.exit_code);
+				command->job_done = 1;
 				x++;
 			}
 			else if (command->content[x + 1])
@@ -121,12 +112,11 @@ int	echo(t_lst *command)
 		}
 		write(1, "\n", 1);
 		command->job_done = 1;
-		return (0);
+		return (EXIT_SUCCESS);
 	}
 	else if (!ft_strcmp(command->content[0], "echo") && !ft_strcmp(command->content[1], "-n"))
 	{
 		x = 2;
-		data.exit_code = 0;
 		while (command->content[x])
 		{
 			if (command->content[x + 1])
@@ -144,5 +134,5 @@ int	echo(t_lst *command)
 		command->job_done = 1;
 		return (0);
 	}
-	return (1);
+	return (EXIT_SUCCESS);
 }

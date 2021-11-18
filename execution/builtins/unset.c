@@ -20,19 +20,19 @@ static void	find_var(char *variable)
 
 int	unset(t_lst *commands)
 {
-	data.exit_code = 0;
-	if (commands->content[1])
+	if (!ft_strncmp(commands->content[1], "-", 1))
+	{
+		if (ft_strcmp(commands->content[1], "-f")
+			&& ft_strcmp(commands->content[1], "-v"))
+		{
+			error_usage("unset: ", commands->content[1], "unset: usage: unset [-f] [-v] [name ...]");
+			commands->job_done = 1;
+			return (EXIT_FAILURE);
+		}
+	}
+	else if (commands->content[1])
 		find_var(commands->content[1]);
-	// else if (!ft_strncmp(commands->content[1], "-", 1))
-	// {
-	// 	if (ft_strncmp(commands->content[1], "-f")
-	// 		&& ft_strncmp(commands->content[1], "-v"))
-	// 	{
-	// 		error_usage("cd: ", commands->content[1], "cd: usage: cd [-L|-P] [dir]");
-	// 		commands->job_done = 1;
-	// 		return (EXIT_FAILURE);
-	// 	}
-	// }
+	
 	commands->job_done = 1;
-	return (1); // a changer
+	return (EXIT_SUCCESS);
 }

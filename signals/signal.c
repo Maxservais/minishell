@@ -22,15 +22,16 @@ void	sighandler_cmd(int signum)
 {
 	if (signum == SIGINT)
 	{
+		// printf("exit code =%d\n", data.exit_code);
 		write(1, "\n", 1);
 		rl_on_new_line();
-		//data.exit_code = 130; // doit devenir 130 pour le code de sortie
+		data.exit_code = 130; // doit devenir 130 pour le code de sortie
 	}
 	else if (signum == SIGQUIT)
 	{
 		write(1, "Quit: 3\n", 8);
 		rl_on_new_line();
-		//data.exit_code = 131; // doit devenir 131 pour le code de sortie
+		data.exit_code = 131; // doit devenir 131 pour le code de sortie
 	}
 }
 

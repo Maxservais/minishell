@@ -39,6 +39,7 @@ int	cd(t_lst *commands)
 			&& ft_strncmp(commands->content[1], "-P", 2))
 		{
 			error_usage("cd: ", commands->content[1], "cd: usage: cd [-L|-P] [dir]");
+			data.exit_code = 1;
 			commands->job_done = 1;
 			return (EXIT_FAILURE);
 		}

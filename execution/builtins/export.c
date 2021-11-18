@@ -78,7 +78,6 @@ int	export(t_lst *commands)
 	char		*env;
 
 	i = 0;
-	data.exit_code = 0;
 	if (!commands->content[1])
 		print_env();
 	else if (!check_format(commands->content[1]))
@@ -94,7 +93,11 @@ int	export(t_lst *commands)
 	else
 	{
 		if (!ft_strncmp(commands->content[1], "-", 1))
+		{
 			error_usage_export(commands->content[1]);
+			commands->job_done = 1;
+			return (EXIT_FAILURE);
+		}
 		else if (commands->content[2] && !check_format(commands->content[2]))
 			error_args(commands->content[2]);
 		return (EXIT_FAILURE);
