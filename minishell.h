@@ -72,6 +72,12 @@ typedef struct s_token
 	int		to_ignore;
 }				t_token;
 
+typedef struct	s_operations
+{
+	char	*operation;
+	int		size;
+}				t_operation;
+
 /* 3. GLOBAL VARIABLE */
 
 t_data data;
@@ -160,5 +166,8 @@ t_lst	*lstnew(char **content, int index);
 void	lstdelone(t_lst *lst);
 void	lstclear(t_lst **lst);
 void	lstadd_back(t_lst **lst, t_lst *new);
+
+
+char	**split_token(char *str);
 
 #endif
