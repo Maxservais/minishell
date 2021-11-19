@@ -1,5 +1,38 @@
 #include "../minishell.h"
 
+void	heredoc(t_lst *commands)
+{
+	int		x;
+	int		pipe_fd[2];
+	char	*to_add;
+
+	pipe(pipe_fd);
+	x = 0;
+	to_add = NULL;
+	// while (commands)
+	// {
+	while (commands->content[x])
+	{
+		if (!ft_strncmp(commands->content[x], "<<", 2))
+		{
+			while (!to_add || ft_strncmp(to_add, commands->content[x + 1],
+				ft_strlen(commands->content[x + 1])))
+			{
+				to_add = readline("> ");
+				write(pipe_fd[WRITE], to_add, ft_strlen(to_add));
+				write(pipe_fd[WRITE], "\n", 1);
+				free(to_add);
+			}
+			dup2(pipe_fd[READ], STDIN_FILENO);
+		}
+		x++;
+	}
+	close(pipe_fd[READ]);
+	close(pipe_fd[WRITE]);
+	// 	commands = commands->next;
+	// }
+}
+
 void	handle_command(t_lst *commands)
 {
 	data.command_code = 1;
@@ -10,6 +43,7 @@ void	handle_command(t_lst *commands)
 	signal(SIGQUIT, sighandler_cmd);
 	if (data.nb_of_commands == 1)
 	{
+		heredoc(commands);
 		if (handle_one_command(commands) == -1)
 			return ; // report error
 	}
