@@ -103,6 +103,7 @@ static	char	*create_word(char *str, t_operation *o, int *i)
 	}
 	word = malloc(sizeof(char) * (len + 1));
 	*i = 0;
+	// printf("%d\n", len);
 	while (len--)
 	{
 		if (*str == first_quote)
@@ -177,20 +178,20 @@ char	**split_token(char *str)
 	return (factory(result, o, str));
 }
 
-int	main(void)
-{
-	char				**result;
-	int					x = 0;
-	result = split_token("  < infile<main.c   cat  >outfile \"$xav >> test <<yo\" >");
-	// result = split_token("echo \"test > wc\"");
-	// result = split_token("test >> oui << non", o);
-	// result = split_token("test \"oui non\"");
-	while (result[x])
-	{
-	    printf("|%s|\n", result[x]);
-	    free(result[x++]);
-	}
-	free(result);
-	// system("leaks a.out");
-	return (0);
-}
+// int	main(void)
+// {
+// 	char				**result;
+// 	int					x = 0;
+// 	result = split_token("  < infile<main.c   cat  >outfile \"$xav >> test <<yo\" ok");
+// 	// result = split_token("echo \"test > wc\"");
+// 	// result = split_token("test >> oui << non", o);
+// 	// result = split_token("test \"oui non\"");
+// 	while (result[x])
+// 	{
+// 	    printf("|%s|\n", result[x]);
+// 	    free(result[x++]);
+// 	}
+// 	free(result);
+// 	// system("leaks a.out");
+// 	return (0);
+// }
