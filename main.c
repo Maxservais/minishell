@@ -21,33 +21,82 @@ void	is_error(t_lst *command)
 		ft_putstr_fd("error\n", 1);
 }
 
-static void	make_block(t_lst **commands)
+static char	find_first_quote(t_lst *command)
 {
-	char  first_quote;
-	int   size;
-	int   x;
+	char	first_quote;
+	int		x;
+
+	x = 0;	
+	while (command->content[x] && command->content[x][0] != '\'' && command->content[x][0] != '\"')
+		x++;
+	if (!command->content[x])
+		return (0);
+	first_quote = command->content[x][0];
+	return (first_quote);
+}
+
+static	int	compute_size(t_lst *command)
+{
+	char	first_quote;
+	int		size;
+	int		x;
 
 	size = 0;
 	x = 0;
-	while (trav->content[x][0] != '\'' && trav->content[x][0] != '\"')
+	while (command->content[x] && command->content[x][0] != '\'' && command->content[x][0] != '\"')
 		x++;
-	first_quote = trav->content[x][0];
-	while (trav->content[x++][0] != first_quote)
+	if (!command->content[x])
+		return (0);
+	first_quote = command->content[x][0];
+	while (command->content[x++][0] != first_quote)
 		size++;
-	size = x - size;
-	printf("%d\n", size);
+	return (size = x - size);
+}
 
+static void	make_block(t_lst **commands)
+{
+	t_lst	*trav;
+	int		size;
+	int		x;
+	int		y;
+	int		z;
+	char	**clean;
+	char	first_quote;
+	char	*word;
+	int		len;
+
+	x = 0;
+	y = 0;
+	size = 0;
+	trav = *commands;
+	while (trav)
+	{
+		len = 0;
+		size = compute_size(trav);
+		if (size)
+			clean = malloc(sizeof(char **) * (size + 1));
+		while (trav->content[x])
+		{
+			first_quote = find_first_quote(trav);
+			while (trav->content[x][0] != first_quote)
+				clean[y++] = ft_strdup(trav->content[x++]);
+			while (trav->content[x] != first_quote)
+				len += ft_strlen(trav->content[x++]);
+		}
+		trav = trav->next;
+		size = 0;
+	}
 }
 
 void	remove_quote(t_lst **commands)
 {
 	t_lst *trav;
-	// char  **temp;
 
 	trav = *commands;
 	while (trav)
 	{
 		is_error(trav);
+		make_block(&trav);
 		trav = trav->next;
 	}
 }

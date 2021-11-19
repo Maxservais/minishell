@@ -112,8 +112,8 @@ static char	**factory(char **result, t_operation *o, char *str)
 
 char	**split_token(char *str)
 {
-	char		**result;
-	t_operation			o[14] =
+	char			**result;
+	t_operation		o[14] =
 	{
 		{">>", 2},
 		{"<<", 2},
