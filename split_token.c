@@ -15,21 +15,47 @@ static int	check_occ(char *str, t_operation *o)
 	return (0);
 }
 
+static char	find_first_quote(char *str)
+{
+	int		x;
+	char	first_quote;
+
+	x = 0;
+	first_quote = 0;
+	while (str[x])
+	{
+		if (str[x] == '\'' || str[x] == '\"')
+			first_quote = str[x];
+		x++;
+	}
+	return (first_quote);
+}
+
 static int	count_words(char *str, t_operation *o)
 {
-	int counter;
-	int x;
+	int		counter;
+	int		x;
+	char	first_quote;
 
 	x = 0;
 	counter = 0;
+	first_quote = find_first_quote(str);
 	while (*str)
 	{
-		if (check_occ(str + x, o))
+		if (*str == first_quote)
+		{
+			str++;
+			while (*str != first_quote)
+				str++;
+			str++;
+			counter++;
+		}
+		else if (check_occ(str, o) && *(str) != first_quote)
 		{
 			if (*str == ' ')
 				counter--;
 			counter++;
-			str += check_occ(str + x, o);
+			str += check_occ(str, o);
 		}
 		else
 		{
@@ -45,9 +71,11 @@ static	char	*create_word(char *str, t_operation *o, int *i)
 {
 	char	*word;
 	int		len;
+	char	first_quote;
 
+	first_quote = find_first_quote(str);
 	len = 0;
-	if (check_occ(str, o))
+	if (check_occ(str, o) && *str != first_quote)
 	{
 		len = check_occ(str, o);
 		word = malloc(sizeof(char) * (len + 1));
@@ -62,11 +90,25 @@ static	char	*create_word(char *str, t_operation *o, int *i)
 	}
 	while (*(str + *i) && !check_occ(str + (*i)++, o))
 		len++;
+	*i = 0;
+	if (*(str + *i) == first_quote)
+	{
+		(*i)++;
+		while (*(str + *i) != first_quote)
+		{
+			(*i)++;
+			len++;
+		}
+		(*i)++;
+	}
 	word = malloc(sizeof(char) * (len + 1));
 	*i = 0;
 	while (len--)
 	{
-		word[*i] = (str)[(*i)];
+		if (*str == first_quote)
+			word[*i] = (str)[(*i) + 1];
+		else
+			word[*i] = (str)[(*i)];
 		(*i)++;
 	}
 	word[*i] = '\0';
@@ -135,19 +177,20 @@ char	**split_token(char *str)
 	return (factory(result, o, str));
 }
 
-// int	main(void)
-// {
-// 	char				**result;
-// 	int					x = 0;
-// 	// result = split_token("  < infile<main.c   cat  >outfile $xav >> test <<yo");
-// 	result = split_token("echo \"test > wc\"");
-// 	// result = split_token("test >> oui << non", o);
-// 	while (result[x])
-// 	{
-// 	    printf("%s\n", result[x]);
-// 	    free(result[x++]);
-// 	}
-// 	free(result);
-// 	// system("leaks a.out");
-// 	return (0);
-// }
+int	main(void)
+{
+	char				**result;
+	int					x = 0;
+	result = split_token("  < infile<main.c   cat  >outfile \"$xav >> test <<yo\" >");
+	// result = split_token("echo \"test > wc\"");
+	// result = split_token("test >> oui << non", o);
+	// result = split_token("test \"oui non\"");
+	while (result[x])
+	{
+	    printf("|%s|\n", result[x]);
+	    free(result[x++]);
+	}
+	free(result);
+	// system("leaks a.out");
+	return (0);
+}
