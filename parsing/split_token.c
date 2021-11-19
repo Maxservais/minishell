@@ -1,5 +1,4 @@
-#include "minishell.h"
-#include <stdio.h>
+#include "../minishell.h"
 
 static int	check_occ(char *str, t_operation *o)
 {
@@ -175,22 +174,4 @@ char	**split_token(char *str)
 
 	result = NULL;
 	return (factory(result, o, str));
-}
-
-int	main(void)
-{
-	char				**result;
-	int					x = 0;
-	result = split_token("  < infile<main.c   cat  >outfile \"$xav >> test <<yo\" >");
-	// result = split_token("echo \"test > wc\"");
-	// result = split_token("test >> oui << non", o);
-	// result = split_token("test \"oui non\"");
-	while (result[x])
-	{
-	    printf("|%s|\n", result[x]);
-	    free(result[x++]);
-	}
-	free(result);
-	// system("leaks a.out");
-	return (0);
 }

@@ -96,6 +96,7 @@ char	**ft_test(char *s, t_token *tokens);
 
 /* 5.1 Tokenizer */
 t_token	*token_finder(char *line);
+char	**split_token(char *str);
 
 /* 5.2 Utils */
 int		check_occurence(char c, char *to_find);
@@ -168,6 +169,5 @@ void	lstclear(t_lst **lst);
 void	lstadd_back(t_lst **lst, t_lst *new);
 
 
-char	**split_token(char *str);
 
 #endif

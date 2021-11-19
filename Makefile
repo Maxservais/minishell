@@ -2,6 +2,7 @@ SRC_FILES 		=	main.c 					\
 					./parsing/parser.c		\
 					./parsing/split_pipes.c \
 					./parsing/tokenizer.c	\
+					./parsing/split_token.c	\
 					./parsing/utils1.c		\
 					./parsing/utils2.c		\
 					./parsing/free.c		\
@@ -19,7 +20,6 @@ SRC_FILES 		=	main.c 					\
 					./execution/utils.c				\
 					./signals/signal.c				\
 					./utils/lst.c 					\
-					split_token.c
 
 OBJ_FILES		=	$(SRC_FILES:.c=.o)
 
