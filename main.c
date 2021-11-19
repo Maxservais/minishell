@@ -30,7 +30,7 @@ void	parser_test(char *line)
 	tokens = token_finder(line);
 	splited = ft_test(line, tokens);
 	commands = put_in_list(splited);
-	add_files(&commands);
+	add_files(commands);
 	remove_files(&commands);
 	handle_command(commands);
 	clean_all(tokens, splited, &commands);

@@ -102,7 +102,7 @@ char	**split_token(char *str);
 int		check_occurence(char c, char *to_find);
 int		space_position(char *line, char c, int start);
 int		char_position(char *line, char c);
-int		count_chevrons(t_lst command, char chevron);
+int		count_chevrons(t_lst command, char *chevron);
 int		last_infile(t_lst *command);
 int		last_outfile(t_lst *command);
 void	add_index(t_lst **commands);
@@ -139,7 +139,7 @@ int		inter_command(int l_pipe[], int r_pipe[], t_lst *command);
 int		pipex(t_lst *command, int left_pipe[]);
 
 /* 6.3 Redirections */
-void	add_files(t_lst **commands);
+void	add_files(t_lst *commands);
 int		ft_open(char *file_name, int mode);
 int		open_files(t_lst *commands);
 int		redirect_files(t_lst *commands);

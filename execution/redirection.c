@@ -1,43 +1,43 @@
 #include "../minishell.h"
 
-void	add_files(t_lst **commands)
+void	add_files(t_lst *commands)
 {
-	t_lst	*trav;
+	int		nbr_chevrons;
 	int		x;
 	int		y;
 	int		z;
 
-	trav = *commands;
-	while (trav)
+	while (commands)
 	{
-		trav->infile = malloc(sizeof(t_file) * (count_chevrons(*trav, '<') + 1));
-		trav->outfile = malloc(sizeof(t_file) * (count_chevrons(*trav, '>') + 1));
+		nbr_chevrons = count_chevrons(*commands, "<");
+		commands->infile = malloc(sizeof(t_file) * (nbr_chevrons + 1));
+		nbr_chevrons = count_chevrons(*commands, ">") + count_chevrons(*commands, ">>");
+		commands->outfile = malloc(sizeof(t_file) * (nbr_chevrons + 1));
 		x = 0;
 		y = 0;
 		z = 0;
-		while (trav->content[x])
+		while (commands->content[x])
 		{
-			if (!ft_strncmp(trav->content[x], "<", 1))
+			if (!ft_strncmp(commands->content[x], ">>", 2))
 			{
-				trav->infile[y].mode = 1;
-				if (ft_strlen(trav->content[x]) == 1)
-					trav->infile[y++].name = trav->content[x + 1];
-				else
-					trav->infile[y++].name = trav->content[x] + 1;
+				commands->outfile[z].mode = 3;
+				commands->outfile[z++].name = commands->content[x + 1];
 			}
-			if (!ft_strncmp(trav->content[x], ">", 1))
+			else if (!ft_strncmp(commands->content[x], ">", 1))
 			{
-				trav->outfile[z].mode = 2;
-				if (ft_strlen(trav->content[x]) == 1)
-					trav->outfile[z++].name = trav->content[x + 1];
-				else
-					trav->outfile[z++].name = trav->content[x] + 1;
+				commands->outfile[z].mode = 2;
+				commands->outfile[z++].name = commands->content[x + 1];
+			}
+			else if (!ft_strncmp(commands->content[x], "<", 1))
+			{
+				commands->infile[y].mode = 1;
+				commands->infile[y++].name = commands->content[x + 1];
 			}
 			x++;
 		}
-		trav->infile[y].name = NULL;
-		trav->outfile[z].name = NULL;
-		trav = trav->next;
+		commands->infile[y].name = NULL;
+		commands->outfile[z].name = NULL;
+		commands = commands->next;
 	}
 }
 
@@ -51,29 +51,32 @@ int	ft_open(char *file_name, int mode)
 		if (fd < 0)
 			return (-1);
 	}
-	else
+	else if (mode == 2)
 	{
 		fd = open(file_name, O_RDWR | O_CREAT | O_TRUNC, 0644);
 		if (fd < 0)
 			return (-1);
 	}
-	// Ajouter 3eme mode pour fichier 'append'
+	else
+	{
+		fd = open(file_name, O_RDWR | O_APPEND | O_CREAT, 0644);
+		if (fd < 0)
+			return (-1);
+	}
 	return (fd);
 }
 
 int	open_files(t_lst *commands)
 {
 	int		i;
-	t_lst	*trav;
-	
-	trav = commands; // TRAV IS A BIT UNNECCESSARY
-	while (trav)
+
+	while (commands)
 	{
 		i = 0;
-		while (trav->infile[i].name)
+		while (commands->infile[i].name)
 		{
-			trav->infile[i].fd = ft_open(trav->infile[i].name, trav->infile[i].mode);
-			if (trav->infile[i].fd == -1)
+			commands->infile[i].fd = ft_open(commands->infile[i].name, commands->infile[i].mode);
+			if (commands->infile[i].fd == -1)
 				return (-1);
 			// GERER LES ERREURS !!!!!!!!!!!!!!!!
 			// if (param.fd1 == -1 || param.fd2 == -1) 
@@ -81,16 +84,16 @@ int	open_files(t_lst *commands)
 			i++;
 		}
 		i = 0;
-		while (trav->outfile[i].name)
+		while (commands->outfile[i].name)
 		{
-			trav->outfile[i].fd = ft_open(trav->outfile[i].name, trav->outfile[i].mode);
-			if (trav->outfile[i].fd == -1)
+			commands->outfile[i].fd = ft_open(commands->outfile[i].name, commands->outfile[i].mode);
+			if (commands->outfile[i].fd == -1)
 				return (-1);
 			// if (param.fd1 == -1 || param.fd2 == -1)
 			// 	perror("Error");
 			i++;
 		}
-		trav = trav->next;
+		commands = commands->next;
 	}
 	return (EXIT_SUCCESS);
 }
