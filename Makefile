@@ -19,6 +19,7 @@ SRC_FILES 		=	main.c 					\
 					./execution/utils.c				\
 					./signals/signal.c				\
 					./utils/lst.c 					\
+					split_token.c
 
 OBJ_FILES		=	$(SRC_FILES:.c=.o)
 

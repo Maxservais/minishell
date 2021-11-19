@@ -167,4 +167,7 @@ void	lstdelone(t_lst *lst);
 void	lstclear(t_lst **lst);
 void	lstadd_back(t_lst **lst, t_lst *new);
 
+
+char	**split_token(char *str);
+
 #endif

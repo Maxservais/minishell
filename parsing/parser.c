@@ -15,11 +15,11 @@ t_lst	*put_in_list(char **splited)
 		splited[x++] = temp;
 	}
 	x = 0;
-	commands = lstnew(ft_split(splited[x], ' '), x + 1);
+	commands = lstnew(split_token(splited[x]), x + 1);
 	x++;
 	while (splited[x])
 	{
-		lstadd_back(&commands, lstnew(ft_split(splited[x], ' '), x + 1));
+		lstadd_back(&commands, lstnew(split_token(splited[x]), x + 1));
 		data.nb_of_commands++;
 		x++;
 	}

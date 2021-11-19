@@ -15,22 +15,6 @@ static int	check_occ(char *str, t_operation *o)
 	return (0);
 }
 
-static int	count_token(char *str, t_operation *o)
-{
-	int	counter;
-	int	x;
-
-	counter = 0;
-	x = 0;
-	while (str[x])
-	{
-		if (check_occ(str + x, o))
-			counter++;
-		x++;
-	}
-	return (counter);
-}
-
 static int	count_words(char *str, t_operation *o)
 {
 	int counter;
@@ -107,10 +91,9 @@ static void fill(char **result, char *str, t_operation *o, int size)
 	result[x] = NULL;
 }
 
-char	**split_token(char *str, t_operation *o)
+static char	**factory(char **result, t_operation *o, char *str)
 {
-	char	**result;
-	int		words;
+	int			words;
 
 	str = ft_strtrim(str, " ");
 	if (!str)
@@ -127,10 +110,9 @@ char	**split_token(char *str, t_operation *o)
 	return (result);
 }
 
-int	main(void)
+char	**split_token(char *str)
 {
-	char				**result;
-	int					x = 0;
+	char		**result;
 	t_operation			o[14] =
 	{
 		{">>", 2},
@@ -148,14 +130,24 @@ int	main(void)
 		{"\f", 1},
 		{NULL, 1}
 	};
-	result = split_token("  < infile<main.c   cat  >outfile $xav >> test <<yo", o);
-	// result = split_token("test >> oui << non", o);
-	while (result[x])
-	{
-	    printf("%s\n", result[x]);
-	    free(result[x++]);
-	}
-	free(result);
-	// system("leaks a.out");
-	return (0);
+
+	result = NULL;
+	return (factory(result, o, str));
 }
+
+// int	main(void)
+// {
+// 	char				**result;
+// 	int					x = 0;
+// 	// result = split_token("  < infile<main.c   cat  >outfile $xav >> test <<yo");
+// 	result = split_token("echo \"test > wc\"");
+// 	// result = split_token("test >> oui << non", o);
+// 	while (result[x])
+// 	{
+// 	    printf("%s\n", result[x]);
+// 	    free(result[x++]);
+// 	}
+// 	free(result);
+// 	// system("leaks a.out");
+// 	return (0);
+// }

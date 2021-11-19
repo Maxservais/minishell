@@ -1,5 +1,57 @@
 #include "minishell.h"
 
+void	is_error(t_lst *command)
+{
+	int simple_quote;
+	int double_quote;
+	int x;
+
+	simple_quote = 0;
+	double_quote = 0;
+	x = 0;
+	while (command->content[x])
+	{
+		if (*command->content[x] == '\'')
+			simple_quote++;
+		if (*command->content[x] == '\"')
+			double_quote++;
+		x++;
+	}
+	if (simple_quote % 2 == 1 || double_quote % 2 == 1)
+		ft_putstr_fd("error\n", 1);
+}
+
+static void	make_block(t_lst **commands)
+{
+	char  first_quote;
+	int   size;
+	int   x;
+
+	size = 0;
+	x = 0;
+	while (trav->content[x][0] != '\'' && trav->content[x][0] != '\"')
+		x++;
+	first_quote = trav->content[x][0];
+	while (trav->content[x++][0] != first_quote)
+		size++;
+	size = x - size;
+	printf("%d\n", size);
+
+}
+
+void	remove_quote(t_lst **commands)
+{
+	t_lst *trav;
+	// char  **temp;
+
+	trav = *commands;
+	while (trav)
+	{
+		is_error(trav);
+		trav = trav->next;
+	}
+}
+
 void	parser_test(char *line)
 {
 	t_token		*tokens;
@@ -7,9 +59,9 @@ void	parser_test(char *line)
 	t_lst		*commands;
 
 	tokens = token_finder(line);
-	// remove "" useless 
 	splited = ft_test(line, tokens);
 	commands = put_in_list(splited);
+	remove_quote(&commands);
 	add_files(&commands);
 	remove_files(&commands);
 	handle_command(commands);
@@ -33,7 +85,6 @@ void	prompt_test(char *line)
 		if (ft_strlen(line))
 			parser_test(line);
 		free(line);
-		// data.exit = 1;
 	}
 }
 
