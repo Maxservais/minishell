@@ -2,6 +2,7 @@
 
 void	test_built(t_lst *commands)
 {
+	data.built = 0;
 	if (!ft_strcmp(commands->content[0], "cd")
 		|| !ft_strcmp(commands->content[0], "echo") 
 		|| !ft_strcmp(commands->content[0], "env")
@@ -9,7 +10,10 @@ void	test_built(t_lst *commands)
 		|| !ft_strcmp(commands->content[0], "export")
 		|| !ft_strcmp(commands->content[0], "pwd")
 		|| !ft_strcmp(commands->content[0], "unset"))
+		{
+			data.built = 1;
 			data.command_code = 0;
+		}
 }
 
 void		execute_builtin(t_lst *commands)
@@ -81,7 +85,7 @@ void	handle_command(t_lst *commands)
 			// if (WIFSIGNALED(data.exit_code))
 			// 	data.exit_code = 128 + WTERMSIG(data.exit_code);
 		}
-		if (data.exit_code == -1 || data.command_code == -1)
+		if (commands->status >= 256 && data.built == 0)
 		{
 			write(2, "bash: ", 6);
 			write(2, commands->content[0], ft_strlen(commands->content[0]));

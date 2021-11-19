@@ -8,7 +8,6 @@ int	pwd(t_lst *commands)
 {
 	char	current_path[PATH_MAX];
 
-	data.exit_code = 0;
 	if (getcwd(current_path, sizeof(current_path)))
 	{
 		if (commands->content[1] && !ft_strncmp(commands->content[1], "-", 1))

@@ -54,8 +54,7 @@ int	exec_cmd(t_lst *command)
 			free(part_path);
 			free(paths[i]);
 			i++;
-			data.exit_code = execve(path, command->cmd, data.envp);
-			// printf("exit code =%d\n", data.exit_code);
+			execve(path, command->cmd, data.envp);
 		}
 	}
 	exit(127);
