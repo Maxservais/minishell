@@ -65,6 +65,8 @@ typedef struct s_data
 	int				command_code;
 	int				built;
 	char			**envp;
+	struct termios	main_old;
+	struct termios	main_new;
 }				t_data;
 
 typedef struct s_token

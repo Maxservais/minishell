@@ -43,6 +43,10 @@ int	main(void)
 	char	*line;
 
 	// FIX SEGV ERROR
+	tcgetattr(0, &data.main_old);	// recupere les parametres du terminal
+	data.main_new = data.main_old;	//on copie l'ancien terminal
+	data.main_new.c_lflag&= ~(ECHOCTL);	// enleve les caracteres speciaux genre ^C
+	tcsetattr(0, TCSANOW, &data.main_new);	//on definit les parametres avec les modifications
 	copy_env(); // check if succesful execution or not
 	line = NULL;
 	prompt_test(line);
@@ -51,7 +55,8 @@ int	main(void)
 	// -->>
 	// free_envp();
 	//system("leaks minishell");
-	return (EXIT_SUCCESS);
+	tcsetattr(0, TCSANOW, &data.main_old);	//on redonne les anciens parametres
+	return (data.exit_code);
 }
 
 // void	parser_lst(char *line)

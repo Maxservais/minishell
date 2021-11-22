@@ -51,8 +51,6 @@ void	handle_command(t_lst *commands)
 		if (data.command_code != 0)
 		{
 			//printf("command = %s\n",commands->content[0]);
-			if (!ft_strcmp(commands->content[0], "cat") || !ft_strcmp(commands->content[0], "ls"))
-				commands->job_done = 1;
 			commands->pid = fork();
 			if (commands->pid < 0)
 				return ; // RETURN ERROR
@@ -85,7 +83,8 @@ void	handle_command(t_lst *commands)
 			// if (WIFSIGNALED(data.exit_code))
 			// 	data.exit_code = 128 + WTERMSIG(data.exit_code);
 		}
-		if (commands->status >= 256 && data.built == 0)
+		printf("status = %d\n", commands->status);
+		if (commands->status > 256 && data.built == 0)
 		{
 			write(2, "bash: ", 6);
 			write(2, commands->content[0], ft_strlen(commands->content[0]));

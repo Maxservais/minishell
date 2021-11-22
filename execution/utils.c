@@ -54,7 +54,7 @@ int	exec_cmd(t_lst *command)
 			free(part_path);
 			free(paths[i]);
 			i++;
-			execve(path, command->cmd, data.envp);
+			data.exit_code = execve(path, command->cmd, data.envp);
 		}
 	}
 	exit(127);
