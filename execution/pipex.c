@@ -25,10 +25,7 @@ int	first_command(int right_pipe[], t_lst *command)
 	}
 	else
 	{
-		if (waitpid(-1, &command->status, 0) == -1)
-			return (-1);
 		close(right_pipe[WRITE]);
-		// close(right_pipe[READ]);
 		if (pipex(command->next, right_pipe) == -1)
 			return (-1);
 	}
@@ -60,8 +57,6 @@ int	last_command(int left_pipe[], int right_pipe[], t_lst *command)
 	{
 		close(right_pipe[READ]);
 		close(right_pipe[WRITE]);
-		if (waitpid(-1, &command->status, 0) == -1)
-			return (-1);
 		close(left_pipe[READ]);
 	}
 	return (0);
@@ -97,8 +92,6 @@ int	inter_command(int l_pipe[], int r_pipe[], t_lst *command)
 	}
 	else
 	{
-		if (waitpid(-1, &command->status, 0) == -1)
-			return (-1);
 		close(l_pipe[READ]);
 		close(r_pipe[WRITE]);
 		if (pipex(command->next, r_pipe) == -1)
@@ -128,5 +121,7 @@ int	pipex(t_lst *command, int left_pipe[])
 		if (inter_command(left_pipe, right_pipe, command) == -1)
 			return (-1); // RETURN ERROR MESSAGE
 	}
+	if (waitpid(-1, &command->status, 0) == -1)
+		return (-1);
 	return (0);
 }

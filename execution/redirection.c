@@ -106,6 +106,10 @@ int	redirect_files(t_lst *commands)
 			return (-1);
 		close(commands->infile[last_infile(commands)].fd);
 	}
+	else
+	{
+		heredoc(commands);
+	}
 	if (commands->outfile->name && commands->outfile[last_outfile(commands)].fd)
 	{
 		if (dup2(commands->outfile[last_outfile(commands)].fd, STDOUT_FILENO) == -1)
@@ -132,3 +136,33 @@ int	redirect_standard(t_lst *commands)
 	return (0);
 }
 
+void	heredoc(t_lst *commands)
+{
+	int		x;
+	int		pipe_fd[2];
+	char	*str;
+
+	if (pipe(pipe_fd) == -1)
+		return ;
+	x = 0;
+	str = NULL;
+	// Ajouter les signaux ici!
+	while (commands->content[x])
+	{
+		if (!ft_strncmp(commands->content[x], "<<", 2))
+		{
+			while (!str || ft_strncmp(str, commands->content[x + 1],
+				ft_strlen(commands->content[x + 1])))
+			{
+				str = readline("> ");
+				write(pipe_fd[WRITE], str, ft_strlen(str));
+				write(pipe_fd[WRITE], "\n", 1);
+				free(str);
+			}
+			dup2(pipe_fd[READ], STDIN_FILENO);
+		}
+		x++;
+	}
+	close(pipe_fd[READ]);
+	close(pipe_fd[WRITE]);
+}
