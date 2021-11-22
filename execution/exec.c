@@ -83,7 +83,7 @@ void	handle_command(t_lst *commands)
 			// if (WIFSIGNALED(data.exit_code))
 			// 	data.exit_code = 128 + WTERMSIG(data.exit_code);
 		}
-		printf("status = %d\n", commands->status);
+		printf("status = %d exit = %d\n", commands->status, data.exit_code);
 		if (commands->status > 256 && data.built == 0)
 		{
 			write(2, "bash: ", 6);

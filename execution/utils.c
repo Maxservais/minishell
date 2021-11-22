@@ -54,8 +54,9 @@ int	exec_cmd(t_lst *command)
 			free(part_path);
 			free(paths[i]);
 			i++;
-			data.exit_code = execve(path, command->cmd, data.envp);
+			execve(path, command->cmd, data.envp);
 		}
+		// wait(&command->status);
 	}
 	exit(127);
 	command->job_done = 1; // IS THAT NECESSARY ?
