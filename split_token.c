@@ -25,10 +25,10 @@ static char	find_first_quote(char *str)
 	while (str[x])
 	{
 		if (str[x] == '\'' || str[x] == '\"')
-			first_quote = str[x];
+			return (str[x]);
 		x++;
 	}
-	return (first_quote);
+	return (0);
 }
 
 static int	count_words(char *str, t_operation *o)
@@ -50,14 +50,15 @@ static int	count_words(char *str, t_operation *o)
 			str++;
 			counter++;
 		}
-		else if (check_occ(str, o) && *(str) != first_quote)
+		first_quote = find_first_quote(str);
+		if (check_occ(str, o) && *(str) != first_quote)
 		{
 			if (*str == ' ')
 				counter--;
 			counter++;
 			str += check_occ(str, o);
 		}
-		else
+		else if (!check_occ(str, o) && *(str) != first_quote)
 		{
 			while (*(str) && !check_occ(str, o))
 				str++;
@@ -103,7 +104,6 @@ static	char	*create_word(char *str, t_operation *o, int *i)
 	}
 	word = malloc(sizeof(char) * (len + 1));
 	*i = 0;
-	// printf("%d\n", len);
 	while (len--)
 	{
 		if (*str == first_quote)
@@ -113,6 +113,8 @@ static	char	*create_word(char *str, t_operation *o, int *i)
 		(*i)++;
 	}
 	word[*i] = '\0';
+	if (*str == first_quote)
+		(*i) += 2;
 	return (word);
 }
 
@@ -156,12 +158,13 @@ static char	**factory(char **result, t_operation *o, char *str)
 char	**split_token(char *str)
 {
 	char			**result;
-	t_operation		o[14] =
+	t_operation		o[15] =
 	{
 		{">>", 2},
 		{"<<", 2},
 		{"<", 1},
 		{">", 1},
+		{"$?", 2},
 		{"\'", 1},
 		{"\"", 1},
 		{"$", 1},
@@ -182,10 +185,13 @@ char	**split_token(char *str)
 // {
 // 	char				**result;
 // 	int					x = 0;
-// 	result = split_token("  < infile<main.c   cat  >outfile \"$xav >> test <<yo\" ok");
+
+// 	result = split_token("  < infile<main.c   cat  >outfile \'$xav >> test <<yo\' test encore \"et c'est reparti\" ");
 // 	// result = split_token("echo \"test > wc\"");
 // 	// result = split_token("test >> oui << non", o);
 // 	// result = split_token("test \"oui non\"");
+// 	// result = split_token("echo $?");
+// 	// result = split_token("\"first << test\" \'second | test\'");
 // 	while (result[x])
 // 	{
 // 	    printf("|%s|\n", result[x]);
