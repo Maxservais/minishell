@@ -144,7 +144,7 @@ int		ft_open(char *file_name, int mode);
 int		open_files(t_lst *commands);
 int		redirect_files(t_lst *commands);
 int		redirect_standard(t_lst *commands);
-void	heredoc(t_lst *commands);
+int		heredoc(t_lst *commands);
 
 /* 6.4 Utils */
 char	**find_paths(void);

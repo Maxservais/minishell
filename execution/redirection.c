@@ -100,15 +100,17 @@ int	open_files(t_lst *commands)
 
 int	redirect_files(t_lst *commands)
 {
+	// heredoc(commands);
 	if (commands->infile->name && commands->infile[last_infile(commands)].fd)
 	{
+		// Bug ici: commands->infile->name devient EOF qd on a un heredoc
+		printf("file name: %s\n", commands->infile->name);
 		if (dup2(commands->infile[last_infile(commands)].fd, STDIN_FILENO) == -1)
+		{
+			printf("COUCOU2\n");
 			return (-1);
+		}
 		close(commands->infile[last_infile(commands)].fd);
-	}
-	else
-	{
-		heredoc(commands);
 	}
 	if (commands->outfile->name && commands->outfile[last_outfile(commands)].fd)
 	{
@@ -136,17 +138,20 @@ int	redirect_standard(t_lst *commands)
 	return (0);
 }
 
-void	heredoc(t_lst *commands)
+int	heredoc(t_lst *commands)
 {
 	int		x;
-	int		pipe_fd[2];
+	int		res;
+	int		fd;
 	char	*str;
 
-	if (pipe(pipe_fd) == -1)
-		return ;
 	x = 0;
+	res = -1;
+	fd = open("tmp_file", O_RDWR | O_CREAT | O_TRUNC, 0644);
+	if (fd < 0)
+		return (res);
 	str = NULL;
-	// Ajouter les signaux ici!
+	// Ajouter la gestion des signaux ici!
 	while (commands->content[x])
 	{
 		if (!ft_strncmp(commands->content[x], "<<", 2))
@@ -155,14 +160,15 @@ void	heredoc(t_lst *commands)
 				ft_strlen(commands->content[x + 1])))
 			{
 				str = readline("> ");
-				write(pipe_fd[WRITE], str, ft_strlen(str));
-				write(pipe_fd[WRITE], "\n", 1);
+				write(fd, str, ft_strlen(str));
+				write(fd, "\n", 1);
 				free(str);
 			}
-			dup2(pipe_fd[READ], STDIN_FILENO);
 		}
 		x++;
 	}
-	close(pipe_fd[READ]);
-	close(pipe_fd[WRITE]);
+	dup2(fd, STDIN_FILENO);
+	close(fd);
+	// unlink("tmp_file");
+	return (0);
 }
