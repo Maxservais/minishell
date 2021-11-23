@@ -9,7 +9,7 @@ void	add_files(t_lst *commands)
 
 	while (commands)
 	{
-		nbr_chevrons = count_chevrons(*commands, "<");
+		nbr_chevrons = count_chevrons(*commands, "<") + count_chevrons(*commands, "<<");
 		commands->infile = malloc(sizeof(t_file) * (nbr_chevrons + 1));
 		nbr_chevrons = count_chevrons(*commands, ">") + count_chevrons(*commands, ">>");
 		commands->outfile = malloc(sizeof(t_file) * (nbr_chevrons + 1));
@@ -27,6 +27,11 @@ void	add_files(t_lst *commands)
 			{
 				commands->outfile[z].mode = 2;
 				commands->outfile[z++].name = commands->content[x + 1];
+			}
+			else if (!ft_strncmp(commands->content[x], "<<", 2))
+			{
+				commands->infile[y].mode = 4;
+				commands->infile[y++].name = ".tmp";
 			}
 			else if (!ft_strncmp(commands->content[x], "<", 1))
 			{
@@ -57,9 +62,15 @@ int	ft_open(char *file_name, int mode)
 		if (fd < 0)
 			return (-1);
 	}
-	else
+	else if (mode == 3)
 	{
 		fd = open(file_name, O_RDWR | O_APPEND | O_CREAT, 0644);
+		if (fd < 0)
+			return (-1);
+	}
+	else
+	{
+		fd = open(file_name, O_RDWR | O_CREAT | O_TRUNC, 0644);
 		if (fd < 0)
 			return (-1);
 	}
@@ -68,7 +79,7 @@ int	ft_open(char *file_name, int mode)
 
 int	open_files(t_lst *commands)
 {
-	int		i;
+	int	i;
 
 	while (commands)
 	{
@@ -78,9 +89,6 @@ int	open_files(t_lst *commands)
 			commands->infile[i].fd = ft_open(commands->infile[i].name, commands->infile[i].mode);
 			if (commands->infile[i].fd == -1)
 				return (-1);
-			// GERER LES ERREURS !!!!!!!!!!!!!!!!
-			// if (param.fd1 == -1 || param.fd2 == -1) 
-			// 	perror("Error");
 			i++;
 		}
 		i = 0;
@@ -89,8 +97,6 @@ int	open_files(t_lst *commands)
 			commands->outfile[i].fd = ft_open(commands->outfile[i].name, commands->outfile[i].mode);
 			if (commands->outfile[i].fd == -1)
 				return (-1);
-			// if (param.fd1 == -1 || param.fd2 == -1)
-			// 	perror("Error");
 			i++;
 		}
 		commands = commands->next;
@@ -98,19 +104,44 @@ int	open_files(t_lst *commands)
 	return (EXIT_SUCCESS);
 }
 
+
+int	last_heredoc(t_lst *command)
+{
+	int	x;
+
+	x = 0;
+	while (command->infile[x].name)
+	{
+		if (!ft_strncmp(command->infile[x].name, ".tmp", 4))
+			return (x);
+		x++;
+	}
+	return (-1);
+}
+
 int	redirect_files(t_lst *commands)
 {
-	// heredoc(commands);
+	int	index;
+
+	index = last_heredoc(commands);
+	if (index != -1)
+	{
+		heredoc(commands, index);
+	}
 	if (commands->infile->name && commands->infile[last_infile(commands)].fd)
 	{
-		// Bug ici: commands->infile->name devient EOF qd on a un heredoc
-		printf("file name: %s\n", commands->infile->name);
-		if (dup2(commands->infile[last_infile(commands)].fd, STDIN_FILENO) == -1)
+		if (index >= 0 && index == last_infile(commands))
 		{
-			printf("COUCOU2\n");
-			return (-1);
+			if (dup2(commands->infile[index].fd, STDIN_FILENO) == -1)
+				return (-1);
+			close(commands->infile[index].fd);
 		}
-		close(commands->infile[last_infile(commands)].fd);
+		else
+		{
+			if (dup2(commands->infile[last_infile(commands)].fd, STDIN_FILENO) == -1)
+				return (-1);
+			close(commands->infile[last_infile(commands)].fd);
+		}
 	}
 	if (commands->outfile->name && commands->outfile[last_outfile(commands)].fd)
 	{
@@ -138,18 +169,18 @@ int	redirect_standard(t_lst *commands)
 	return (0);
 }
 
-int	heredoc(t_lst *commands)
+int	heredoc(t_lst *commands, int index)
 {
 	int		x;
 	int		res;
-	int		fd;
+	// int		fd;
 	char	*str;
 
 	x = 0;
 	res = -1;
-	fd = open("tmp_file", O_RDWR | O_CREAT | O_TRUNC, 0644);
-	if (fd < 0)
-		return (res);
+	// fd = open("tmp_file", O_RDWR | O_CREAT | O_TRUNC, 0644);
+	// if (fd < 0)
+	// 	return (res);
 	str = NULL;
 	// Ajouter la gestion des signaux ici!
 	while (commands->content[x])
@@ -160,15 +191,15 @@ int	heredoc(t_lst *commands)
 				ft_strlen(commands->content[x + 1])))
 			{
 				str = readline("> ");
-				write(fd, str, ft_strlen(str));
-				write(fd, "\n", 1);
+				write(commands->infile[index].fd, str, ft_strlen(str));
+				write(commands->infile[index].fd, "\n", 1);
 				free(str);
 			}
 		}
 		x++;
 	}
-	dup2(fd, STDIN_FILENO);
-	close(fd);
-	// unlink("tmp_file");
+	// dup2(commands->infile[index].fd, STDIN_FILENO);
+	// close(commands->infile[index].fd);
+	// unlink(".tmp");
 	return (0);
 }
