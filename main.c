@@ -1,24 +1,26 @@
 #include "minishell.h"
 
-void	is_error(t_lst *command)
+int	is_error(char *line)
 {
 	int simple_quote;
 	int double_quote;
-	int x;
 
 	simple_quote = 0;
 	double_quote = 0;
-	x = 0;
-	while (command->content[x])
+	while (*line)
 	{
-		if (*command->content[x] == '\'')
+		if (*line == '\'')
 			simple_quote++;
-		if (*command->content[x] == '\"')
+		if (*line == '\"')
 			double_quote++;
-		x++;
+		line++;
 	}
 	if (simple_quote % 2 == 1 || double_quote % 2 == 1)
-		ft_putstr_fd("error\n", 1);
+	{
+		ft_putstr_fd("input error\n", 1);
+		return (1);
+	}
+	return (0);
 }
 
 void	parser_test(char *line)
@@ -27,6 +29,8 @@ void	parser_test(char *line)
 	char		**splited;
 	t_lst		*commands;
 
+	if (is_error(line))
+		return ;
 	tokens = token_finder(line);
 	splited = ft_test(line, tokens);
 	commands = put_in_list(splited);
