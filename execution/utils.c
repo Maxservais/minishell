@@ -56,9 +56,8 @@ int	exec_cmd(t_lst *command)
 			i++;
 			execve(path, command->cmd, data.envp);
 		}
-		// wait(&command->status);
 	}
-	exit(127);
+	exit (127);
 	command->job_done = 1; // IS THAT NECESSARY ?
 	return (-1); // DO I NEED THIS IF WE EXIT ALREADY ?
 }

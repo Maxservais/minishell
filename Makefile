@@ -2,6 +2,7 @@ SRC_FILES 		=	main.c 					\
 					./parsing/parser.c		\
 					./parsing/split_pipes.c \
 					./parsing/tokenizer.c	\
+					./parsing/split_token.c	\
 					./parsing/utils1.c		\
 					./parsing/utils2.c		\
 					./parsing/free.c		\
@@ -41,6 +42,7 @@ $(NAME): $(OBJ_FILES)
 clean:
 	@rm -f $(OBJ_FILES)
 	@$(MAKE) clean -C libft
+	@rm -rf *.dSYM
 
 fclean: clean
 	@rm -f $(NAME)

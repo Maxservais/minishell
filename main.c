@@ -1,5 +1,26 @@
 #include "minishell.h"
 
+void	is_error(t_lst *command)
+{
+	int simple_quote;
+	int double_quote;
+	int x;
+
+	simple_quote = 0;
+	double_quote = 0;
+	x = 0;
+	while (command->content[x])
+	{
+		if (*command->content[x] == '\'')
+			simple_quote++;
+		if (*command->content[x] == '\"')
+			double_quote++;
+		x++;
+	}
+	if (simple_quote % 2 == 1 || double_quote % 2 == 1)
+		ft_putstr_fd("error\n", 1);
+}
+
 void	parser_test(char *line)
 {
 	t_token		*tokens;
@@ -7,7 +28,6 @@ void	parser_test(char *line)
 	t_lst		*commands;
 
 	tokens = token_finder(line);
-	// remove "" useless 
 	splited = ft_test(line, tokens);
 	commands = put_in_list(splited);
 	add_files(&commands);
@@ -28,13 +48,12 @@ void	prompt_test(char *line)
 		if (!line)
 		{
 			ft_ctrl_d();
-			break;
+			break ;
 		}
 		add_history(line);
 		if (ft_strlen(line))
 			parser_test(line);
 		free(line);
-		// data.exit = 1;
 	}
 }
 

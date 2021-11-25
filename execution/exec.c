@@ -43,7 +43,10 @@ void	handle_command(t_lst *commands)
 	commands->save_stdin = dup(STDIN_FILENO);
 	commands->save_stdout = dup(STDOUT_FILENO);
 	open_files(commands);
-	signal(SIGINT, sighandler_cmd);
+	if (!ft_strcmp(commands->content[0], "top"))
+		signal(SIGINT, sighandler_cmd1);
+	else
+		signal(SIGINT, sighandler_cmd);
 	signal(SIGQUIT, sighandler_cmd);
 	if (data.nb_of_commands == 1)
 	{
@@ -72,16 +75,26 @@ void	handle_command(t_lst *commands)
 				}
 				// Execute command
 				if (exec_cmd(commands) == -1)
+				{
 					return ;
+				}
 			}
-			else
+			else									// CHANGEMENT ICIIIIIIIIII
 			{
-				if (waitpid(-1, &commands->status, 0) == -1)
+				wait(&commands->status);
+				if (commands->status == 256)
+				{
+					data.exit_code = 1;
 					return ;
+				}
+				else if (commands->status < 256)
+				{
+					data.exit_code = 0;
+					return ;
+				}
+				// if (waitpid(-1, &commands->status, 0) == -1)
+				// 	return ;
 			}
-			// wait(&data.exit_code);
-			// if (WIFSIGNALED(data.exit_code))
-			// 	data.exit_code = 128 + WTERMSIG(data.exit_code);
 		}
 		printf("status = %d exit = %d\n", commands->status, data.exit_code);
 		if (commands->status > 256 && data.built == 0)
@@ -120,19 +133,11 @@ int	handle_one_command(t_lst *commands)
 		}
 		else
 		{
-			if (redirect_standard(commands) == -1)
-				return (-1); // GERER ERREUR
 			if (waitpid(-1, &commands->status, 0) == -1)
+				return (-1); // GERER ERREUR
+			if (redirect_standard(commands) == -1)
 				return (-1); // GERER ERREUR
 		}
 	}
 	return (0);
 }
-
-// if (!commands->job_done)
-// {
-// 	write(2, "bash: ", 6);
-// 	write(2, commands->content[0], ft_strlen(commands->content[0]));
-// 	write(2, ": command not found", 19);
-// 	data.command_code = 127;
-// }

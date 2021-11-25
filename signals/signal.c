@@ -18,6 +18,15 @@ void	ft_ctrl_d(void)
 	data.exit = 1; // aucun code de sortie
 }
 
+void	sighandler_cmd1(int signum)
+{
+	if (signum == SIGINT)
+	{
+		rl_on_new_line();
+		data.exit_code = 130; // doit devenir 130 pour le code de sortie
+	}
+}
+
 void	sighandler_cmd(int signum)
 {
 	if (signum == SIGINT)
