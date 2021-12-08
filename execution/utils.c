@@ -54,7 +54,6 @@ int	exec_cmd(t_lst *command)
 			free(part_path);
 			free(paths[i]);
 			i++;
-			printf("cmd: %s\n", command->cmd[0]);
 			execve(path, command->cmd, data.envp);
 		}
 	}

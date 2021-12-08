@@ -80,7 +80,7 @@ typedef struct	s_operations
 
 /* 3. GLOBAL VARIABLE */
 
-t_data data;
+t_data data; // IS it norminette compliant????
 
 /* 4. MAIN FUNCTIONS */
 
@@ -168,7 +168,7 @@ t_lst	*lstnew(char **content, int index);
 void	lstdelone(t_lst *lst);
 void	lstclear(t_lst **lst);
 void	lstadd_back(t_lst **lst, t_lst *new);
-
+int		ft_strcmp(char *str, char *end);
 
 
 #endif
