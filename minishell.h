@@ -62,6 +62,7 @@ typedef struct s_data
 	int				new_line;
 	int				nb_of_commands;
 	int				command_code;
+	int				here_doc;
 	char			**envp;
 }				t_data;
 
@@ -142,6 +143,7 @@ int		pipex(t_lst *command, int left_pipe[]);
 void	add_files(t_lst *commands);
 int		ft_open(char *file_name, int mode);
 int		open_files(t_lst *commands);
+int		last_heredoc(t_lst *command);
 int		redirect_files(t_lst *commands);
 int		redirect_standard(t_lst *commands);
 int		heredoc(t_lst *commands, int index);
@@ -154,6 +156,7 @@ int		exec_cmd(t_lst *command);
 void	sighandler(int signum);
 void	ft_ctrl_d(void);
 void	sighandler_cmd(int signum);
+void	sighandler_heredoc(int signum);
 
 /* 8. LIST MANIPULATION */
 int		lstsize(t_lst *lst);

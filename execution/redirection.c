@@ -31,6 +31,7 @@ void	add_files(t_lst *commands)
 			else if (!ft_strncmp(commands->content[x], "<<", 2))
 			{
 				commands->infile[y].mode = 4;
+				data.here_doc = 1;
 				commands->infile[y++].name = "tmp";
 			}
 			else if (!ft_strncmp(commands->content[x], "<", 1))
@@ -186,6 +187,8 @@ int	heredoc(t_lst *commands, int index)
 	fd = open("tmp", O_RDWR | O_TRUNC, 0644);
 	if (fd < 0)
 		return (-1);
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, sighandler_heredoc);
 	while (commands->content[x])
 	{
 		if (!ft_strncmp(commands->content[x], "<<", 2))

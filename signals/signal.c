@@ -33,3 +33,9 @@ void	sighandler_cmd(int signum)
 		data.command_code = 3; // doit devenir 131 pour le code de sortie
 	}
 }
+
+void	sighandler_heredoc(int signum)
+{
+	if (signum == SIGINT)
+		exit (130);
+}

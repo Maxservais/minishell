@@ -41,6 +41,7 @@ void	prompt_test(char *line)
 	data.exit = -1;
 	while (data.exit == -1)
 	{
+		data.here_doc = 0;
 		signal(SIGINT, sighandler);
 		signal(SIGQUIT, SIG_IGN);
 		line = readline("ta_mère$ ");
@@ -62,6 +63,7 @@ int	main(void)
 
 	// FIX SEGV ERROR
 	copy_env(); // check if succesful execution or not
+	data.here_doc = 0;
 	line = NULL;
 	prompt_test(line);
 
