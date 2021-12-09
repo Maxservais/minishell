@@ -43,7 +43,6 @@ int	handle_one_command(t_lst *commands)
 			return (-1); // GERER ERREUR
 		execute_builtin(commands);
 		redirect_standard(commands);
-		return (0);
 	}
 	/* ELSE */
 	else
@@ -62,8 +61,10 @@ int	handle_one_command(t_lst *commands)
 		{
 			if (waitpid(-1, &commands->status, 0) == -1)
 				return (-1); // GERER ERREUR
-			if (commands->status == 256)
+			if (commands->status >= 256)
 			{
+				if (data.here_doc == 1)
+					commands->status = 256;
 				data.exit_code = 1;
 				return (0); // check return type
 			}
