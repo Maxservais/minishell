@@ -30,7 +30,7 @@ void	parser_test(char *line)
 	tokens = token_finder(line);
 	splited = ft_test(line, tokens);
 	commands = put_in_list(splited);
-	add_files(&commands);
+	add_files(commands);
 	remove_files(&commands);
 	handle_command(commands);
 	clean_all(tokens, splited, &commands);
@@ -42,6 +42,7 @@ void	prompt_test(char *line)
 	data.exit_code = 0;
 	while (data.exit == -1)
 	{
+		data.here_doc = 0;
 		signal(SIGINT, sighandler);
 		signal(SIGQUIT, SIG_IGN);
 		line = readline("ta_mère$ ");
@@ -67,6 +68,7 @@ int	main(void)
 	data.main_new.c_lflag&= ~(ECHOCTL);	// enleve les caracteres speciaux genre ^C
 	tcsetattr(0, TCSANOW, &data.main_new);	//on definit les parametres avec les modifications
 	copy_env(); // check if succesful execution or not
+	data.here_doc = 0;
 	line = NULL;
 	prompt_test(line);
 

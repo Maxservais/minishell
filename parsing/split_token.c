@@ -102,6 +102,7 @@ static	char	*create_word(char *str, t_operation *o, int *i)
 	}
 	word = malloc(sizeof(char) * (len + 1));
 	*i = 0;
+	// printf("%d\n", len);
 	while (len--)
 	{
 		if (*str == first_quote)

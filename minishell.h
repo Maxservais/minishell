@@ -64,6 +64,7 @@ typedef struct s_data
 	int				exit_code;
 	int				command_code;
 	int				built;
+	int				here_doc;
 	char			**envp;
 	struct termios	main_old;
 	struct termios	main_new;
@@ -84,7 +85,7 @@ typedef struct	s_operations
 
 /* 3. GLOBAL VARIABLE */
 
-t_data data;
+t_data data; // IS it norminette compliant????
 
 /* 4. MAIN FUNCTIONS */
 
@@ -106,7 +107,7 @@ char	**split_token(char *str);
 int		check_occurence(char c, char *to_find);
 int		space_position(char *line, char c, int start);
 int		char_position(char *line, char c);
-int		count_chevrons(t_lst command, char chevron);
+int		count_chevrons(t_lst command, char *chevron);
 int		last_infile(t_lst *command);
 int		last_outfile(t_lst *command);
 void	add_index(t_lst **commands);
@@ -137,6 +138,7 @@ void	error_usage(char *cmd_name, char *str, char *usage);
 void	handle_command(t_lst *commands);
 int		handle_one_command(t_lst *commands);
 void	execute_builtin(t_lst *commands);
+void	test_built(t_lst *commands);
 
 /* 6.2 Piping */
 int		first_command(int right_pipe[], t_lst *command);
@@ -145,11 +147,13 @@ int		inter_command(int l_pipe[], int r_pipe[], t_lst *command);
 int		pipex(t_lst *command, int left_pipe[]);
 
 /* 6.3 Redirections */
-void	add_files(t_lst **commands);
+void	add_files(t_lst *commands);
 int		ft_open(char *file_name, int mode);
 int		open_files(t_lst *commands);
+int		last_heredoc(t_lst *command);
 int		redirect_files(t_lst *commands);
 int		redirect_standard(t_lst *commands);
+int		heredoc(t_lst *commands, int index);
 
 /* 6.4 Utils */
 char	**find_paths(void);
@@ -160,6 +164,7 @@ void	sighandler(int signum);
 void	ft_ctrl_d(void);
 void	sighandler_cmd(int signum);
 void	sighandler_cmd1(int signum);
+void	sighandler_heredoc(int signum);
 
 /* 8. LIST MANIPULATION */
 int		lstsize(t_lst *lst);
@@ -174,7 +179,7 @@ t_lst	*lstnew(char **content, int index);
 void	lstdelone(t_lst *lst);
 void	lstclear(t_lst **lst);
 void	lstadd_back(t_lst **lst, t_lst *new);
-
+int		ft_strcmp(char *str, char *end);
 
 
 #endif

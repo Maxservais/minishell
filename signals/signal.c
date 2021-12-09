@@ -52,3 +52,8 @@ wait(&data->exit_code);
 if (WIFSIGNALED(data->exit_code))
 	data->exit_code = 128 + WTERMSIG(data->exit_code);
 */
+void	sighandler_heredoc(int signum)
+{
+	if (signum == SIGINT)
+		exit (130);
+}
