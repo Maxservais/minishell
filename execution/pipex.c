@@ -18,7 +18,7 @@ int	first_command(int right_pipe[], t_lst *command)
 				return (-1);
 		close(right_pipe[WRITE]);
 		/* Execute command */
-		execute_builtin(command);
+		execute_builtin(command); // A MODIFIER
 		if (data.command_code != 0)
 			if (exec_cmd(command) == -1)
 				return (-1);

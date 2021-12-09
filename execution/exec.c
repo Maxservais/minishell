@@ -58,7 +58,7 @@ int	handle_one_command(t_lst *commands)
 
 void	execute_builtin(t_lst *commands)
 {
-	if (redirect_files(commands) == -1)
+	if (redirect_files(commands) == -1) // LE METTRE AUTRE PART car execute_builtin est appele dans pipex.
 		return ; // GERER ERREUR
 	if (!ft_strncmp(commands->content[0], "cd", 2))
 		data.command_code = cd(commands);
@@ -74,5 +74,5 @@ void	execute_builtin(t_lst *commands)
 		data.command_code = pwd(commands);
 	else if (!ft_strncmp(commands->content[0], "unset", 5))
 		data.command_code = unset(commands);
-	redirect_standard(commands);
+	redirect_standard(commands); // LE METTRE AUTRE PART car execute_builtin est appele dans pipex.
 }
