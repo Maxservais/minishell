@@ -96,7 +96,6 @@ void	handle_command(t_lst *commands)
 				// 	return ;
 			}
 		}
-		printf("status = %d exit = %d\n", commands->status, data.exit_code);
 		if (commands->status > 256 && data.built == 0)
 		{
 			write(2, "bash: ", 6);
