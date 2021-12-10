@@ -1,5 +1,13 @@
 #include "../minishell.h"
 
+void	handle_commandbis(t_lst *commands)
+{
+	write(2, "bash: ", 6);
+	write(2, commands->content[0], ft_strlen(commands->content[0]));
+	write(2, ": command not found\n", 20);
+	data.exit_code = 127;
+}
+
 void	handle_command(t_lst *commands)
 {
 	data.command_code = -1;
@@ -19,12 +27,7 @@ void	handle_command(t_lst *commands)
 		if (handle_one_command(commands) == -1)
 			return ; // report error
 		if (commands->status > 256 && data.built == 0)
-		{
-			write(2, "bash: ", 6);
-			write(2, commands->content[0], ft_strlen(commands->content[0]));
-			write(2, ": command not found\n", 20);
-			data.exit_code = 127;
-		}
+			handle_commandbis(commands);
 	}
 	else
 	{
@@ -84,16 +87,16 @@ void	test_built(t_lst *commands)
 {
 	data.built = 0;
 	if (!ft_strcmp(commands->content[0], "cd")
-		|| !ft_strcmp(commands->content[0], "echo") 
+		|| !ft_strcmp(commands->content[0], "echo")
 		|| !ft_strcmp(commands->content[0], "env")
 		|| !ft_strcmp(commands->content[0], "exit")
 		|| !ft_strcmp(commands->content[0], "export")
 		|| !ft_strcmp(commands->content[0], "pwd")
 		|| !ft_strcmp(commands->content[0], "unset"))
-		{
-			data.built = 1;
-			data.command_code = 0;
-		}
+	{
+		data.built = 1;
+		data.command_code = 0;
+	}
 }
 
 void	execute_builtin(t_lst *commands)

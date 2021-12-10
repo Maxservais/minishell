@@ -1,6 +1,6 @@
-SRC_FILES 		=	main.c 					\
+SRC_FILES 		=	main.c					\
 					./parsing/parser.c		\
-					./parsing/split_pipes.c \
+					./parsing/split_pipes.c	\
 					./parsing/tokenizer.c	\
 					./parsing/split_token.c	\
 					./parsing/utils1.c		\
@@ -16,10 +16,13 @@ SRC_FILES 		=	main.c 					\
 					./execution/builtins/error_handler.c \
 					./execution/exec.c				\
 					./execution/pipex.c				\
-					./execution/redirection.c 		\
+					./execution/redirection.c		\
+					./execution/heredoc.c			\
+					./execution/open_files.c			\
 					./execution/utils.c				\
 					./signals/signal.c				\
-					./utils/lst.c 					\
+					./utils/lst.c					\
+					./utils/lst2.c					\
 
 OBJ_FILES		=	$(SRC_FILES:.c=.o)
 

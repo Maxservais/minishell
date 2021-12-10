@@ -65,7 +65,6 @@ typedef struct s_data
 	int				command_code;
 	int				built;
 	int				here_doc;
-	int				here_signC;
 	char			**envp;
 	struct termios	main_old;
 	struct termios	main_new;
@@ -78,7 +77,7 @@ typedef struct s_token
 	int		to_ignore;
 }				t_token;
 
-typedef struct	s_operations
+typedef struct s_operations
 {
 	char	*operation;
 	int		size;
@@ -86,7 +85,7 @@ typedef struct	s_operations
 
 /* 3. GLOBAL VARIABLE */
 
-t_data data; // IS it norminette compliant????
+t_data	data; // IS it norminette compliant????
 
 /* 4. MAIN FUNCTIONS */
 
@@ -181,6 +180,5 @@ void	lstdelone(t_lst *lst);
 void	lstclear(t_lst **lst);
 void	lstadd_back(t_lst **lst, t_lst *new);
 int		ft_strcmp(char *str, char *end);
-
 
 #endif

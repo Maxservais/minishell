@@ -2,9 +2,9 @@
 
 void	is_error(t_lst *command)
 {
-	int simple_quote;
-	int double_quote;
-	int x;
+	int	simple_quote;
+	int	double_quote;
+	int	x;
 
 	simple_quote = 0;
 	double_quote = 0;
@@ -59,24 +59,23 @@ void	prompt_test(char *line)
 }
 
 int	main(void)
- {
+{
 	char	*line;
 
 	// FIX SEGV ERROR
-	tcgetattr(0, &data.main_old);	// recupere les parametres du terminal
-	data.main_new = data.main_old;	//on copie l'ancien terminal
-	data.main_new.c_lflag&= ~(ECHOCTL);	// enleve les caracteres speciaux genre ^C
-	tcsetattr(0, TCSANOW, &data.main_new);	//on definit les parametres avec les modifications
-	copy_env(); // check if succesful execution or not
+	tcgetattr(0, &data.main_old);// recupere les parametres du terminal
+	data.main_new = data.main_old;//on copie l'ancien terminal
+	data.main_new.c_lflag&= ~(ECHOCTL);// enleve les caracteres speciaux genre ^C
+	tcsetattr(0, TCSANOW, &data.main_new);//on definit les parametres avec les modifications
+	copy_env();// check if succesful execution or not
 	data.here_doc = 0;
 	line = NULL;
 	prompt_test(line);
-
 	// raises an error;
 	// -->>
 	// free_envp();
 	//system("leaks minishell");
-	tcsetattr(0, TCSANOW, &data.main_old);	//on redonne les anciens parametres
+	tcsetattr(0, TCSANOW, &data.main_old);//on redonne les anciens parametres
 	return (data.exit_code);
 }
 
