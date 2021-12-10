@@ -194,10 +194,10 @@ int	heredoc(t_lst *commands, int index)
 		if (!ft_strncmp(commands->content[x], "<<", 2))
 		{
 			// Ajouter la gestion des signaux ici!
-			while (!str || ft_strcmp(str, commands->content[x + 1]))
+			while (!str || ft_strcmp(str, commands->content[x + 1]) || !ft_strcmp(str, "\n"))
 			{
 				str = readline("> ");
-				if (ft_strcmp(str, commands->content[x + 1]))
+				if (ft_strcmp(str, commands->content[x + 1]) || !ft_strcmp(str, "\n"))
 				{
 					write(fd, str, ft_strlen(str));
 					write(fd, "\n", 1);
