@@ -65,6 +65,7 @@ typedef struct s_data
 	int				command_code;
 	int				built;
 	int				here_doc;
+	int				here_signC;
 	char			**envp;
 	struct termios	main_old;
 	struct termios	main_new;

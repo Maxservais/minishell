@@ -45,7 +45,7 @@ void	prompt_test(char *line)
 		data.here_doc = 0;
 		signal(SIGINT, sighandler);
 		signal(SIGQUIT, SIG_IGN);
-		line = readline("ta_mère$ ");
+		line = readline("Minishell$ ");
 		if (!line)
 		{
 			ft_ctrl_d();
