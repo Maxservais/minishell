@@ -1,32 +1,5 @@
 #include "../minishell.h"
 
-// int	add_filesbis(int x, int y, int z, t_lst *commands)
-// {
-// 	if (!ft_strncmp(commands->content[x], ">>", 2))
-// 	{
-// 		commands->outfile[z].mode = 3;
-// 		commands->outfile[z++].name = commands->content[x + 1];
-// 	}
-// 	else if (!ft_strncmp(commands->content[x], ">", 1))
-// 	{
-// 		commands->outfile[z].mode = 2;
-// 		commands->outfile[z++].name = commands->content[x + 1];
-// 	}
-// 	else if (!ft_strncmp(commands->content[x], "<<", 2))
-// 	{
-// 		commands->infile[y].mode = 4;
-// 		data.here_doc = 1;
-// 		commands->infile[y++].name = "tmp";
-// 	}
-// 	else if (!ft_strncmp(commands->content[x], "<", 1))
-// 	{
-// 		commands->infile[y].mode = 1;
-// 		commands->infile[y++].name = commands->content[x + 1];
-// 	}
-// 	x++;
-// 	return (x);
-// }
-
 void	add_files(t_lst *commands)
 {
 	int		nbr_chevrons;
@@ -116,7 +89,10 @@ int	redirect_files(t_lst *commands)
 	{
 		if (dup2(commands->outfile
 				[last_outfile(commands)].fd, STDOUT_FILENO) == -1)
+		{
+			ft_putendl_fd(strerror(errno), STDERR_FILENO);
 			return (-1);
+		}
 		close(commands->outfile[last_outfile(commands)].fd);
 	}
 	return (0);
@@ -127,13 +103,19 @@ int	redirect_standard(t_lst *commands)
 	if (commands->infile->name)
 	{
 		if (dup2(commands->save_stdin, STDIN_FILENO) == -1)
+		{
+			ft_putendl_fd(strerror(errno), STDERR_FILENO);
 			return (-1);
+		}
 		close(commands->save_stdin);
 	}
 	if (commands->outfile->name)
 	{
 		if (dup2(commands->save_stdout, STDOUT_FILENO) == -1)
+		{
+			ft_putendl_fd(strerror(errno), STDERR_FILENO);
 			return (-1);
+		}
 		close(commands->save_stdout);
 	}
 	return (0);

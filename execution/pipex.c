@@ -22,7 +22,7 @@ int	first_command(int right_pipe[], t_lst *command)
 		if (data.built == 1)
 			execute_builtin(command);
 		else
-			if (exec_cmd(command) == -1)
+			if (exec_cmd(command) == -1) // cette commande ne renvoie jamais -1
 				return (-1);
 	}
 	else
@@ -46,8 +46,10 @@ int	last_command(int left_pipe[], int right_pipe[], t_lst *command)
 		redirect_files(command);
 		/* Only read from left pipe if there was no input file */
 		if (!command->infile->name)
+		{
 			if (dup2(left_pipe[READ], STDIN_FILENO) == -1)
 				return (-1);
+		}
 		close(left_pipe[READ]);
 		/* Execute command */
 		test_built(command);
@@ -63,10 +65,6 @@ int	last_command(int left_pipe[], int right_pipe[], t_lst *command)
 		close(right_pipe[WRITE]);
 		close(left_pipe[READ]);
 	}
-//	command->pid
-	// wait(&data->status);
-	// if (WIFSIGNALED(data->status))
-	// 	data->exit_code = WEXITSTATUS(status);128 + WTERMSIG(data->status);
 	return (0);
 }
 
@@ -115,7 +113,10 @@ int	pipex(t_lst *command, int left_pipe[])
 	int		right_pipe[2];
 
 	if (pipe(right_pipe) == -1)
-			return (-1); // RETURN ERROR MESSAGE
+	{
+		ft_putendl_fd(strerror(errno), STDERR_FILENO);
+		return (-1);
+	}
 	if (command->index == 1)
 	{
 		if (first_command(right_pipe, command) == -1)

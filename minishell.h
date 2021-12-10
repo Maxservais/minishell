@@ -22,6 +22,8 @@
 
 # define READ 0
 # define WRITE 1
+# define NO_SUCH_FILE ": No such file or directory\n"
+# define INVALID_COMMAND ": command not found\n"
 
 /* 2. CUSTOM STRUCTS */
 
@@ -172,13 +174,10 @@ t_lst	*lstnew(char **content, int index);
 void	lstdelone(t_lst *lst);
 void	lstclear(t_lst **lst);
 void	lstadd_back(t_lst **lst, t_lst *new);
-
-/* 8. LIST MANIPULATION */
-int		lstsize(t_lst *lst);
-t_lst	*lstnew(char **content, int index);
-void	lstdelone(t_lst *lst);
-void	lstclear(t_lst **lst);
-void	lstadd_back(t_lst **lst, t_lst *new);
 int		ft_strcmp(char *str, char *end);
+
+/* 9. ERROR HANDLING */
+void	command_not_found(t_lst *commands);
+void	invalid_file(t_lst *commands, int i);
 
 #endif

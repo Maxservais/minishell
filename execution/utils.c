@@ -30,23 +30,14 @@ int	exec_cmd(t_lst *command)
 	char	*path;
 	char	**paths;
 
-	// // execute_builtin(command);
-	if (data.command_code == 0) // EST-CE VRAIMENT NECESSAIRE???
-		return (0);
+	// if (data.command_code == 0) // EST-CE VRAIMENT NECESSAIRE???
+	// 	return (0);
 	paths = find_paths();
 	if (!paths)
 		return (-1);
 	i = 0;
 	if (execve(command->cmd[0], command->cmd, data.envp) == -1)
 	{
-		// int x;
-		// while (command)
-		// {
-		// 	x = 0;
-		// 	while (command->cmd[x])
-		// 		printf("cmd: %s\n", command->cmd[x++]);
-		// 	command = command->next;
-		// }
 		while (paths[i])
 		{
 			part_path = ft_strjoin(paths[i], "/");
@@ -57,7 +48,8 @@ int	exec_cmd(t_lst *command)
 			execve(path, command->cmd, data.envp);
 		}
 	}
-	exit (127);
 	command->job_done = 1; // IS THAT NECESSARY ?
-	return (-1); // DO I NEED THIS IF WE EXIT ALREADY ?
+	command_not_found(command);
+	exit (127);
+	// return (-1); // DO I NEED THIS IF WE EXIT ALREADY ?
 }
