@@ -27,12 +27,12 @@ int	unset(t_lst *commands)
 		{
 			error_usage("unset: ", commands->content[1],
 				"unset: usage: unset [-f] [-v] [name ...]");
-			commands->job_done = 1;
+			// commands->job_done = 1;
 			return (EXIT_FAILURE);
 		}
 	}
 	else if (commands->content[1])
 		find_var(commands->content[1]);
-	commands->job_done = 1;
+	// commands->job_done = 1;
 	return (EXIT_SUCCESS);
 }

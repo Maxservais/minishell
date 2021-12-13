@@ -24,7 +24,7 @@ t_lst	*lstnew(char **content, int index)
 	(*node).content = content;
 	(*node).type = 0;
 	(*node).index = index;
-	(*node).job_done = 0;
+	// (*node).job_done = 0;
 	(*node).next = NULL;
 	return (node);
 }

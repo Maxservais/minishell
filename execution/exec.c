@@ -18,16 +18,16 @@ void	handle_command(t_lst *commands)
 	if (data.nb_of_commands == 1)
 	{
 		if (handle_one_command(commands) == -1)
-			return ; // report error
-		if (commands->status > 256 && data.built == 0)
-			command_not_found(commands);
+			return ;
+		// if (commands->status > 256 && data.built == 0)
+		// 	command_not_found(commands);
 	}
 	else
 	{
 		if (pipex(commands, STDIN_FILENO) == -1)
 			return ; // report error
 	}
-	// close_files(commands);
+	close_files(commands);
 }
 
 int	handle_one_command(t_lst *commands)
@@ -46,25 +46,24 @@ int	handle_one_command(t_lst *commands)
 	{
 		commands->pid = fork();
 		if (commands->pid < 0)
-			return (-1); // GERER ERREUR
+			return (-1);
 		else if (commands->pid == 0)
 		{
 			if (redirect_files(commands) == -1)
-				return (-1);
-			if (exec_cmd(commands) == -1)
-				return (-1); // GERER ERREUR, faut print qqchose
+				exit(127);
+			exec_cmd(commands);
 		}
 		else
 		{
 			if (waitpid(-1, &commands->status, 0) == -1)
 				return (-1); // GERER ERREUR
-			if (commands->status >= 256)
-			{
-				if (data.here_doc == 1)
-					commands->status = 256;
-				data.exit_code = 1;
-				return (0); // check return type
-			}
+			// if (commands->status >= 256)
+			// {
+			// 	if (data.here_doc == 1)
+			// 		commands->status = 256;
+			// 	data.exit_code = 1;
+			// 	return (0); // check return type
+			// }
 			else if (commands->status < 256)
 			{
 				data.exit_code = 0;

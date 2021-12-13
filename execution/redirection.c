@@ -34,7 +34,7 @@ void	add_files(t_lst *commands)
 			{
 				commands->infile[y].mode = 4;
 				data.here_doc = 1;
-				commands->infile[y++].name = "tmp";
+				commands->infile[y++].name = "/tmp/tmp";
 			}
 			else if (!ft_strncmp(commands->content[x], "<", 1))
 			{
@@ -55,7 +55,7 @@ int	redirect_filesbis(int index, t_lst *commands)
 
 	if (index >= 0 && index == last_infile(commands))
 	{
-		fd = open("tmp", O_RDONLY);
+		fd = open("/tmp/tmp", O_RDONLY);
 		if (fd < 0)
 			return (-1);
 		if (dup2(fd, STDIN_FILENO) == -1)
@@ -69,8 +69,6 @@ int	redirect_filesbis(int index, t_lst *commands)
 			return (-1);
 		close(commands->infile[last_infile(commands)].fd);
 	}
-	if (index != -1)
-		unlink("tmp");
 	return (0);
 }
 

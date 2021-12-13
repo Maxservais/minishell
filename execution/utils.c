@@ -23,18 +23,19 @@ char	**find_paths(void)
 	return (paths);
 }
 
-int	exec_cmd(t_lst *command)
+void	exec_cmd(t_lst *command)
 {
 	int		i;
 	char	*part_path;
 	char	*path;
 	char	**paths;
 
-	// if (data.command_code == 0) // EST-CE VRAIMENT NECESSAIRE???
-	// 	return (0);
 	paths = find_paths();
 	if (!paths)
-		return (-1);
+	{
+		invalid_path(command);
+		exit(127);
+	}
 	i = 0;
 	if (execve(command->cmd[0], command->cmd, data.envp) == -1)
 	{
@@ -48,8 +49,7 @@ int	exec_cmd(t_lst *command)
 			execve(path, command->cmd, data.envp);
 		}
 	}
-	command->job_done = 1; // IS THAT NECESSARY ?
 	command_not_found(command);
+	// printf("code2 %d\n", data.exit_code);
 	exit (127);
-	// return (-1); // DO I NEED THIS IF WE EXIT ALREADY ?
 }

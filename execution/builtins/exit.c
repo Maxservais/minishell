@@ -29,6 +29,6 @@ int	ft_exit(t_lst *commands)
 	}
 	else
 		data.exit = 1;
-	commands->job_done = 1;
+	// commands->job_done = 1;
 	return (0);
 }

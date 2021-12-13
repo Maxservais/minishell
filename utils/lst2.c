@@ -38,7 +38,9 @@ int	ft_strcmp(char *str, char *end)
 	int	i;
 
 	i = 0;
-	while (str[i])
+	if (ft_strlen(str) != ft_strlen(end))
+		return (1);
+	while (end[i])
 	{
 		if (str[i] != end[i])
 			return (1);

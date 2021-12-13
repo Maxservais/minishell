@@ -7,7 +7,7 @@ int	last_heredoc(t_lst *command)
 	x = 0;
 	while (command->infile[x].name)
 	{
-		if (!ft_strcmp(command->infile[x].name, "tmp"))
+		if (!ft_strcmp(command->infile[x].name, "/tmp/tmp"))
 			return (x);
 		x++;
 	}
@@ -46,7 +46,7 @@ int	heredoc(t_lst *commands, int index)
 	res = -1;
 	str = NULL;
 	close(commands->infile[index].fd);
-	fd = open("tmp", O_RDWR | O_TRUNC, 0644);
+	fd = open("/tmp/tmp", O_RDWR | O_TRUNC, 0644);
 	if (fd < 0)
 		return (-1);
 	signal(SIGQUIT, SIG_IGN);
