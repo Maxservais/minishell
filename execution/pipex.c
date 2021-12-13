@@ -129,7 +129,7 @@ int	inter_command(int l_pipe[], int r_pipe[], t_lst *command)
 int	pipex(t_lst *command, int left_pipe[])
 {
 	int		right_pipe[2];
-	// pid_t	wpid;
+	// int		nbr_commands = data.nb_of_commands; // not norminette-friendly
 
 	if (pipe(right_pipe) == -1)
 	{
@@ -151,12 +151,17 @@ int	pipex(t_lst *command, int left_pipe[])
 		if (inter_command(left_pipe, right_pipe, command) == -1)
 			return (-1);
 	}
+	// waitpid(-1, &command->status, 0);
+	// while (nbr_commands-- > 0)
+	// 	waitpid(-1, &command->status, 0);
+	// waitpid(-1, &command->status, 0);
+	waitpid(-1, &command->status, 0);
+	if (WIFEXITED(command->status))
+		data.exit_code = WEXITSTATUS(command->status);
 	// while ((wpid = wait(&command->status)) > 0);
-	if (waitpid(-1, &command->status, 0) == -1)
-		return (-1);
-	// if (WIFEXITED(command->status))
-	// 	data.exit_code = WEXITSTATUS(command->status);
-	if (WIFSIGNALED(command->status))
-		data.exit_code = 128 + WTERMSIG(command->status);
+	// if (waitpid(-1, &command->status, 0) == -1)
+	// 	return (-1);
+	// if (WIFSIGNALED(command->status))
+	// 	data.exit_code = 128 + WTERMSIG(command->status);
 	return (0);
 }
