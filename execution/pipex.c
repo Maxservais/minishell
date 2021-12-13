@@ -133,5 +133,7 @@ int	pipex(t_lst *command, int left_pipe[])
 	}
 	if (waitpid(-1, &command->status, 0) == -1)
 		return (-1);
+	if (WIFSIGNALED(command->status))
+		data.exit_code = 128 + WTERMSIG(command->status);
 	return (0);
 }
