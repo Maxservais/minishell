@@ -10,16 +10,16 @@ int	pwd(t_lst *commands)
 
 	if (getcwd(current_path, sizeof(current_path)))
 	{
-		if (commands->content[1] && !ft_strncmp(commands->content[1], "-", 1))
+		if (commands->cmd[1] && !ft_strncmp(commands->cmd[1], "-", 1))
 		{
-			if (ft_strncmp(commands->content[1], "-L", 2)
-				&& ft_strncmp(commands->content[1], "-P", 2))
+			if (ft_strncmp(commands->cmd[1], "-L", 2)
+				&& ft_strncmp(commands->cmd[1], "-P", 2))
 			{
-				error_usage("pwd: ", commands->content[1], "pwd: usage: pwd [-LP]");
+				error_usage("pwd: ", commands->cmd[1], "pwd: usage: pwd [-LP]");
 				return (EXIT_FAILURE);
 			}
 		}
-		ft_putendl_fd(current_path, 1);
+		ft_putendl_fd(current_path, STDOUT_FILENO);
 	}
 	else
 	{

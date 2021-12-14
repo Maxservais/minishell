@@ -64,7 +64,6 @@ typedef struct s_data
 	int				new_line;
 	int				nb_of_commands;
 	int				exit_code;
-	int				command_code;
 	int				built;
 	int				here_doc;
 	char			**envp;

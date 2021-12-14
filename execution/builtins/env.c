@@ -51,23 +51,23 @@ int	env(t_lst *commands)
 	extern char	**environ;
 
 	i = 0;
-	if (commands->content[1] && !ft_strncmp(commands->content[1], "-", 1))
+	if (commands->cmd[1] && !ft_strncmp(commands->cmd[1], "-", 1))
 	{
-		if (ft_strncmp(commands->content[1], "-i", 2)
-			&& ft_strncmp(commands->content[1], "-V", 2))
+		if (ft_strncmp(commands->cmd[1], "-i", 2)
+			&& ft_strncmp(commands->cmd[1], "-V", 2))
 		{
-			error_usage_env(commands->content[1]);
+			error_usage_env(commands->cmd[1]);
 			return (EXIT_FAILURE);
 		}
 	}
-	else if (commands->content[1]) //A QUOI CA SERT?
+	else if (commands->cmd[1]) //A QUOI CA SERT?
 	{
-		error_env(commands->content[1]);
+		error_env(commands->cmd[1]);
 		return (127);
 	}
 	while (data.envp[i] != NULL)
 	{
-		ft_putendl_fd(data.envp[i], STDIN_FILENO);
+		ft_putendl_fd(data.envp[i], STDOUT_FILENO);
 		i++;
 	}
 	return (EXIT_SUCCESS);

@@ -2,7 +2,6 @@
 
 void	handle_command(t_lst *commands)
 {
-	data.command_code = -1;
 	commands->save_stdin = dup(STDIN_FILENO);
 	commands->save_stdout = dup(STDOUT_FILENO);
 	if (open_files(commands) == -1 && data.nb_of_commands == 1)
@@ -67,34 +66,33 @@ int	handle_one_command(t_lst *commands)
 void	test_built(t_lst *commands)
 {
 	data.built = 0;
-	if (!ft_strcmp(commands->content[0], "cd")
-		|| !ft_strcmp(commands->content[0], "echo")
-		|| !ft_strcmp(commands->content[0], "env")
-		|| !ft_strcmp(commands->content[0], "exit")
-		|| !ft_strcmp(commands->content[0], "export")
-		|| !ft_strcmp(commands->content[0], "pwd")
-		|| !ft_strcmp(commands->content[0], "unset"))
+	if (!ft_strcmp(commands->cmd[0], "cd")
+		|| !ft_strcmp(commands->cmd[0], "echo")
+		|| !ft_strcmp(commands->cmd[0], "env")
+		|| !ft_strcmp(commands->cmd[0], "exit")
+		|| !ft_strcmp(commands->cmd[0], "export")
+		|| !ft_strcmp(commands->cmd[0], "pwd")
+		|| !ft_strcmp(commands->cmd[0], "unset"))
 	{
 		data.built = 1;
-		data.command_code = 0;
 	}
 }
 
 void	execute_builtin(t_lst *commands)
 {
-	if (!ft_strcmp(commands->content[0], "cd"))
+	if (!ft_strcmp(commands->cmd[0], "cd"))
 		data.exit_code = cd(commands);
-	else if (!ft_strcmp(commands->content[0], "echo"))
+	else if (!ft_strcmp(commands->cmd[0], "echo"))
 		data.exit_code = echo(commands);
-	else if (!ft_strcmp(commands->content[0], "env"))
+	else if (!ft_strcmp(commands->cmd[0], "env"))
 		data.exit_code = env(commands);
-	else if (!ft_strcmp(commands->content[0], "exit"))
+	else if (!ft_strcmp(commands->cmd[0], "exit"))
 		ft_exit(commands);
-	else if (!ft_strcmp(commands->content[0], "export"))
+	else if (!ft_strcmp(commands->cmd[0], "export"))
 		data.exit_code = export(commands);
-	else if (!ft_strcmp(commands->content[0], "pwd"))
+	else if (!ft_strcmp(commands->cmd[0], "pwd"))
 		data.exit_code = pwd(commands);
-	else if (!ft_strcmp(commands->content[0], "unset"))
+	else if (!ft_strcmp(commands->cmd[0], "unset"))
 		data.exit_code = unset(commands);
 	// Return Success if at least one builtin command got executed
 }

@@ -28,28 +28,27 @@ int	cd(t_lst *commands)
 	char	current_path[PATH_MAX];
 
 	getcwd(current_path, sizeof(current_path));
-	if (!commands->content[1])
+	if (!commands->cmd[1])
 		chdir(getenv("HOME"));
-	else if (!ft_strncmp(commands->content[1], "\"\"", 2)) //en cas de cd "" il doit simplement retourner a la ligne
-		rl_on_new_line();
-	else if (!ft_strncmp(commands->content[1], "-", 1))
+	else if (!ft_strcmp(commands->cmd[1], "\0"))
+		return (EXIT_SUCCESS);
+	else if (!ft_strncmp(commands->cmd[1], "-", 1))
 	{
-		if (ft_strncmp(commands->content[1], "-L", 2)
-			&& ft_strncmp(commands->content[1], "-P", 2))
+		if (ft_strcmp(commands->cmd[1], "-L")
+			&& ft_strcmp(commands->cmd[1], "-P"))
 		{
-			error_usage("cd: ", commands->content[1], "cd: usage: cd [-L|-P] [dir]");
-			// commands->job_done = 1;
+			error_usage("cd: ", commands->cmd[1], "cd: usage: cd [-L|-P] [dir]");
 			return (EXIT_FAILURE);
 		}
+		else
+			chdir(commands->cmd[2]);
 	}
-	else if (chdir(commands->content[1]) == -1)
+	else if (chdir(commands->cmd[1]) == -1)
 	{
-		error_cmd("bash: ", "cd: ", commands->content[1]);
-		// commands->job_done = 1;
+		error_cmd("bash: ", "cd: ", commands->cmd[1]);
 		return (EXIT_FAILURE);
 	}
 	// need to unset first OLDPWD if there was one
 	add_to_env(ft_strjoin("OLDPWD=", current_path));
-	// commands->job_done = 1;
 	return (EXIT_SUCCESS);
 }
