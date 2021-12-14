@@ -16,7 +16,6 @@ int	pwd(t_lst *commands)
 				&& ft_strncmp(commands->content[1], "-P", 2))
 			{
 				error_usage("pwd: ", commands->content[1], "pwd: usage: pwd [-LP]");
-				// commands->job_done = 1;
 				return (EXIT_FAILURE);
 			}
 		}
@@ -25,9 +24,7 @@ int	pwd(t_lst *commands)
 	else
 	{
 		perror("bash: pwd");
-		// commands->job_done = 1;
 		return (EXIT_FAILURE);
 	}
-	// commands->job_done = 1;
 	return (EXIT_SUCCESS);
 }
