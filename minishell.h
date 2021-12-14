@@ -22,6 +22,8 @@
 
 # define READ 0
 # define WRITE 1
+# define NO_SUCH_FILE ": No such file or directory\n"
+# define INVALID_COMMAND ": command not found\n"
 
 /* 2. CUSTOM STRUCTS */
 
@@ -85,7 +87,7 @@ typedef struct s_operations
 
 /* 3. GLOBAL VARIABLE */
 
-t_data	data; // IS it norminette compliant????
+t_data	data; // IS it norminette compliant???? NO, c'est une global il faut la declarer autrement
 
 /* 4. MAIN FUNCTIONS */
 
@@ -150,6 +152,7 @@ int		pipex(t_lst *command, int left_pipe[]);
 void	add_files(t_lst *commands);
 int		ft_open(char *file_name, int mode);
 int		open_files(t_lst *commands);
+int		close_files(t_lst *commands);
 int		last_heredoc(t_lst *command);
 int		redirect_files(t_lst *commands);
 int		redirect_standard(t_lst *commands);
@@ -157,7 +160,7 @@ int		heredoc(t_lst *commands, int index);
 
 /* 6.4 Utils */
 char	**find_paths(void);
-int		exec_cmd(t_lst *command);
+void	exec_cmd(t_lst *command);
 
 /* 7. SIGNALS */
 void	sighandler(int signum);
@@ -172,13 +175,11 @@ t_lst	*lstnew(char **content, int index);
 void	lstdelone(t_lst *lst);
 void	lstclear(t_lst **lst);
 void	lstadd_back(t_lst **lst, t_lst *new);
-
-/* 8. LIST MANIPULATION */
-int		lstsize(t_lst *lst);
-t_lst	*lstnew(char **content, int index);
-void	lstdelone(t_lst *lst);
-void	lstclear(t_lst **lst);
-void	lstadd_back(t_lst **lst, t_lst *new);
 int		ft_strcmp(char *str, char *end);
+
+/* 9. ERROR HANDLING */
+void	command_not_found(t_lst *commands);
+void	invalid_file(t_lst *commands, int i);
+void	invalid_path(t_lst *commands);
 
 #endif

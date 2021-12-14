@@ -38,18 +38,18 @@ int	cd(t_lst *commands)
 			&& ft_strncmp(commands->content[1], "-P", 2))
 		{
 			error_usage("cd: ", commands->content[1], "cd: usage: cd [-L|-P] [dir]");
-			commands->job_done = 1;
+			// commands->job_done = 1;
 			return (EXIT_FAILURE);
 		}
 	}
 	else if (chdir(commands->content[1]) == -1)
 	{
 		error_cmd("bash: ", "cd: ", commands->content[1]);
-		commands->job_done = 1;
+		// commands->job_done = 1;
 		return (EXIT_FAILURE);
 	}
 	// need to unset first OLDPWD if there was one
 	add_to_env(ft_strjoin("OLDPWD=", current_path));
-	commands->job_done = 1;
+	// commands->job_done = 1;
 	return (EXIT_SUCCESS);
 }

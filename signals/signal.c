@@ -47,5 +47,5 @@ void	sighandler_cmd(int signum)
 void	sighandler_heredoc(int signum)
 {
 	if (signum == SIGINT)
-		exit (130);
+		exit (1);
 }

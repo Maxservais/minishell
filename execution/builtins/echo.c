@@ -83,7 +83,7 @@ int	echo(t_lst *command)
 	if (!ft_strcmp(command->content[0], "echo") && !command->content[1])
 	{
 		write(1, "\n", 1);
-		command->job_done = 1;
+		// command->job_done = 1;
 		return (EXIT_SUCCESS);
 	}
 	else if (!ft_strcmp(command->content[0], "echo") && ft_strcmp(command->content[1], "-n"))
@@ -94,7 +94,7 @@ int	echo(t_lst *command)
 			if (!ft_strcmp(command->content[x], "$?"))
 			{
 				ft_putnbr(data.exit_code);
-				command->job_done = 1;
+				// command->job_done = 1;
 				x++;
 			}
 			else if (command->content[x + 1])
@@ -108,10 +108,10 @@ int	echo(t_lst *command)
 				write(1, command->content[x], ft_strlen(command->content[x]));
 				x++;
 			}
-			write(1, " ", 1);
+			// write(1, " ", 1);
 		}
 		write(1, "\n", 1);
-		command->job_done = 1;
+		// command->job_done = 1;
 		return (EXIT_SUCCESS);
 	}
 	else if (!ft_strcmp(command->content[0], "echo") && !ft_strcmp(command->content[1], "-n"))
@@ -131,7 +131,7 @@ int	echo(t_lst *command)
 				x++;
 			}
 		}
-		command->job_done = 1;
+		// command->job_done = 1;
 		return (0);
 	}
 	return (EXIT_SUCCESS);

@@ -1,28 +1,29 @@
-SRC_FILES 		=	main.c					\
-					./parsing/parser.c		\
-					./parsing/split_pipes.c	\
-					./parsing/tokenizer.c	\
-					./parsing/split_token.c	\
-					./parsing/utils1.c		\
-					./parsing/utils2.c		\
-					./parsing/free.c		\
-					./execution/builtins/echo.c		\
-					./execution/builtins/exit.c		\
-					./execution/builtins/pwd.c		\
-					./execution/builtins/env.c		\
-					./execution/builtins/export.c	\
-					./execution/builtins/cd.c		\
-					./execution/builtins/unset.c	\
-					./execution/builtins/error_handler.c \
-					./execution/exec.c				\
-					./execution/pipex.c				\
-					./execution/redirection.c		\
-					./execution/heredoc.c			\
-					./execution/open_files.c			\
-					./execution/utils.c				\
-					./signals/signal.c				\
-					./utils/lst.c					\
-					./utils/lst2.c					\
+SRC_FILES 		=	main.c									\
+					error.c									\
+					./parsing/parser.c						\
+					./parsing/split_pipes.c					\
+					./parsing/tokenizer.c					\
+					./parsing/split_token.c					\
+					./parsing/utils1.c						\
+					./parsing/utils2.c						\
+					./parsing/free.c						\
+					./execution/builtins/echo.c				\
+					./execution/builtins/exit.c				\
+					./execution/builtins/pwd.c				\
+					./execution/builtins/env.c				\
+					./execution/builtins/export.c			\
+					./execution/builtins/cd.c				\
+					./execution/builtins/unset.c			\
+					./execution/builtins/error_handler.c	\
+					./execution/exec.c						\
+					./execution/pipex.c						\
+					./execution/redirection.c				\
+					./execution/heredoc.c					\
+					./execution/open_files.c				\
+					./execution/utils.c						\
+					./signals/signal.c						\
+					./utils/lst.c							\
+					./utils/lst2.c							\
 
 OBJ_FILES		=	$(SRC_FILES:.c=.o)
 

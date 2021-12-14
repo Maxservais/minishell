@@ -38,7 +38,11 @@ int	ft_strcmp(char *str, char *end)
 	int	i;
 
 	i = 0;
-	while (str[i])
+	if (ft_strncmp(str, "(null)", 6) == 0)
+		return (0);
+	if (ft_strlen(str) != ft_strlen(end))
+		return (1);
+	while (end[i] != '\0' && str[i] != '\0')
 	{
 		if (str[i] != end[i])
 			return (1);

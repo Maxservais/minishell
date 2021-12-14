@@ -29,7 +29,10 @@ int	open_files(t_lst *commands)
 			commands->infile[i].fd
 				= ft_open(commands->infile[i].name, commands->infile[i].mode);
 			if (commands->infile[i].fd == -1)
+			{
+				invalid_file(commands, i);
 				return (-1);
+			}
 			i++;
 		}
 		i = 0;
@@ -39,6 +42,29 @@ int	open_files(t_lst *commands)
 				= ft_open(commands->outfile[i].name, commands->outfile[i].mode);
 			if (commands->outfile[i].fd == -1)
 				return (-1);
+			i++;
+		}
+		commands = commands->next;
+	}
+	return (EXIT_SUCCESS);
+}
+
+int	close_files(t_lst *commands)
+{
+	int	i;
+
+	while (commands)
+	{
+		i = 0;
+		while (commands->infile[i].name)
+		{
+			close(commands->infile[i].fd);
+			i++;
+		}
+		i = 0;
+		while (commands->outfile[i].name)
+		{
+			close(commands->outfile[i].fd);
 			i++;
 		}
 		commands = commands->next;

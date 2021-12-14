@@ -92,13 +92,13 @@ int	export(t_lst *commands)
 		if (!ft_strncmp(commands->content[1], "-", 1))
 		{
 			error_usage_export(commands->content[1]);
-			commands->job_done = 1;
+			// commands->job_done = 1;
 			return (EXIT_FAILURE);
 		}
 		else if (commands->content[2] && !check_format(commands->content[2]))
 			error_args(commands->content[2]);
 		return (EXIT_FAILURE);
 	}
-	commands->job_done = 1;
+	// commands->job_done = 1;
 	return (EXIT_SUCCESS);
 }

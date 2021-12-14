@@ -57,14 +57,12 @@ int	env(t_lst *commands)
 			&& ft_strncmp(commands->content[1], "-V", 2))
 		{
 			error_usage_env(commands->content[1]);
-			commands->job_done = 1;
 			return (EXIT_FAILURE);
 		}
 	}
 	else if (commands->content[1]) //A QUOI CA SERT?
 	{
 		error_env(commands->content[1]);
-		commands->job_done = 1;
 		return (127);
 	}
 	while (data.envp[i] != NULL)
@@ -72,6 +70,5 @@ int	env(t_lst *commands)
 		ft_putendl_fd(data.envp[i], STDIN_FILENO);
 		i++;
 	}
-	commands->job_done = 1;
 	return (EXIT_SUCCESS);
 }

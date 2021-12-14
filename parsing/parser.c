@@ -39,7 +39,7 @@ void	remove_files(t_lst **commands)
 		trav->cmd = malloc(sizeof(char *) * (trav->args + 1));
 		x = 0;
 		y = 0;
-		while (trav->content[x][0] == '<')
+		while (trav->content[x] && trav->content[x][0] == '<')
 		{
 			if (!trav->content[x][1])
 				x += 2;
@@ -47,7 +47,7 @@ void	remove_files(t_lst **commands)
 				x++;
 		}
 		while (trav->content[x] && trav->content[x][0] != '<' && trav->content[x][0] != '>')
-			trav->cmd[y++] = ft_strdup(trav->content[x++]);
+			trav->cmd[y++] = ft_strdup(trav->content[x++]);;
 		trav->cmd[y] = NULL;
 		trav = trav->next;
 	}
