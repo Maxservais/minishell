@@ -155,7 +155,8 @@ int	pipex(t_lst *command, int left_pipe[])
 	// while (nbr_commands-- > 0)
 	// 	waitpid(-1, &command->status, 0);
 	// waitpid(-1, &command->status, 0);
-	waitpid(-1, &command->status, 0);
+	if (waitpid(-1, &command->status, 0) == -1)
+		return (-1);
 	if (WIFEXITED(command->status))
 		data.exit_code = WEXITSTATUS(command->status);
 	// while ((wpid = wait(&command->status)) > 0);

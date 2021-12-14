@@ -49,7 +49,7 @@ void	add_files(t_lst *commands)
 	}
 }
 
-int	redirect_filesbis(int index, t_lst *commands)
+int	redirect_input(int index, t_lst *commands)
 {
 	int	fd;
 
@@ -80,7 +80,7 @@ int	redirect_files(t_lst *commands)
 	if (index != -1)
 		heredoc(commands, index);
 	if (commands->infile->name && commands->infile[last_infile(commands)].fd)
-		if (redirect_filesbis(index, commands) == -1)
+		if (redirect_input(index, commands) == -1)
 			return (-1);
 	if (commands->outfile->name
 		&& commands->outfile[last_outfile(commands)].fd)
