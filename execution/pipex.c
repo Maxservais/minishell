@@ -24,7 +24,10 @@ int	first_command(int right_pipe[], t_lst *command)
 		{
 			test_built(command);
 			if (data.built == 1)
+			{
 				execute_builtin(command);
+				exit(data.exit_code);
+			}
 			else
 				exec_cmd(command);
 		}
@@ -64,7 +67,10 @@ int	last_command(int left_pipe[], int right_pipe[], t_lst *command)
 		{
 			test_built(command);
 			if (data.built == 1)
+			{
 				execute_builtin(command);
+				exit(data.exit_code);
+			}
 			else
 				exec_cmd(command);
 		}
@@ -109,7 +115,10 @@ int	inter_command(int l_pipe[], int r_pipe[], t_lst *command)
 		{
 			test_built(command);
 			if (data.built == 1)
+			{
 				execute_builtin(command);
+				exit(data.exit_code);
+			}
 			else
 				exec_cmd(command);
 		}
