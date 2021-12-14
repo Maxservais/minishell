@@ -50,6 +50,5 @@ void	exec_cmd(t_lst *command)
 		}
 	}
 	command_not_found(command);
-	// printf("code2 %d\n", data.exit_code);
 	exit (127);
 }

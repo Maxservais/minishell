@@ -29,7 +29,7 @@ int	first_command(int right_pipe[], t_lst *command)
 				exec_cmd(command);
 		}
 		else
-			exit(127);
+			exit(1);
 	}
 	else
 	{
@@ -44,7 +44,6 @@ int	last_command(int left_pipe[], int right_pipe[], t_lst *command)
 {
 	int	err;
 
-	data.exit_code = 0;
 	command->pid = fork();
 	if (command->pid < 0)
 		return (-1);
@@ -67,13 +66,10 @@ int	last_command(int left_pipe[], int right_pipe[], t_lst *command)
 			if (data.built == 1)
 				execute_builtin(command);
 			else
-			{
 				exec_cmd(command);
-				data.exit_code = 1;
-			}
 		}
 		else
-			exit(127);
+			exit(1);
 	}
 	else
 	{
@@ -118,7 +114,7 @@ int	inter_command(int l_pipe[], int r_pipe[], t_lst *command)
 				exec_cmd(command);
 		}
 		else
-			exit(127);
+			exit(1);
 	}
 	else
 	{
@@ -133,6 +129,7 @@ int	inter_command(int l_pipe[], int r_pipe[], t_lst *command)
 int	pipex(t_lst *command, int left_pipe[])
 {
 	int		right_pipe[2];
+	// int		nbr_commands = data.nb_of_commands; // not norminette-friendly
 
 	if (pipe(right_pipe) == -1)
 	{
@@ -142,21 +139,29 @@ int	pipex(t_lst *command, int left_pipe[])
 	if (command->index == 1)
 	{
 		if (first_command(right_pipe, command) == -1)
-			return (-1); // RETURN ERROR MESSAGE
+			return (-1);
 	}
 	else if (command->index == data.nb_of_commands)
 	{
 		if (last_command(left_pipe, right_pipe, command) == -1)
-			return (-1); // RETURN ERROR MESSAGE
+			return (-1);
 	}
 	else
 	{
 		if (inter_command(left_pipe, right_pipe, command) == -1)
-			return (-1); // RETURN ERROR MESSAGE
+			return (-1);
 	}
-	if (waitpid(-1, &command->status, 0) == -1)
-		return (-1);
-	if (WIFSIGNALED(command->status))
-		data.exit_code = 128 + WTERMSIG(command->status);
+	// waitpid(-1, &command->status, 0);
+	// while (nbr_commands-- > 0)
+	// 	waitpid(-1, &command->status, 0);
+	// waitpid(-1, &command->status, 0);
+	waitpid(-1, &command->status, 0);
+	if (WIFEXITED(command->status))
+		data.exit_code = WEXITSTATUS(command->status);
+	// while ((wpid = wait(&command->status)) > 0);
+	// if (waitpid(-1, &command->status, 0) == -1)
+	// 	return (-1);
+	// if (WIFSIGNALED(command->status))
+	// 	data.exit_code = 128 + WTERMSIG(command->status);
 	return (0);
 }

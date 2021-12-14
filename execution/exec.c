@@ -19,13 +19,11 @@ void	handle_command(t_lst *commands)
 	{
 		if (handle_one_command(commands) == -1)
 			return ;
-		// if (commands->status > 256 && data.built == 0)
-		// 	command_not_found(commands);
 	}
 	else
 	{
 		if (pipex(commands, STDIN_FILENO) == -1)
-			return ; // report error
+			return ;
 	}
 	close_files(commands);
 }
@@ -50,25 +48,15 @@ int	handle_one_command(t_lst *commands)
 		else if (commands->pid == 0)
 		{
 			if (redirect_files(commands) == -1)
-				exit(127);
+				exit(1);
 			exec_cmd(commands);
 		}
 		else
 		{
 			if (waitpid(-1, &commands->status, 0) == -1)
-				return (-1); // GERER ERREUR
-			// if (commands->status >= 256)
-			// {
-			// 	if (data.here_doc == 1)
-			// 		commands->status = 256;
-			// 	data.exit_code = 1;
-			// 	return (0); // check return type
-			// }
-			else if (commands->status < 256)
-			{
-				data.exit_code = 0;
-				return (0); // check return type
-			}
+				return (-1);
+			if (WIFEXITED(commands->status))
+				data.exit_code = WEXITSTATUS(commands->status);
 			if (redirect_standard(commands) == -1)
 				return (-1);
 		}

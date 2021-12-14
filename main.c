@@ -41,6 +41,31 @@ void	parser_test(char *line)
 	clean_all(tokens, splited, &commands);
 }
 
+char	*ft_space_line(char *line)
+{
+	int		i;
+	int		j;
+	char	*line2;
+
+	i = 0;
+	j = 0;
+	line2 = 0;
+	while (line[i] == ' ' || line[i] == '	')
+		i++;
+	line2 = malloc(sizeof(char) * ((ft_strlen(line) - i) + 1));
+	while (line[i])
+	{
+		line2[j] = line[i];
+		j++;
+		i++;
+	}
+	free(line);
+	line2[j] = '\0';
+	return (line2);
+}
+
+/*la ligne 85/86 supprime les espace et les tabulations*/
+
 void	prompt_test(char *line)
 {
 	data.exit = -1;
@@ -57,6 +82,8 @@ void	prompt_test(char *line)
 			break ;
 		}
 		add_history(line);
+		if(line[0] == ' ' || line[0] == '	')
+			line = ft_space_line(line);
 		if (ft_strlen(line))
 			parser_test(line);
 		free(line);
