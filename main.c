@@ -99,7 +99,9 @@ int	main(void)
 	data.main_new = data.main_old;//on copie l'ancien terminal
 	data.main_new.c_lflag&= ~(ECHOCTL);// enleve les caracteres speciaux genre ^C
 	tcsetattr(0, TCSANOW, &data.main_new);//on definit les parametres avec les modifications
-	copy_env();// check if succesful execution or not
+	if (copy_env() == -1)
+		return (EXIT_FAILURE);
+	// check if succesful execution or not
 	// data.here_doc = 0;
 	line = NULL;
 	prompt_test(line);

@@ -21,7 +21,6 @@ static void	add_to_env(char *variable)
 			data.envp[i] = variable;
 		i++;
 	}
-	data.envp[i + 1] = NULL;
 }
 
 int	cd_flag(t_lst *commands)
