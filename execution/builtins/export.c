@@ -1,27 +1,54 @@
 /* Reminders:
-- retour des bonnes valeurs (0 en cas de succes, etc.) !!!!!!!!!
-- variables d'environnement doivent etre passées au child process grace à execve.
-Si j'export une variable, les enfants doivent en 'heriter'. Par contre l'inverse n'est pas vrai.
-Ici je travaille directement sur environ, peut-etre qu'il faut travailler sur une copie.
-- leaks to be found
-- export coucou=hey = bonjour=y a gerer!!! Il faut renvoyer erreur mais qd meme
+- retour des bonnes valeurs:
+		0 en cas de succes
+		1 en cas d'erreur (meme si partiellement reussi, si message d'erreur, renvoie 1)
+- leaks to be found?
 - Faut gerer export QQCHOSE+=qqchose !!!
-- si export d'un truc qui existe deja, ca le remplace, ca n'ajoute pas un nouveau
+- si export d'un truc qui existe deja, ca le remplace, ca n'ajoute pas un nouveau!!!!!!!!!!!!!
 
 Some tests to run:
 export coucou=hey=
+------------------
+declare -x coucou="hey="
+
 export coucou=56 = hey=42
+-------------------------
+bash: export: `=': not a valid identifier
+declare -x coucou="56"
+declare -x hey="42"
+
 export coucou=56 =
+------------------------
+bash: export: `=': not a valid identifier
+declare -x coucou="56"
+
 export = coucou=12
+------------------
+bash: export: `=': not a valid identifier
+declare -x coucou="12"
+
 export =
-export bonjour=bon = holla=56
+--------
+bash: export: `=': not a valid identifier
+
 export =coucou=hey
+------------------
+bash: export: `=coucou=hey': not a valid identifier
+
 export "A= 2"
-export C=c CWI=2
+-------------
+declare -x A=" 2"
+
 export C=c B=b C=l
-export " C=c"
-export "D C=c"
+------------------
+declare -x B="b"
+declare -x C="l"
+
 export "D C=c" B=b
+------------------
+bash: export: `D C=c': not a valid identifier
+declare -x B="b"
+
 */
 
 #include "../../minishell.h"
@@ -47,58 +74,96 @@ static void	error_args(char *str)
 
 static int check_format(char *str)
 {
-	while (str && *str)
+	int	i;
+
+	i = 0;
+	while (str && str[i])
 	{
-		if (*str == '=')
-			return (EXIT_SUCCESS);
-		str++;
+		if (str[i] == '=')
+			return (i);
+		i++;
 	}
-	return (EXIT_FAILURE);
+	return (-1);
 }
 
 static void	print_env(void)
 {
-	int	i;
+	int		i;
+	int		j;
+	char	*var;
+	char	*value;
 
 	i = 0;
 	while (data.envp[i] != NULL)
 	{
-		ft_putstr_fd("declare -x ", STDIN_FILENO);
-		ft_putendl_fd(data.envp[i], STDIN_FILENO);
+		j = 0;
+		while(data.envp[i][j])
+		{
+			if (data.envp[i][j] == '=')
+			{
+				var = ft_substr(data.envp[i], 0, j + 1);
+				value = ft_substr(data.envp[i], j + 1, ft_strlen(data.envp[i]) - j);
+				break ;
+			}
+			j++;
+		}
+		ft_putstr_fd("declare -x ", STDOUT_FILENO);
+		ft_putstr_fd(var, STDOUT_FILENO);
+		ft_putstr_fd("\"", STDOUT_FILENO);
+		ft_putstr_fd(value, STDOUT_FILENO);
+		ft_putendl_fd("\"", STDOUT_FILENO);
+		free(var);
+		free(value);
 		i++;
 	}
 }
 
 int	export(t_lst *commands)
 {
-	int			i;
-	char		*env;
+	int		i;
+	int		flag;
+	char	*env;
 
 	i = 0;
-	if (!commands->content[1])
+	flag = 0;
+	if (!commands->cmd[1])
 		print_env();
-	else if (!check_format(commands->content[1]))
+	else if (check_format(commands->cmd[1]) != -1)
 	{
-		env = strdup(commands->content[1]);
+		env = strdup(commands->cmd[1]);
 		if (!env)
 			return (EXIT_FAILURE);
+		// faut verifier que la variable existe pas deja, auquel cas faut la remplacer
 		while (data.envp[i] != NULL)
+		{
+			if (!ft_strncmp(data.envp[i], env, check_format(env)))
+			{
+				data.envp[i] = env;
+				printf("test: %s\n", data.envp[i]);
+				flag = 1;
+				break ;
+			}
 			i++;
-		data.envp[i] = env;
-		data.envp[i + 1] = NULL;
+		}
+		if (flag != 1)
+		{
+			data.envp[i] = env;
+			printf("env: %s\n", env);
+			// how? Do I need to reallocate memory to fit the new addition?
+			data.envp[i + 1] = NULL;
+		}
+		free(env);
 	}
 	else
 	{
-		if (!ft_strncmp(commands->content[1], "-", 1))
+		if (!ft_strncmp(commands->cmd[1], "-", 1))
 		{
-			error_usage_export(commands->content[1]);
-			// commands->job_done = 1;
+			error_usage_export(commands->cmd[1]);
 			return (EXIT_FAILURE);
 		}
-		else if (commands->content[2] && !check_format(commands->content[2]))
-			error_args(commands->content[2]);
+		else if (commands->cmd[2] && !check_format(commands->cmd[2]))
+			error_args(commands->cmd[2]);
 		return (EXIT_FAILURE);
 	}
-	// commands->job_done = 1;
 	return (EXIT_SUCCESS);
 }

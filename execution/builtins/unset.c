@@ -15,7 +15,6 @@ int	find_var(char *variable)
 	while (data.envp[i] && ft_strncmp(data.envp[i],
 			variable, ft_strlen(variable)))
 		i++;
-	printf("variable = %s\n", variable);
 	if (data.envp[i] && !ft_strcmp_unset(data.envp[i], variable))
 	{
 		free(data.envp[i]);
