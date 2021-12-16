@@ -12,6 +12,7 @@ static void	find_var(char *variable)
 	int			i;
 
 	i = 0;
+	// strcmp plutot?
 	while (ft_strncmp(data.envp[i], variable, ft_strlen(variable)))
 			i++;
 	free(data.envp[i]);

@@ -36,6 +36,8 @@ int	copy_env(void)
 	while (environ[counter] != NULL)
 		counter++;
 	data.envp = malloc(sizeof(char *) * (counter + 1));
+	if (!data.envp)
+		return (-1);
 	while (environ[i] != NULL)
 	{
 		data.envp[i] = strdup(environ[i]);
@@ -49,7 +51,6 @@ int	copy_env(void)
 int	env(t_lst *commands)
 {
 	int			i;
-	extern char	**environ;
 
 	i = 0;
 	if (commands->cmd[1] && !ft_strncmp(commands->cmd[1], "-", 1))

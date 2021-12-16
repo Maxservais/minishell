@@ -1,25 +1,26 @@
 /* Reminders:
 - La commande 'cd' doit etre capable de gerer les variables qui ont été EXPORT.
-e.g. export test=Documents/minishell cd $test
-- the 'cd' command should update the PWD environment variable and create the OLDPWD env variable.
-e.g	bash-3.2$ env | grep PWD
-	PWD=/Users/mservais/Documents/minishell
-	bash-3.2$ cd pipex/
-	bash-3.2$ env | grep PWD
-	PWD=/Users/mservais/Documents/minishell/pipex
-	OLDPWD=/Users/mservais/Documents/minishell
+e.g. 	export test=Documents/minishell
+		cd $test
 */
 
 #include "../../minishell.h"
 
 static void	add_to_env(char *variable)
 {
-	int			i;
+	int		i;
+	char	current_path[PATH_MAX];
 
 	i = 0;
+	getcwd(current_path, sizeof(current_path));
 	while (data.envp[i] != NULL)
-			i++;
-	data.envp[i] = variable;
+	{
+		if (!ft_strncmp(data.envp[i], "PWD=", ft_strlen("PWD=")))
+			data.envp[i] = ft_strjoin("PWD=", current_path);
+		if (ft_strnstr(data.envp[i], "OLDPWD=", ft_strlen("OLDPWD=")) != NULL)
+			data.envp[i] = variable;
+		i++;
+	}
 	data.envp[i + 1] = NULL;
 }
 
@@ -56,7 +57,6 @@ int	cd(t_lst *commands)
 		error_cmd("bash: ", "cd: ", commands->cmd[1]);
 		return (EXIT_FAILURE);
 	}
-	// need to unset first OLDPWD if there was one
 	add_to_env(ft_strjoin("OLDPWD=", current_path));
 	return (EXIT_SUCCESS);
 }
