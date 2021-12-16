@@ -1,7 +1,3 @@
-/* Reminders:
-- Improve Return codes
-*/
-
 #include "../../minishell.h"
 
 static void	error_env(char *str)
@@ -9,7 +5,7 @@ static void	error_env(char *str)
 	ft_putstr_fd("env: ", STDERR_FILENO);
 	ft_putstr_fd(str, STDERR_FILENO);
 	ft_putstr_fd(": ", STDERR_FILENO);
-	ft_putendl_fd(strerror(errno), STDERR_FILENO);
+	ft_putstr_fd("No such file or directory\n", STDERR_FILENO);
 }
 
 static void	error_usage_env(char *str)
@@ -41,7 +37,13 @@ int	copy_env(void)
 	while (environ[i] != NULL)
 	{
 		data.envp[i] = strdup(environ[i]);
-		// check for errors and free
+		if (!data.envp[i])
+		{
+			while(i-- > 0)
+				free(data.envp[i]);
+			free(data.envp);
+			return (-1);
+		}
 		i++;
 	}
 	data.envp[i] = NULL;
@@ -62,7 +64,7 @@ int	env(t_lst *commands)
 			return (EXIT_FAILURE);
 		}
 	}
-	else if (commands->cmd[1]) //A QUOI CA SERT?
+	else if (commands->cmd[1])
 	{
 		error_env(commands->cmd[1]);
 		return (127);
