@@ -115,6 +115,7 @@ void	add_index(t_lst **commands);
 char	*add_env(char *line);
 int		strisdigit(char *str);
 int		ft_strcmp(char *str, char *end);
+int		ft_strcmp_unset(char *str, char *end);
 
 /* 5.3 Free Memory */
 void	free_splited(char **splited);

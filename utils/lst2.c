@@ -50,3 +50,19 @@ int	ft_strcmp(char *str, char *end)
 	}
 	return (0);
 }
+
+int	ft_strcmp_unset(char *str, char *end)
+{
+	int	i;
+
+	i = 0;
+	while (end[i] != '\0' && str[i] != '\0')
+	{
+		if (str[i] != end[i])
+			return (1);
+		i++;
+	}
+	if (str[i] != '=')
+		return (1);
+	return (0);
+}
