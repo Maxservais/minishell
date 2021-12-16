@@ -7,33 +7,45 @@
 
 #include "../../minishell.h"
 
-static void	find_var(char *variable)
+int	find_var(char *variable)
 {
 	int			i;
 
 	i = 0;
-	// strcmp plutot?
-	while (ft_strncmp(data.envp[i], variable, ft_strlen(variable)))
+	while (data.envp[i] && ft_strncmp(data.envp[i],
+			variable, ft_strlen(variable)))
+		i++;
+	if (data.envp[i] && ft_strcmp(data.envp[i], variable))
+	{
+		free(data.envp[i]);
+		ft_bzero(data.envp[i], ft_strlen(data.envp[i]));
+		while (data.envp[i])
+		{
+			data.envp[i] = data.envp[i + 1];
 			i++;
-	free(data.envp[i]);
-	// ft_bzero(data.envp[i], ft_strlen(data.envp[i]));
+		}
+	}
+	else
+		return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }
 
 int	unset(t_lst *commands)
 {
-	if (!ft_strncmp(commands->content[1], "-", 1))
+	if (!ft_strncmp(commands->cmd[1], "-", 1))
 	{
-		if (ft_strcmp(commands->content[1], "-f")
-			&& ft_strcmp(commands->content[1], "-v"))
+		if (ft_strcmp(commands->cmd[1], "-f")
+			&& ft_strcmp(commands->cmd[1], "-v"))
 		{
-			error_usage("unset: ", commands->content[1],
+			error_usage("unset: ", commands->cmd[1],
 				"unset: usage: unset [-f] [-v] [name ...]");
-			// commands->job_done = 1;
 			return (EXIT_FAILURE);
 		}
+		else if (find_var(commands->cmd[2]) == 1)
+			return (EXIT_FAILURE);
 	}
-	else if (commands->content[1])
-		find_var(commands->content[1]);
-	// commands->job_done = 1;
+	else if (commands->cmd[1])
+		if (find_var(commands->cmd[1]) == 1)
+			return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
