@@ -30,6 +30,8 @@ void	handle_command(t_lst *commands)
 int	handle_one_command(t_lst *commands)
 {
 	/* IF BUILTIN */
+	if (!commands->cmd[0])
+		return (-1);
 	test_built(commands);
 	if (data.built == 1)
 	{
