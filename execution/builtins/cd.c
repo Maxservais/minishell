@@ -23,6 +23,20 @@ static void	add_to_env(char *variable)
 	data.envp[i + 1] = NULL;
 }
 
+int	cd_flag(t_lst *commands)
+{
+	if (ft_strcmp(commands->cmd[1], "-L")
+		&& ft_strcmp(commands->cmd[1], "-P"))
+	{
+		error_usage("cd: ", commands->cmd[1],
+			"cd: usage: cd [-L|-P] [dir]");
+		return (EXIT_FAILURE);
+	}
+	else
+		chdir(commands->cmd[2]);
+	return (EXIT_SUCCESS);
+}
+
 int	cd(t_lst *commands)
 {
 	char	current_path[PATH_MAX];
@@ -34,14 +48,8 @@ int	cd(t_lst *commands)
 		return (EXIT_SUCCESS);
 	else if (!ft_strncmp(commands->cmd[1], "-", 1))
 	{
-		if (ft_strcmp(commands->cmd[1], "-L")
-			&& ft_strcmp(commands->cmd[1], "-P"))
-		{
-			error_usage("cd: ", commands->cmd[1], "cd: usage: cd [-L|-P] [dir]");
+		if (cd_flag(commands) == 1)
 			return (EXIT_FAILURE);
-		}
-		else
-			chdir(commands->cmd[2]);
 	}
 	else if (chdir(commands->cmd[1]) == -1)
 	{

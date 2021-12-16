@@ -19,12 +19,13 @@ static void	error_usage_env(char *str)
 	option = ft_substr(str, 0, 2);
 	ft_putstr_fd("env: illegal option -", STDERR_FILENO);
 	ft_putendl_fd(option, STDERR_FILENO);
-	ft_putendl_fd("usage: env [-iv] [-P utilpath] [-S string] [-u name]", STDERR_FILENO);
+	ft_putendl_fd("usage: env [-iv] [-P utilpath] [-S string] [-u name]",
+		STDERR_FILENO);
 	ft_putendl_fd("\t [name=value ...] [utility [argument ...]]", STDERR_FILENO);
 	free((void *)option);
 }
 
-int		copy_env(void)
+int	copy_env(void)
 {
 	int			i;
 	int			counter;
