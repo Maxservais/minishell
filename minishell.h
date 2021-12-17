@@ -97,6 +97,7 @@ void	prompt_test(char *line);
 
 /* 5.0 Parser */
 t_lst	*put_in_list(char **splited);
+int		check_syntax(t_lst *commands);
 void	remove_files(t_lst **commands);
 char	**ft_test(char *s, t_token *tokens);
 

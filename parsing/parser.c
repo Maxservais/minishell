@@ -27,6 +27,48 @@ t_lst	*put_in_list(char **splited)
 	return (commands);
 }
 
+int	check_syntax(t_lst *commands)
+{
+	int		x;
+	t_lst	*trav;
+
+	x = 0;
+	trav = commands;
+	// if (trav->content[x] && trav->content[x][0] == '|')
+	// {
+	// 	if (!trav->content[x + 1] || !trav->content[x + 2])
+	// 	{
+	// 		printf("bash: syntax error near unexpected token `|'\n");
+	// 		return (-1);
+	// 	}
+	// }
+	if (trav->content[x] && !strcmp(trav->content[x], ">>"))
+	{
+		if (!trav->content[x + 1] || !trav->content[x + 2])
+		{
+			printf("bash: syntax error near unexpected token `newline'\n");
+			return (-1);
+		}
+	}
+	else if (trav->content[x] && !strncmp(trav->content[x], ">", 1))
+	{
+		if (!trav->content[x + 1] || !trav->content[x + 2])
+		{
+			printf("bash: syntax error near unexpected token `newline'\n");
+			return (-1);
+		}
+	}
+	else if (trav->content[x] && !strncmp(trav->content[x], "<", 1))
+	{
+		if (!trav->content[x + 1] || !trav->content[x + 2])
+		{
+			printf("bash: syntax error near unexpected token `newline'\n");
+			return (-1);
+		}
+	}
+	return (0);
+}
+
 void	remove_files(t_lst **commands)
 {
 	t_lst	*trav;

@@ -36,9 +36,10 @@ void	parser_test(char *line)
 	splited = ft_test(line, tokens);
 	commands = put_in_list(splited);
 	add_files(commands);
+	if (check_syntax(commands) == -1)
+		return ;
 	remove_files(&commands);
 	handle_command(commands);
-	// DO WE REALLY FREE EVERYTHING HERE? NO MEMORY LEAKS?
 	clean_all(tokens, splited, &commands);
 }
 
@@ -83,6 +84,11 @@ void	prompt_test(char *line)
 			break ;
 		}
 		add_history(line);
+		if (line[0] == '|')
+		{
+			printf("bash: syntax error near unexpected token `|'\n");
+			line = strdup("");
+		}
 		if(line[0] == ' ' || line[0] == '	')
 			line = ft_space_line(line);
 		if (ft_strlen(line))

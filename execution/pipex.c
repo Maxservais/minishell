@@ -4,6 +4,8 @@ int	first_command(int right_pipe[], t_lst *command)
 {
 	int	err;
 
+	if (!command->cmd[0])
+		return (-1);
 	command->pid = fork();
 	if (command->pid < 0)
 		return (-1);

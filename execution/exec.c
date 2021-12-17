@@ -29,9 +29,12 @@ void	handle_command(t_lst *commands)
 
 int	handle_one_command(t_lst *commands)
 {
-	/* IF BUILTIN */
 	if (!commands->cmd[0])
+	{
+		printf("bash: syntax error near unexpected token\n");
 		return (-1);
+	}
+	/* IF BUILTIN */
 	test_built(commands);
 	if (data.built == 1)
 	{

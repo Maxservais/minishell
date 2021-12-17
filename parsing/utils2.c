@@ -32,8 +32,12 @@ void	add_index(t_lst **commands)
 	{
 		x = 0;
 		trav->args = 0;
+		// printf("coucoucoucou\n");
+		// printf("trav->content[x]: %s\n", trav->content[0]);
 		while (trav->content[x++])
+		{
 			trav->args++;
+		}
 		trav->index = index++;
 		trav = trav->next;
 	}
