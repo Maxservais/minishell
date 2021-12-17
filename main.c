@@ -101,21 +101,18 @@ int	main(void)
 {
 	char	*line;
 
-	// FIX SEGV ERROR WHEN SPACE OR TAB IS INPUT
-	tcgetattr(0, &data.main_old);// recupere les parametres du terminal
-	data.main_new = data.main_old;//on copie l'ancien terminal
-	data.main_new.c_lflag&= ~(ECHOCTL);// enleve les caracteres speciaux genre ^C
-	tcsetattr(0, TCSANOW, &data.main_new);//on definit les parametres avec les modifications
+	tcgetattr(0, &data.main_old); // recupere les parametres du terminal
+	data.main_new = data.main_old; //on copie l'ancien terminal
+	data.main_new.c_lflag&= ~(ECHOCTL); // enleve les caracteres speciaux genre ^C
+	tcsetattr(0, TCSANOW, &data.main_new); //on definit les parametres avec les modifications
 	if (copy_env() == -1)
 		return (EXIT_FAILURE);
-	// check if succesful execution or not
-	// data.here_doc = 0;
 	line = NULL;
 	prompt_test(line);
 	// raises an error;
 	// -->>
 	// free_envp();
-	tcsetattr(0, TCSANOW, &data.main_old);//on redonne les anciens parametres
+	tcsetattr(0, TCSANOW, &data.main_old); //on redonne les anciens parametres
 	//system("leaks minishell");
 	return (data.exit_code);
 }
