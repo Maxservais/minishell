@@ -146,7 +146,7 @@ void	test_built(t_lst *commands);
 /* 6.2 Piping */
 int		first_command(int right_pipe[], t_lst *command);
 int		last_command(int left_pipe[], int right_pipe[], t_lst *command);
-int		inter_command(int l_pipe[], int r_pipe[], t_lst *command);
+int		inter_command(int l_pipe[], int r_pipe[], t_lst *command, int err);
 int		pipex(t_lst *command, int left_pipe[]);
 
 /* 6.3 Redirections */
@@ -161,7 +161,7 @@ int		heredoc(t_lst *commands, int index);
 
 /* 6.4 Utils */
 char	**find_paths(void);
-void	exec_cmd(t_lst *command);
+void	exec_cmd(t_lst *command, int i);
 
 /* 7. SIGNALS */
 void	sighandler(int signum);
@@ -180,7 +180,7 @@ int		ft_strcmp(char *str, char *end);
 
 /* 9. ERROR HANDLING */
 void	command_not_found(t_lst *commands);
-void	invalid_file(t_lst *commands, int i);
+int		invalid_file(t_lst *commands, int i);
 void	invalid_path(t_lst *commands);
 
 #endif

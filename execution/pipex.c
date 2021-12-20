@@ -1,5 +1,22 @@
 #include "../minishell.h"
 
+static void	exec(t_lst *command, int err)
+{
+	if (err != -1)
+	{
+		test_built(command);
+		if (data.built == 1)
+		{
+			execute_builtin(command);
+			exit(data.exit_code);
+		}
+		else
+			exec_cmd(command, 0);
+	}
+	else
+		exit(1);
+}
+
 int	first_command(int right_pipe[], t_lst *command)
 {
 	int	err;
@@ -11,30 +28,13 @@ int	first_command(int right_pipe[], t_lst *command)
 		return (-1);
 	else if (command->pid == 0)
 	{
-		/* Read from last input file (if any), otherwise read from STDIN
-		Write to last output file (if any), otherwise write to STDOUT */
 		err = redirect_files(command);
-		/* Close unused side of the right pipe */
 		close(right_pipe[READ]);
-		/* Only write to pipe if there was no output file */
 		if (!command->outfile->name)
 			if (dup2(right_pipe[WRITE], STDOUT_FILENO) == -1)
 				return (-1);
 		close(right_pipe[WRITE]);
-		/* Execute command */
-		if (err != -1)
-		{
-			test_built(command);
-			if (data.built == 1)
-			{
-				execute_builtin(command);
-				exit(data.exit_code);
-			}
-			else
-				exec_cmd(command);
-		}
-		else
-			exit(1);
+		exec(command, err);
 	}
 	else
 	{
@@ -54,30 +54,14 @@ int	last_command(int left_pipe[], int right_pipe[], t_lst *command)
 		return (-1);
 	else if (command->pid == 0)
 	{
-		/* Read from last input file (if any), otherwise read from STDIN
-		Write to last output file (if any), otherwise write to STDOUT */
 		err = redirect_files(command);
-		/* Only read from left pipe if there was no input file */
 		if (!command->infile->name)
 		{
 			if (dup2(left_pipe[READ], STDIN_FILENO) == -1)
 				return (-1);
 		}
 		close(left_pipe[READ]);
-		/* Execute command */
-		if (err != -1)
-		{
-			test_built(command);
-			if (data.built == 1)
-			{
-				execute_builtin(command);
-				exit(data.exit_code);
-			}
-			else
-				exec_cmd(command);
-		}
-		else
-			exit(1);
+		exec(command, err);
 	}
 	else
 	{
@@ -88,44 +72,24 @@ int	last_command(int left_pipe[], int right_pipe[], t_lst *command)
 	return (0);
 }
 
-int	inter_command(int l_pipe[], int r_pipe[], t_lst *command)
+int	inter_command(int l_pipe[], int r_pipe[], t_lst *command, int err)
 {
-	int	err;
-
 	command->pid = fork();
 	if (command->pid < 0)
 		return (-1);
 	else if (command->pid == 0)
 	{
-		/* Read from last input file (if any), otherwise read from STDIN
-		Write to last output file (if any), otherwise write to STDOUT */
 		err = redirect_files(command);
-		/* Close unused side of the right pipe */
 		close(r_pipe[READ]);
-		/* Only write to right pipe if there was no output file */
 		if (!command->outfile->name)
 			if (dup2(r_pipe[WRITE], STDOUT_FILENO) == -1)
 				return (-1);
 		close(r_pipe[WRITE]);
-		/* Only read from left pipe if there was no input file */
 		if (!command->infile->name)
 			if (dup2(l_pipe[READ], STDIN_FILENO) == -1)
 				return (-1);
 		close(l_pipe[READ]);
-		/* Execute command */
-		if (err != -1)
-		{
-			test_built(command);
-			if (data.built == 1)
-			{
-				execute_builtin(command);
-				exit(data.exit_code);
-			}
-			else
-				exec_cmd(command);
-		}
-		else
-			exit(1);
+		exec(command, err);
 	}
 	else
 	{
@@ -158,7 +122,7 @@ int	pipex(t_lst *command, int left_pipe[])
 	}
 	else
 	{
-		if (inter_command(left_pipe, right_pipe, command) == -1)
+		if (inter_command(left_pipe, right_pipe, command, 0) == -1)
 			return (-1);
 	}
 	if (waitpid(-1, &command->status, 0) == -1)

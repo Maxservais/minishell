@@ -1,5 +1,34 @@
 #include "../minishell.h"
 
+void	add_files_loop(t_lst *commands, int *x, int *y, int *z)
+{
+	while (commands->content[(*x)])
+	{
+		if (!ft_strncmp(commands->content[(*x)], ">>", 2))
+		{
+			commands->outfile[(*z)].mode = 3;
+			commands->outfile[(*z)++].name = commands->content[(*x) + 1];
+		}
+		else if (!ft_strncmp(commands->content[(*x)], ">", 1))
+		{
+			commands->outfile[(*z)].mode = 2;
+			commands->outfile[(*z)++].name = commands->content[(*x) + 1];
+		}
+		else if (!ft_strncmp(commands->content[(*x)], "<<", 2))
+		{
+			commands->infile[(*y)].mode = 4;
+			data.here_doc = 1;
+			commands->infile[(*y)++].name = "/tmp/tmp";
+		}
+		else if (!ft_strncmp(commands->content[(*x)], "<", 1))
+		{
+			commands->infile[(*y)].mode = 1;
+			commands->infile[(*y)++].name = commands->content[(*x) + 1];
+		}
+		(*x)++;
+	}
+}
+
 void	add_files(t_lst *commands)
 {
 	int		nbr_chevrons;
@@ -18,31 +47,7 @@ void	add_files(t_lst *commands)
 		x = 0;
 		y = 0;
 		z = 0;
-		while (commands->content[x])
-		{
-			if (!ft_strncmp(commands->content[x], ">>", 2))
-			{
-				commands->outfile[z].mode = 3;
-				commands->outfile[z++].name = commands->content[x + 1];
-			}
-			else if (!ft_strncmp(commands->content[x], ">", 1))
-			{
-				commands->outfile[z].mode = 2;
-				commands->outfile[z++].name = commands->content[x + 1];
-			}
-			else if (!ft_strncmp(commands->content[x], "<<", 2))
-			{
-				commands->infile[y].mode = 4;
-				data.here_doc = 1;
-				commands->infile[y++].name = "/tmp/tmp";
-			}
-			else if (!ft_strncmp(commands->content[x], "<", 1))
-			{
-				commands->infile[y].mode = 1;
-				commands->infile[y++].name = commands->content[x + 1];
-			}
-			x++;
-		}
+		add_files_loop(commands, &x, &y, &z);
 		commands->infile[y].name = NULL;
 		commands->outfile[z].name = NULL;
 		commands = commands->next;

@@ -39,7 +39,7 @@ int	copy_env(void)
 		data.envp[i] = strdup(environ[i]);
 		if (!data.envp[i])
 		{
-			while(i-- > 0)
+			while (i-- > 0)
 				free(data.envp[i]);
 			free(data.envp);
 			return (-1);

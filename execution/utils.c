@@ -23,9 +23,8 @@ char	**find_paths(void)
 	return (paths);
 }
 
-void	exec_cmd(t_lst *command)
+void	exec_cmd(t_lst *command, int i)
 {
-	int		i;
 	char	*part_path;
 	char	*path;
 	char	**paths;
@@ -36,7 +35,6 @@ void	exec_cmd(t_lst *command)
 		invalid_path(command);
 		exit(127);
 	}
-	i = 0;
 	if (execve(command->cmd[0], command->cmd, data.envp) == -1)
 	{
 		while (paths[i])
