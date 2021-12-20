@@ -34,14 +34,6 @@ int	check_syntax(t_lst *commands)
 
 	x = 0;
 	trav = commands;
-	// if (trav->content[x] && trav->content[x][0] == '|')
-	// {
-	// 	if (!trav->content[x + 1] || !trav->content[x + 2])
-	// 	{
-	// 		printf("bash: syntax error near unexpected token `|'\n");
-	// 		return (-1);
-	// 	}
-	// }
 	if (trav->content[x] && !strcmp(trav->content[x], ">>"))
 	{
 		if (!trav->content[x + 1] || !trav->content[x + 2])

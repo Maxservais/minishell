@@ -7,24 +7,24 @@ once we check in the parsing which function should be called (cd, pwd, echo, etc
 
 int	ft_exit(t_lst *commands)
 {
-	write(2, "exit\n", 5);
+	write(STDOUT_FILENO, "exit\n", 5);
 	if ((commands->args == 2 || commands->args >= 3)
-		&& strisdigit(commands->content[1]) == -1)
+		&& strisdigit(commands->cmd[1]) == -1)
 	{
-		write(2, "bash: ", 6);
-		write(2, commands->content[1], ft_strlen(commands->content[1]));
-		write(2, ": numeric argument required\n", 28);
+		write(STDERR_FILENO, "bash: ", 6);
+		write(STDERR_FILENO, commands->cmd[1], ft_strlen(commands->cmd[1]));
+		write(STDERR_FILENO, ": numeric argument required\n", 28);
 		data.exit_code = 255;
 		data.exit = 1;
 	}
-	else if (commands->args >= 3 && strisdigit(commands->content[1]) == 0)
+	else if (commands->args >= 3 && strisdigit(commands->cmd[1]) == 0)
 	{
-		write(2, "bash: exit: too many arguments\n", 31);
+		write(STDERR_FILENO, "bash: exit: too many arguments\n", 31);
 		data.exit_code = 1;
 	}
-	else if (commands->args == 2 && strisdigit(commands->content[1]) == 0)
+	else if (commands->args == 2 && strisdigit(commands->cmd[1]) == 0)
 	{
-		data.exit_code = ft_atoi(commands->content[1]);
+		data.exit_code = ft_atoi(commands->cmd[1]);
 		data.exit = 1;
 	}
 	else

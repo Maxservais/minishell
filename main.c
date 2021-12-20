@@ -66,8 +66,6 @@ char	*ft_space_line(char *line)
 	return (line2);
 }
 
-/*la ligne 85/86 supprime les espace et les tabulations*/
-
 void	prompt_test(char *line)
 {
 	data.exit = -1;
@@ -93,6 +91,7 @@ void	prompt_test(char *line)
 			line = ft_space_line(line);
 		if (ft_strlen(line))
 			parser_test(line);
+		ft_bzero(line, ft_strlen(line));
 		free(line);
 	}
 }

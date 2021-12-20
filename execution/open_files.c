@@ -56,13 +56,13 @@ int	close_files(t_lst *commands)
 	while (commands)
 	{
 		i = 0;
-		while (commands->infile[i].name)
+		while (commands->infile[i].fd)
 		{
 			close(commands->infile[i].fd);
 			i++;
 		}
 		i = 0;
-		while (commands->outfile[i].name)
+		while (commands->outfile[i].fd)
 		{
 			close(commands->outfile[i].fd);
 			i++;
