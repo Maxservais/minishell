@@ -29,7 +29,7 @@ void	add_files_loop(t_lst *commands, int *x, int *y, int *z)
 	}
 }
 
-void	add_files(t_lst *commands)
+int	add_files(t_lst *commands)
 {
 	int		nbr_chevrons;
 	int		x;
@@ -41,9 +41,13 @@ void	add_files(t_lst *commands)
 		nbr_chevrons = count_chevrons(*commands, "<")
 			+ count_chevrons(*commands, "<<");
 		commands->infile = malloc(sizeof(t_file) * (nbr_chevrons + 1));
+		if (!commands->infile)
+			return (-1);
 		nbr_chevrons = count_chevrons(*commands, ">")
 			+ count_chevrons(*commands, ">>");
 		commands->outfile = malloc(sizeof(t_file) * (nbr_chevrons + 1));
+		if (!commands->outfile)
+			return (-1);
 		x = 0;
 		y = 0;
 		z = 0;
@@ -52,6 +56,7 @@ void	add_files(t_lst *commands)
 		commands->outfile[z].name = NULL;
 		commands = commands->next;
 	}
+	return (0);
 }
 
 int	redirect_input(int index, t_lst *commands)

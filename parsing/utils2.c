@@ -32,8 +32,6 @@ void	add_index(t_lst **commands)
 	{
 		x = 0;
 		trav->args = 0;
-		// printf("coucoucoucou\n");
-		// printf("trav->content[x]: %s\n", trav->content[0]);
 		while (trav->content[x++])
 		{
 			trav->args++;
@@ -41,6 +39,20 @@ void	add_index(t_lst **commands)
 		trav->index = index++;
 		trav = trav->next;
 	}
+}
+
+int	find_equal(char *line)
+{
+	int	i;
+
+	i = 0;
+	while (line[i])
+	{
+		if (line[i] == '=')
+			return (i);
+		i++;
+	}
+	return (0);
 }
 
 char	*add_env(char *line)
@@ -51,6 +63,7 @@ char	*add_env(char *line)
 	char		*key;
 	char		*string_before;
 	char		*string_after;
+	char		*sub_str;
 	char		*value;
 	char		*temp;
 	char		*new_line;
@@ -66,22 +79,30 @@ char	*add_env(char *line)
 		string_after = ft_substr(line, space, ft_strlen(line));
 		while (data.envp[x])
 		{
-			if (!ft_strncmp(data.envp[x], key, ft_strlen(key) - 1))
+			sub_str = ft_substr(data.envp[x], 0, find_equal(data.envp[x]));
+			if (!ft_strcmp_parse(sub_str, key, ft_strlen(sub_str)))
 			{
-				value = ft_substr(data.envp[x], ft_strlen(key) + 1, ft_strlen(data.envp[x]) - 1);
+				value = ft_substr(data.envp[x], ft_strlen(key) + 1, ft_strlen(data.envp[x]) - 1 - ft_strlen(key));
+				free (sub_str);
 				break ;
 			}
+			free(sub_str);
 			x++;
 		}
-		temp = ft_strjoin(string_before, value);
-		free(value);
-		free(string_before);
-		new_line = ft_strjoin(temp, string_after);
-		free(string_after);
-		free(temp);
-		free(key);
-		free(line);
-		return (new_line);
 	}
-	return (line);
+	if (!value)
+	{
+		free(key);
+		free(string_before);
+		free(string_after);
+		return (line);
+	}
+	temp = ft_strjoin(string_before, value);
+	free(value);
+	free(string_before);
+	new_line = ft_strjoin(temp, string_after);
+	free(string_after);
+	free(temp);
+	free(key);
+	return (new_line);
 }

@@ -23,7 +23,7 @@ static void	add_to_env(char *variable)
 	}
 }
 
-int	cd_flag(t_lst *commands)
+static int	cd_flag(t_lst *commands)
 {
 	if (ft_strcmp(commands->cmd[1], "-L")
 		&& ft_strcmp(commands->cmd[1], "-P"))
@@ -37,13 +37,32 @@ int	cd_flag(t_lst *commands)
 	return (EXIT_SUCCESS);
 }
 
+static int	find_home(void)
+{
+	int	i;
+
+	i = 0;
+	while (data.envp[i])
+	{
+		if (!ft_strncmp(data.envp[i], "HOME", ft_strlen("HOME")))
+			return (0);
+		i++;
+	}
+	return (-1);
+}
+
 int	cd(t_lst *commands)
 {
 	char	current_path[PATH_MAX];
 
 	getcwd(current_path, sizeof(current_path));
 	if (!commands->cmd[1])
-		chdir(getenv("HOME"));
+	{
+		if (find_home() != -1)
+			chdir(getenv("HOME"));
+		else
+			printf("bash: cd: HOME not set\n");
+	}
 	else if (!ft_strcmp(commands->cmd[1], "\0"))
 		return (EXIT_SUCCESS);
 	else if (!ft_strncmp(commands->cmd[1], "-", 1))

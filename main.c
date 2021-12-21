@@ -31,11 +31,17 @@ void	parser_test(char *line)
 
 	if (is_error(line))
 		return ;
-	add_env(line);
+	// IF there are multiple $
+	// while (!ft_strchr(line, '$'))
+  		line = add_env(line);
 	tokens = token_finder(line);
 	splited = ft_test(line, tokens);
 	commands = put_in_list(splited);
-	add_files(commands);
+	if (add_files(commands) == -1)
+	{
+		printf("Malloc failed\n");
+		return ;
+	}
 	if (check_syntax(commands) == -1)
 		return ;
 	remove_files(&commands);
@@ -51,10 +57,11 @@ char	*ft_space_line(char *line)
 
 	i = 0;
 	j = 0;
-	line2 = 0;
 	while (line[i] == ' ' || line[i] == '	')
 		i++;
 	line2 = malloc(sizeof(char) * ((ft_strlen(line) - i) + 1));
+	if (!line2)
+		return (NULL);
 	while (line[i])
 	{
 		line2[j] = line[i];

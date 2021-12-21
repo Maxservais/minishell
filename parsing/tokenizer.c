@@ -23,6 +23,8 @@ t_token	*token_finder(char *line)
 	int			y;
 
 	tokens = malloc(sizeof(t_token) * (count_token(line) + 1));
+	if (!tokens)
+		return (NULL);
 	x = 0;
 	y = 0;
 	while (line[x])

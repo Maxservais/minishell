@@ -79,6 +79,8 @@ static	char	*create_word(char *str, t_operation *o, int *i)
 	{
 		len = check_occ(str, o);
 		word = malloc(sizeof(char) * (len + 1));
+		if (!word)
+			return (NULL);
 		while (len)
 		{
 			word[*i] = (str)[*i];
@@ -102,6 +104,8 @@ static	char	*create_word(char *str, t_operation *o, int *i)
 		(*i)++;
 	}
 	word = malloc(sizeof(char) * (len + 1));
+	if (!word)
+		return (NULL);
 	*i = 0;
 	while (len--)
 	{
@@ -179,24 +183,3 @@ char	**split_token(char *str)
 	result = NULL;
 	return (factory(result, o, str));
 }
-
-// int	main(void)
-// {
-// 	char				**result;
-// 	int					x = 0;
-
-// 	result = split_token("  < infile<main.c   cat  >outfile \'$xav >> test <<yo\' test encore \"et c'est reparti\" ");
-// 	// result = split_token("echo \"test > wc\"");
-// 	// result = split_token("test >> oui << non", o);
-// 	// result = split_token("test \"oui non\"");
-// 	// result = split_token("echo $?");
-// 	// result = split_token("\"first << test\" \'second | test\'");
-// 	while (result[x])
-// 	{
-// 	    printf("|%s|\n", result[x]);
-// 	    free(result[x++]);
-// 	}
-// 	free(result);
-// 	// system("leaks a.out");
-// 	return (0);
-// }

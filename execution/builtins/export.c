@@ -53,17 +53,17 @@ declare -x B="b"
 
 #include "../../minishell.h"
 
-static void	error_usage_export(char *str)
-{
-	char	*option;
+// static void	error_usage_export(char *str)
+// {
+// 	char	*option;
 
-	option = ft_substr(str, 0, 2);
-	ft_putstr_fd("bash: export: ", STDERR_FILENO);
-	ft_putstr_fd(option, STDERR_FILENO);
-	ft_putendl_fd(": invalid option", STDERR_FILENO);
-	ft_putendl_fd("export: usage: export [-nf] [name[=value] ...] or export -p", STDERR_FILENO);
-	free((void *)option);
-}
+// 	option = ft_substr(str, 0, 2);
+// 	ft_putstr_fd("bash: export: ", STDERR_FILENO);
+// 	ft_putstr_fd(option, STDERR_FILENO);
+// 	ft_putendl_fd(": invalid option", STDERR_FILENO);
+// 	ft_putendl_fd("export: usage: export [-nf] [name[=value] ...] or export -p", STDERR_FILENO);
+// 	free((void *)option);
+// }
 
 static void	error_args(char *str)
 {
@@ -118,52 +118,164 @@ static void	print_env(void)
 	}
 }
 
+// int	export(t_lst *commands)
+// {
+// 	int		i;
+// 	int		flag;
+// 	char	*env;
+
+// 	i = 0;
+// 	flag = 0;
+// 	if (!commands->cmd[1])
+// 		print_env();
+// 	else if (check_format(commands->cmd[1]) != -1)
+// 	{
+// 		env = strdup(commands->cmd[1]);
+// 		if (!env)
+// 			return (EXIT_FAILURE);
+// 		// faut verifier que la variable existe pas deja, auquel cas faut la remplacer
+// 		while (data.envp[i] != NULL)
+// 		{
+// 			if (!ft_strncmp(data.envp[i], env, check_format(env)))
+// 			{
+// 				data.envp[i] = env;
+// 				printf("test: %s\n", data.envp[i]);
+// 				flag = 1;
+// 				break ;
+// 			}
+// 			i++;
+// 		}
+// 		if (flag != 1)
+// 		{
+// 			data.envp[i] = env;
+// 			printf("env: %s\n", env);
+// 			// how? Do I need to reallocate memory to fit the new addition?
+// 			data.envp[i + 1] = NULL;
+// 		}
+// 		free(env);
+// 	}
+// 	else
+// 	{
+// 		if (!ft_strncmp(commands->cmd[1], "-", 1))
+// 		{
+// 			error_usage_export(commands->cmd[1]);
+// 			return (EXIT_FAILURE);
+// 		}
+// 		else if (commands->cmd[2] && !check_format(commands->cmd[2]))
+// 			error_args(commands->cmd[2]);
+// 		return (EXIT_FAILURE);
+// 	}
+// 	return (EXIT_SUCCESS);
+// }
+
+static int	exported(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (data.envp[i])
+	{
+		if (!ft_strncmp(str, data.envp[i], ft_strlen(str)))
+		{
+			printf("%s\n", str);
+			return (i);
+		}
+		i++;
+	}
+	return (-1);
+}
+
+// static int	len_env(char **env)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	if (!env)
+// 		return (0);
+// 	while (env[i])
+// 		i++;
+// 	return (i);
+// }
+
+// static void	copy_e(char **tmp, int ret, char *str)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	while (data.envp[i])
+// 	{
+// 		tmp[i] = data.envp[i];
+// 		i++;
+// 	}
+// 	/* IF IT DOES NOT EXIST */
+// 	if  (ret == -1)
+// 	{
+// 		tmp[i] = ft_strdup(str);
+// 		tmp[i + 1] = NULL;
+// 	}
+// 	/* ELSE */
+// 	else
+// 		tmp[ret] = str;
+// }
+
 int	export(t_lst *commands)
 {
 	int		i;
-	int		flag;
-	char	*env;
+	int		ret;
+	// char	**tmp;
 
-	i = 0;
-	flag = 0;
 	if (!commands->cmd[1])
+	{
 		print_env();
-	else if (check_format(commands->cmd[1]) != -1)
-	{
-		env = strdup(commands->cmd[1]);
-		if (!env)
-			return (EXIT_FAILURE);
-		// faut verifier que la variable existe pas deja, auquel cas faut la remplacer
-		while (data.envp[i] != NULL)
-		{
-			if (!ft_strncmp(data.envp[i], env, check_format(env)))
-			{
-				data.envp[i] = env;
-				printf("test: %s\n", data.envp[i]);
-				flag = 1;
-				break ;
-			}
-			i++;
-		}
-		if (flag != 1)
-		{
-			data.envp[i] = env;
-			printf("env: %s\n", env);
-			// how? Do I need to reallocate memory to fit the new addition?
-			data.envp[i + 1] = NULL;
-		}
-		free(env);
+		data.exit_code = 0;
+		return (EXIT_SUCCESS);
 	}
-	else
+	i = 1;
+	while (commands->cmd[i])
 	{
-		if (!ft_strncmp(commands->cmd[1], "-", 1))
+		ret = 0;
+		if (commands->cmd[i][0] == '=' || ft_isdigit(commands->cmd[i][0]))
+			error_args(commands->cmd[i]);
+		else if (check_format(commands->cmd[i]) != -1)
 		{
-			error_usage_export(commands->cmd[1]);
-			return (EXIT_FAILURE);
+			if (exported(commands->cmd[i]) >= 0)
+				ret = 1;
+			printf("ret: %d\n", ret);
+			// tmp = malloc(sizeof(char *) * (len_env(data.envp) + 2 - ret));
+			// if (!tmp)
+			// 	return (-1);
+			// copy_e(tmp, ret, commands->cmd[i]);
+			// free(data.envp);
+			// data.envp = tmp;
+			// free(tmp);
 		}
-		else if (commands->cmd[2] && !check_format(commands->cmd[2]))
-			error_args(commands->cmd[2]);
-		return (EXIT_FAILURE);
+		i++;
 	}
+	
 	return (EXIT_SUCCESS);
 }
+
+
+/*
+checkvalid(char *str) : 
+	This function is called in builtin_export. It contains a list of char that would
+	make an export name invalid.
+*/
+// int	checkvalid(char *str)
+// {
+// 	const char	*end = ft_strrchr(str, '=');
+
+// 	while (str && *str && str != end)
+// 	{
+// 		if (*str == '-' || *str == '.' || *str == '{' || *str == '}'
+// 			|| *str == '*' || *str == '#' || *str == '@' || *str == '!'
+// 			|| *str == '^' || *str == '~' || *str == '\"' || *str == '|'
+// 			|| *str == '\'' || *str == '$' || *str == ';' || *str == '&'
+// 			|| !ft_isascii(*str) || ft_isspace(*str))
+// 			return (0);
+// 		if (*str == '+' && *(str + 1) != '=')
+// 			return (0);
+// 		str++;
+// 	}
+// 	return (1);
+// }

@@ -117,6 +117,7 @@ char	*add_env(char *line);
 int		strisdigit(char *str);
 int		ft_strcmp(char *str, char *end);
 int		ft_strcmp_unset(char *str, char *end);
+int		ft_strcmp_parse(char *str1, char *str2, int n);
 
 /* 5.3 Free Memory */
 void	free_splited(char **splited);
@@ -150,7 +151,7 @@ int		inter_command(int l_pipe[], int r_pipe[], t_lst *command, int err);
 int		pipex(t_lst *command, int left_pipe[]);
 
 /* 6.3 Redirections */
-void	add_files(t_lst *commands);
+int		add_files(t_lst *commands);
 int		ft_open(char *file_name, int mode);
 int		open_files(t_lst *commands);
 int		close_files(t_lst *commands);
@@ -176,7 +177,6 @@ t_lst	*lstnew(char **content, int index);
 void	lstdelone(t_lst *lst);
 void	lstclear(t_lst **lst);
 void	lstadd_back(t_lst **lst, t_lst *new);
-int		ft_strcmp(char *str, char *end);
 
 /* 9. ERROR HANDLING */
 void	command_not_found(t_lst *commands);
