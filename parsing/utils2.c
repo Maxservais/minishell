@@ -55,11 +55,42 @@ int	find_equal(char *line)
 	return (0);
 }
 
-char	*add_env(char *line)
+int	find_first_quote(char *line, int dollar)
+{
+	int		x;
+
+	x = 0;
+	while (line[x])
+	{
+		if (line[x] == '\'' && x == dollar -1)
+			return (x);
+			// return ('\'');
+		// if (line[x] == '\"')
+		// 	return ('\"');
+		x++;
+	}
+	return (-1);
+}
+
+int	find_second_quote(char *line, int first_quote)
+{
+	while (line[first_quote])
+	{
+		if (line[first_quote] == '\'')
+			return (first_quote);
+		first_quote++;
+	}
+	return (-1);
+}
+
+char	*add_env(char *line, int *ret, int *count)
 {
 	int			x;
 	int			dollar;
 	int			space;
+	int			quote;
+	int			first_quote;
+	int			last_quote;
 	char		*key;
 	char		*string_before;
 	char		*string_after;
@@ -70,8 +101,21 @@ char	*add_env(char *line)
 
 	x = 0;
 	value = NULL;
-	dollar = char_position(line, '$');
+	dollar = char_position(line, '$', *ret);
+	// printf("dollar index:%d\n", dollar);
 	space = space_position(line, ' ', dollar);
+	quote = space_position(line, '\"', dollar);
+	if (quote < space)
+		space = quote;
+	first_quote = find_first_quote(line, dollar); // Remodifier
+	last_quote = find_second_quote(line, first_quote); // Remodifier
+	if (first_quote > -1 && last_quote > -1 && first_quote < dollar && last_quote < space)
+	{
+		// free les bons trucs
+		*ret += 1;
+		*count = nbr_of_dollars(line);
+		return (line);
+	}
 	if (dollar >= 0)
 	{
 		key = ft_substr(line, dollar + 1, space - dollar - 1);
@@ -80,7 +124,9 @@ char	*add_env(char *line)
 		string_after = ft_substr(line, space, ft_strlen(line) - space);
 		// printf("before:%s\n", string_before);
 		// printf("after:%s\n", string_after);
-		while (data.envp[x])
+		if (key[0] == '?')
+			value = ft_itoa(data.exit_code);
+		while (!value && data.envp[x])
 		{
 			sub_str = ft_substr(data.envp[x], 0, find_equal(data.envp[x]));
 			if (!ft_strcmp_parse(sub_str, key, ft_strlen(sub_str)))
@@ -99,6 +145,8 @@ char	*add_env(char *line)
 			free(key);
 			free(string_before);
 			free(string_after);
+			// *ret += 1;
+			*count = nbr_of_dollars(temp);
 			return (temp);
 		}
 		temp = ft_strjoin(string_before, value);
@@ -110,8 +158,12 @@ char	*add_env(char *line)
 		free(string_after);
 		free(temp);
 		free(key);
+		// *ret += 1;
+		*count = nbr_of_dollars(new_line);
 		return (new_line);
 	}
+	// *ret += 1;
+	*count = nbr_of_dollars(line);
 	return (line);
 	// printf("value:%s\n", value);
 }

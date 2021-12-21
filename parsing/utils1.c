@@ -30,7 +30,7 @@ int	space_position(char *line, char c, int start)
 	return (-1);
 }
 
-int	char_position(char *line, char c)
+int	char_position(char *line, char c, int occ)
 {
 	int	position;
 
@@ -38,6 +38,8 @@ int	char_position(char *line, char c)
 	while (line[position])
 	{
 		if (line[position] == c)
+			occ--;
+		if (occ < 0)
 			return (position);
 		position++;
 	}

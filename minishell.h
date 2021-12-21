@@ -108,16 +108,18 @@ char	**split_token(char *str);
 /* 5.2 Utils */
 int		check_occurence(char c, char *to_find);
 int		space_position(char *line, char c, int start);
-int		char_position(char *line, char c);
+// int		char_position(char *line, char c);
+int		char_position(char *line, char c, int occ);
 int		count_chevrons(t_lst command, char *chevron);
 int		last_infile(t_lst *command);
 int		last_outfile(t_lst *command);
 void	add_index(t_lst **commands);
-char	*add_env(char *line);
+char	*add_env(char *line, int *ret, int *count);
 int		strisdigit(char *str);
 int		ft_strcmp(char *str, char *end);
 int		ft_strcmp_unset(char *str, char *end);
 int		ft_strcmp_parse(char *str1, char *str2, int n);
+int		nbr_of_dollars(char *line);
 
 /* 5.3 Free Memory */
 void	free_splited(char **splited);

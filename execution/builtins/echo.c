@@ -1,21 +1,5 @@
 #include "../../minishell.h"
 
-// char	find_first_quote(char *line)
-// {
-// 	int		x;
-
-// 	x = 0;
-// 	while (line[x])
-// 	{
-// 		if (line[x] == '\'')
-// 			return ('\'');
-// 		if (line[x] == '\"')
-// 			return ('\"');
-// 		x++;
-// 	}
-// 	return (0);
-// }
-
 // char	*dquote(char *line)
 // {
 // 	char	*new_line;
@@ -68,11 +52,6 @@
 // 	return (new_line);
 // }
 
-// int	bad_char(t_lst *command)
-// {
-// 	if ()
-// }
-
 int	echo(t_lst *command)
 {
 	int	x;
@@ -111,7 +90,6 @@ int	echo(t_lst *command)
 			// write(1, " ", 1);
 		}
 		write(1, "\n", 1);
-		// command->job_done = 1;
 		return (EXIT_SUCCESS);
 	}
 	else if (!ft_strcmp(command->content[0], "echo") && !ft_strcmp(command->content[1], "-n"))
@@ -131,7 +109,6 @@ int	echo(t_lst *command)
 				x++;
 			}
 		}
-		// command->job_done = 1;
 		return (0);
 	}
 	return (EXIT_SUCCESS);

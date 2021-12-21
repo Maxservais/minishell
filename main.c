@@ -23,18 +23,37 @@ int	is_error(char *line)
 	return (0);
 }
 
+int	nbr_of_dollars(char *line)
+{
+	int	i;
+	int	count;
+
+	i = 0;
+	count = 0;
+	while (line[i])
+	{
+		if (line[i] == '$')
+			count++;
+		i++;
+	}
+	return (count);
+}
+
 void	parser_test(char *line)
 {
+	int			ret;
+	int			count;
 	t_token		*tokens;
 	char		**splited;
 	t_lst		*commands;
 
 	if (is_error(line))
 		return ;
-	// IF there are multiple $
-	while (ft_strchr(line, '$'))
-		line = add_env(line);
-	// printf("|%s|\n", line);
+	ret = 0;
+	count = nbr_of_dollars(line);
+	while (ft_strchr(line, '$') && ret != count)
+		line = add_env(line, &ret, &count);
+	printf("|%s|\n", line);
 	tokens = token_finder(line);
 	splited = ft_test(line, tokens);
 	commands = put_in_list(splited);
