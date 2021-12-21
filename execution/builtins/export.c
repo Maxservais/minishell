@@ -72,19 +72,19 @@ static void	error_args(char *str)
 	ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
 }
 
-static int check_format(char *str)
-{
-	int	i;
+// static int check_format(char *str)
+// {
+// 	int	i;
 
-	i = 0;
-	while (str && str[i])
-	{
-		if (str[i] == '=')
-			return (i);
-		i++;
-	}
-	return (-1);
-}
+// 	i = 0;
+// 	while (str && str[i])
+// 	{
+// 		if (str[i] == '=')
+// 			return (i);
+// 		i++;
+// 	}
+// 	return (-1);
+// }
 
 static void	print_env(void)
 {
@@ -168,22 +168,22 @@ static void	print_env(void)
 // 	return (EXIT_SUCCESS);
 // }
 
-static int	exported(char *str)
-{
-	int	i;
+// static int	exported(char *str)
+// {
+// 	int	i;
 
-	i = 0;
-	while (data.envp[i])
-	{
-		if (!ft_strncmp(str, data.envp[i], ft_strlen(str)))
-		{
-			printf("%s\n", str);
-			return (i);
-		}
-		i++;
-	}
-	return (-1);
-}
+// 	i = 0;
+// 	while (data.envp[i])
+// 	{
+// 		if (!ft_strncmp(str, data.envp[i], ft_strlen(str)))
+// 		{
+// 			printf("%s\n", str);
+// 			return (i);
+// 		}
+// 		i++;
+// 	}
+// 	return (-1);
+// }
 
 // static int	len_env(char **env)
 // {
@@ -236,19 +236,19 @@ int	export(t_lst *commands)
 		ret = 0;
 		if (commands->cmd[i][0] == '=' || ft_isdigit(commands->cmd[i][0]))
 			error_args(commands->cmd[i]);
-		else if (check_format(commands->cmd[i]) != -1)
-		{
-			if (exported(commands->cmd[i]) >= 0)
-				ret = 1;
-			printf("ret: %d\n", ret);
-			// tmp = malloc(sizeof(char *) * (len_env(data.envp) + 2 - ret));
-			// if (!tmp)
-			// 	return (-1);
-			// copy_e(tmp, ret, commands->cmd[i]);
-			// free(data.envp);
-			// data.envp = tmp;
-			// free(tmp);
-		}
+		// else if (check_format(commands->cmd[i]) != -1)
+		// {
+		// 	if (exported(commands->cmd[i]) >= 0)
+		// 		ret = 1;
+		// 	printf("ret: %d\n", ret);
+		// 	// tmp = malloc(sizeof(char *) * (len_env(data.envp) + 2 - ret));
+		// 	// if (!tmp)
+		// 	// 	return (-1);
+		// 	// copy_e(tmp, ret, commands->cmd[i]);
+		// 	// free(data.envp);
+		// 	// data.envp = tmp;
+		// 	// free(tmp);
+		// }
 		i++;
 	}
 	

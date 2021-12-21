@@ -32,8 +32,9 @@ void	parser_test(char *line)
 	if (is_error(line))
 		return ;
 	// IF there are multiple $
-	// while (!ft_strchr(line, '$'))
-  		line = add_env(line);
+	while (ft_strchr(line, '$'))
+		line = add_env(line);
+	// printf("|%s|\n", line);
 	tokens = token_finder(line);
 	splited = ft_test(line, tokens);
 	commands = put_in_list(splited);

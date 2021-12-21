@@ -74,9 +74,12 @@ char	*add_env(char *line)
 	space = space_position(line, ' ', dollar);
 	if (dollar >= 0)
 	{
-		key = ft_substr(line, dollar + 1, space - dollar);
+		key = ft_substr(line, dollar + 1, space - dollar - 1);
+		// printf("key:|%s|\n", key);
 		string_before = ft_substr(line, 0, dollar);
-		string_after = ft_substr(line, space, ft_strlen(line));
+		string_after = ft_substr(line, space, ft_strlen(line) - space);
+		// printf("before:%s\n", string_before);
+		// printf("after:%s\n", string_after);
 		while (data.envp[x])
 		{
 			sub_str = ft_substr(data.envp[x], 0, find_equal(data.envp[x]));
@@ -87,22 +90,28 @@ char	*add_env(char *line)
 				break ;
 			}
 			free(sub_str);
+			sub_str = NULL;
 			x++;
 		}
-	}
-	if (!value)
-	{
-		free(key);
+		if (!value)
+		{
+			temp = ft_strjoin(string_before, string_after);
+			free(key);
+			free(string_before);
+			free(string_after);
+			return (temp);
+		}
+		temp = ft_strjoin(string_before, value);
+		// printf("tmp:|%s|\n", temp);
+		free(value);
 		free(string_before);
+		new_line = ft_strjoin(temp, string_after);
+		// printf("new_line:|%s|\n", new_line);
 		free(string_after);
-		return (line);
+		free(temp);
+		free(key);
+		return (new_line);
 	}
-	temp = ft_strjoin(string_before, value);
-	free(value);
-	free(string_before);
-	new_line = ft_strjoin(temp, string_after);
-	free(string_after);
-	free(temp);
-	free(key);
-	return (new_line);
+	return (line);
+	// printf("value:%s\n", value);
 }
