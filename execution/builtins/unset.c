@@ -9,7 +9,7 @@
 
 int	find_var(char *variable)
 {
-	int			i;
+	int	i;
 
 	i = 0;
 	while (data.envp[i] && ft_strncmp(data.envp[i],

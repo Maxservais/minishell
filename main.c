@@ -55,6 +55,8 @@ char	*ft_space_line(char *line)
 	while (line[i] == ' ' || line[i] == '	')
 		i++;
 	line2 = malloc(sizeof(char) * ((ft_strlen(line) - i) + 1));
+	if (!line2)
+		return ("EXIT");
 	while (line[i])
 	{
 		line2[j] = line[i];
@@ -85,7 +87,7 @@ void	prompt_test(char *line)
 		if (line[0] == '|')
 		{
 			printf("bash: syntax error near unexpected token `|'\n");
-			line = strdup("");
+			line = ft_strdup("");
 		}
 		if(line[0] == ' ' || line[0] == '	')
 			line = ft_space_line(line);

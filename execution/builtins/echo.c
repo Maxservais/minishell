@@ -73,66 +73,77 @@
 // 	if ()
 // }
 
+int	echo_base(t_lst *command, int x)
+{
+	x = 1;
+	while (command->cmd[x])
+	{
+		if (!ft_strcmp(command->content[x], "$?"))
+		{
+			ft_putnbr(data.exit_code);
+			if (command->cmd[x + 1])
+				write(1, " ", 1);
+			x++;
+		}
+		else if (command->cmd[x + 1])
+		{
+			write(1, command->cmd[x], ft_strlen(command->cmd[x]));
+			write(1, " ", 1);
+			x++;
+		}
+		else
+		{
+			write(1, command->cmd[x], ft_strlen(command->cmd[x]));
+			x++;
+		}
+	}
+	write(1, "\n", 1);
+	return (x);
+}
+
+int	echo_n(t_lst *command, int x)
+{
+	x = 2;
+	while (command->cmd[x])
+	{
+		if (command->cmd[x + 1])
+		{
+			write(1, command->cmd[x], ft_strlen(command->cmd[x]));
+			write(1, " ", 1);
+			x++;
+		}
+		else
+		{
+			write(1, command->cmd[x], ft_strlen(command->cmd[x]));
+			x++;
+		}
+	}
+	return (x);
+}
+
 int	echo(t_lst *command)
 {
 	int	x;
 
 	// if (command->index < data.nb_of_commands)
-	// 	return ;
-
-	if (!ft_strcmp(command->content[0], "echo") && !command->content[1])
+	//  return ;
+	x = 0;
+	if (!ft_strcmp(command->cmd[0], "echo") && !command->cmd[1])
 	{
 		write(1, "\n", 1);
-		// command->job_done = 1;
 		return (EXIT_SUCCESS);
 	}
-	else if (!ft_strcmp(command->content[0], "echo") && ft_strcmp(command->content[1], "-n"))
+	else if (!ft_strcmp(command->cmd[0], "echo")
+		&& ft_strcmp(command->cmd[1], "-n"))
 	{
-		x = 1;
-		while (command->content[x])
-		{
-			if (!ft_strcmp(command->content[x], "$?"))
-			{
-				ft_putnbr(data.exit_code);
-				// command->job_done = 1;
-				x++;
-			}
-			else if (command->content[x + 1])
-			{
-				write(1, command->content[x], ft_strlen(command->content[x]));
-				write(1, " ", 1);
-				x++;
-			}
-			else
-			{
-				write(1, command->content[x], ft_strlen(command->content[x]));
-				x++;
-			}
-			// write(1, " ", 1);
-		}
-		write(1, "\n", 1);
-		// command->job_done = 1;
+		x = echo_base(command, x);
 		return (EXIT_SUCCESS);
 	}
-	else if (!ft_strcmp(command->content[0], "echo") && !ft_strcmp(command->content[1], "-n"))
+	else if (!ft_strcmp(command->cmd[0], "echo")
+		&& !ft_strcmp(command->cmd[1], "-n"))
 	{
-		x = 2;
-		while (command->content[x])
-		{
-			if (command->content[x + 1])
-			{
-				write(1, command->content[x], ft_strlen(command->content[x]));
-				write(1, " ", 1);
-				x++;
-			}
-			else
-			{
-				write(1, command->content[x], ft_strlen(command->content[x]));
-				x++;
-			}
-		}
-		// command->job_done = 1;
-		return (0);
+		x = echo_n(command, x);
+		return (EXIT_SUCCESS);
 	}
 	return (EXIT_SUCCESS);
 }
