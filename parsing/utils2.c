@@ -64,11 +64,11 @@ char	*add_env(char *line)
 		key = ft_substr(line, dollar + 1, space - dollar);
 		string_before = ft_substr(line, 0, dollar);
 		string_after = ft_substr(line, space, ft_strlen(line));
-		while (data.envp[x])
+		while (g_data.envp[x])
 		{
-			if (!ft_strncmp(data.envp[x], key, ft_strlen(key) - 1))
+			if (!ft_strncmp(g_data.envp[x], key, ft_strlen(key) - 1))
 			{
-				value = ft_substr(data.envp[x], ft_strlen(key) + 1, ft_strlen(data.envp[x]) - 1);
+				value = ft_substr(g_data.envp[x], ft_strlen(key) + 1, ft_strlen(g_data.envp[x]) - 1);
 				break ;
 			}
 			x++;

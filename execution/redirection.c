@@ -33,7 +33,7 @@ void	add_files(t_lst *commands)
 			else if (!ft_strncmp(commands->content[x], "<<", 2))
 			{
 				commands->infile[y].mode = 4;
-				data.here_doc = 1;
+				g_data.here_doc = 1;
 				commands->infile[y++].name = "/tmp/tmp";
 			}
 			else if (!ft_strncmp(commands->content[x], "<", 1))

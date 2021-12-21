@@ -61,10 +61,10 @@ static void	print_env(void)
 	int	i;
 
 	i = 0;
-	while (data.envp[i] != NULL)
+	while (g_data.envp[i] != NULL)
 	{
 		ft_putstr_fd("declare -x ", STDIN_FILENO);
-		ft_putendl_fd(data.envp[i], STDIN_FILENO);
+		ft_putendl_fd(g_data.envp[i], STDIN_FILENO);
 		i++;
 	}
 }
@@ -82,10 +82,10 @@ int	export(t_lst *commands)
 		env = ft_strdup(commands->content[1]);
 		if (!env)
 			return (EXIT_FAILURE);
-		while (data.envp[i] != NULL)
+		while (g_data.envp[i] != NULL)
 			i++;
-		data.envp[i] = env;
-		data.envp[i + 1] = NULL;
+		g_data.envp[i] = env;
+		g_data.envp[i + 1] = NULL;
 	}
 	else
 	{

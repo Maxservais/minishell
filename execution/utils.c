@@ -7,11 +7,11 @@ char	**find_paths(void)
 	char	**paths;
 
 	i = 0;
-	while (data.envp[i] != NULL)
+	while (g_data.envp[i] != NULL)
 	{
-		if (ft_strnstr(data.envp[i], "PATH=", ft_strlen("PATH=")) != NULL)
+		if (ft_strnstr(g_data.envp[i], "PATH=", ft_strlen("PATH=")) != NULL)
 		{
-			env = data.envp[i];
+			env = g_data.envp[i];
 			break ;
 		}
 		i++;
@@ -37,7 +37,7 @@ void	exec_cmd(t_lst *command)
 		exit(127);
 	}
 	i = 0;
-	if (execve(command->cmd[0], command->cmd, data.envp) == -1)
+	if (execve(command->cmd[0], command->cmd, g_data.envp) == -1)
 	{
 		while (paths[i])
 		{
@@ -46,7 +46,7 @@ void	exec_cmd(t_lst *command)
 			free(part_path);
 			free(paths[i]);
 			i++;
-			execve(path, command->cmd, data.envp);
+			execve(path, command->cmd, g_data.envp);
 		}
 	}
 	command_not_found(command);

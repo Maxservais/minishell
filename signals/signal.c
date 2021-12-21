@@ -7,16 +7,16 @@ void	sighandler(int signum)
 		rl_replace_line("", 0); //remet la line a zero
 		write(STDOUT_FILENO, "\n", 1);
 		rl_on_new_line(); //relance le prompt
-		if (data.here_doc != 1)
+		if (g_data.here_doc != 1)
 			rl_redisplay(); //reaffiche la ligne precedente
-		data.exit_code = 1; // doit rester 1 pour le code de sortie
+		g_data.exit_code = 1; // doit rester 1 pour le code de sortie
 	}
 }
 
 void	ft_ctrl_d(void)
 {
 	write(STDOUT_FILENO, "exit\n", 5);
-	data.exit = 1;
+	g_data.exit = 1;
 }
 
 void	sighandler_cmd1(int signum)
@@ -24,7 +24,7 @@ void	sighandler_cmd1(int signum)
 	if (signum == SIGINT)
 	{
 		rl_on_new_line();
-		data.exit_code = 130;
+		g_data.exit_code = 130;
 	}
 }
 
@@ -34,13 +34,13 @@ void	sighandler_cmd(int signum)
 	{
 		write(STDOUT_FILENO, "^C\n", 3);
 		rl_on_new_line();
-		data.exit_code = 130;
+		g_data.exit_code = 130;
 	}
 	else if (signum == SIGQUIT)
 	{
 		write(STDOUT_FILENO, "Quit: 3\n", 8);
 		rl_on_new_line();
-		data.exit_code = 131;
+		g_data.exit_code = 131;
 	}
 }
 

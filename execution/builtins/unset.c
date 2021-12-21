@@ -12,16 +12,16 @@ int	find_var(char *variable)
 	int	i;
 
 	i = 0;
-	while (data.envp[i] && ft_strncmp(data.envp[i],
+	while (g_data.envp[i] && ft_strncmp(g_data.envp[i],
 			variable, ft_strlen(variable)))
 		i++;
-	if (data.envp[i] && !ft_strcmp_unset(data.envp[i], variable))
+	if (g_data.envp[i] && !ft_strcmp_unset(g_data.envp[i], variable))
 	{
-		free(data.envp[i]);
-		ft_bzero(data.envp[i], ft_strlen(data.envp[i]));
-		while (data.envp[i])
+		free(g_data.envp[i]);
+		ft_bzero(g_data.envp[i], ft_strlen(g_data.envp[i]));
+		while (g_data.envp[i])
 		{
-			data.envp[i] = data.envp[i + 1];
+			g_data.envp[i] = g_data.envp[i + 1];
 			i++;
 		}
 	}

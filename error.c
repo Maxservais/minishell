@@ -14,7 +14,7 @@ void	invalid_file(t_lst *commands, int i)
 	write(STDERR_FILENO, commands->infile[i].name,
 		ft_strlen(commands->infile[i].name));
 	write(STDERR_FILENO, NO_SUCH_FILE, ft_strlen(NO_SUCH_FILE));
-	data.exit_code = 1;
+	g_data.exit_code = 1;
 }
 
 void	invalid_path(t_lst *commands)

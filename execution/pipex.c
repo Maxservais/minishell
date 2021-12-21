@@ -25,10 +25,10 @@ int	first_command(int right_pipe[], t_lst *command)
 		if (err != -1)
 		{
 			test_built(command);
-			if (data.built == 1)
+			if (g_data.built == 1)
 			{
 				execute_builtin(command);
-				exit(data.exit_code);
+				exit(g_data.exit_code);
 			}
 			else
 				exec_cmd(command);
@@ -68,10 +68,10 @@ int	last_command(int left_pipe[], int right_pipe[], t_lst *command)
 		if (err != -1)
 		{
 			test_built(command);
-			if (data.built == 1)
+			if (g_data.built == 1)
 			{
 				execute_builtin(command);
-				exit(data.exit_code);
+				exit(g_data.exit_code);
 			}
 			else
 				exec_cmd(command);
@@ -116,10 +116,10 @@ int	inter_command(int l_pipe[], int r_pipe[], t_lst *command)
 		if (err != -1)
 		{
 			test_built(command);
-			if (data.built == 1)
+			if (g_data.built == 1)
 			{
 				execute_builtin(command);
-				exit(data.exit_code);
+				exit(g_data.exit_code);
 			}
 			else
 				exec_cmd(command);
@@ -151,7 +151,7 @@ int	pipex(t_lst *command, int left_pipe[])
 		if (first_command(right_pipe, command) == -1)
 			return (-1);
 	}
-	else if (command->index == data.nb_of_commands)
+	else if (command->index == g_data.nb_of_commands)
 	{
 		if (last_command(left_pipe, right_pipe, command) == -1)
 			return (-1);
@@ -164,6 +164,6 @@ int	pipex(t_lst *command, int left_pipe[])
 	if (waitpid(-1, &command->status, 0) == -1)
 		return (-1);
 	if (WIFEXITED(command->status))
-		data.exit_code = WEXITSTATUS(command->status);
+		g_data.exit_code = WEXITSTATUS(command->status);
 	return (0);
 }

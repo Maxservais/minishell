@@ -70,11 +70,11 @@ char	*ft_space_line(char *line)
 
 void	prompt_test(char *line)
 {
-	data.exit = -1;
-	data.exit_code = 0;
-	while (data.exit == -1)
+	g_data.exit = -1;
+	g_data.exit_code = 0;
+	while (g_data.exit == -1)
 	{
-		data.here_doc = 0;
+		g_data.here_doc = 0;
 		signal(SIGINT, sighandler);
 		signal(SIGQUIT, SIG_IGN);
 		line = readline("Minishell$ ");
@@ -102,10 +102,10 @@ int	main(void)
 {
 	char	*line;
 
-	tcgetattr(0, &data.main_old); // recupere les parametres du terminal
-	data.main_new = data.main_old; //on copie l'ancien terminal
-	data.main_new.c_lflag&= ~(ECHOCTL); // enleve les caracteres speciaux genre ^C
-	tcsetattr(0, TCSANOW, &data.main_new); //on definit les parametres avec les modifications
+	tcgetattr(0, &g_data.main_old); // recupere les parametres du terminal
+	g_data.main_new = g_data.main_old; //on copie l'ancien terminal
+	g_data.main_new.c_lflag&= ~(ECHOCTL); // enleve les caracteres speciaux genre ^C
+	tcsetattr(0, TCSANOW, &g_data.main_new); //on definit les parametres avec les modifications
 	if (copy_env() == -1)
 		return (EXIT_FAILURE);
 	line = NULL;
@@ -113,7 +113,7 @@ int	main(void)
 	// raises an error;
 	// -->>
 	// free_envp();
-	tcsetattr(0, TCSANOW, &data.main_old); //on redonne les anciens parametres
+	tcsetattr(0, TCSANOW, &g_data.main_old); //on redonne les anciens parametres
 	//system("leaks minishell");
-	return (data.exit_code);
+	return (g_data.exit_code);
 }

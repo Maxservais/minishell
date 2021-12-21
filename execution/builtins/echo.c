@@ -80,7 +80,7 @@ int	echo_base(t_lst *command, int x)
 	{
 		if (!ft_strcmp(command->content[x], "$?"))
 		{
-			ft_putnbr(data.exit_code);
+			ft_putnbr(g_data.exit_code);
 			if (command->cmd[x + 1])
 				write(1, " ", 1);
 			x++;
@@ -125,8 +125,6 @@ int	echo(t_lst *command)
 {
 	int	x;
 
-	// if (command->index < data.nb_of_commands)
-	//  return ;
 	x = 0;
 	if (!ft_strcmp(command->cmd[0], "echo") && !command->cmd[1])
 	{

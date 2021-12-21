@@ -31,22 +31,22 @@ int	copy_env(void)
 	counter = 0;
 	while (environ[counter] != NULL)
 		counter++;
-	data.envp = malloc(sizeof(char *) * (counter + 1));
-	if (!data.envp)
+	g_data.envp = malloc(sizeof(char *) * (counter + 1));
+	if (!g_data.envp)
 		return (-1);
 	while (environ[i] != NULL)
 	{
-		data.envp[i] = ft_strdup(environ[i]);
-		if (!data.envp[i])
+		g_data.envp[i] = ft_strdup(environ[i]);
+		if (!g_data.envp[i])
 		{
 			while (i-- > 0)
-				free(data.envp[i]);
-			free(data.envp);
+				free(g_data.envp[i]);
+			free(g_data.envp);
 			return (-1);
 		}
 		i++;
 	}
-	data.envp[i] = NULL;
+	g_data.envp[i] = NULL;
 	return (EXIT_SUCCESS);
 }
 
@@ -69,9 +69,9 @@ int	env(t_lst *commands)
 		error_env(commands->cmd[1]);
 		return (127);
 	}
-	while (data.envp[i] != NULL)
+	while (g_data.envp[i] != NULL)
 	{
-		ft_putendl_fd(data.envp[i], STDOUT_FILENO);
+		ft_putendl_fd(g_data.envp[i], STDOUT_FILENO);
 		i++;
 	}
 	return (EXIT_SUCCESS);

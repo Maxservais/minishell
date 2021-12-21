@@ -7,7 +7,7 @@ t_lst	*put_in_list(char **splited)
 	char	*temp;
 
 	x = 0;
-	data.nb_of_commands = 1;
+	g_data.nb_of_commands = 1;
 	while (splited[x])
 	{
 		temp = ft_strtrim(splited[x], " ");
@@ -20,7 +20,7 @@ t_lst	*put_in_list(char **splited)
 	while (splited[x])
 	{
 		lstadd_back(&commands, lstnew(split_token(splited[x]), x + 1));
-		data.nb_of_commands++;
+		g_data.nb_of_commands++;
 		x++;
 	}
 	add_index(&commands);

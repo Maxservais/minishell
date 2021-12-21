@@ -13,12 +13,12 @@ static void	add_to_env(char *variable)
 
 	i = 0;
 	getcwd(current_path, sizeof(current_path));
-	while (data.envp[i] != NULL)
+	while (g_data.envp[i] != NULL)
 	{
-		if (!ft_strncmp(data.envp[i], "PWD=", ft_strlen("PWD=")))
-			data.envp[i] = ft_strjoin("PWD=", current_path);
-		if (ft_strnstr(data.envp[i], "OLDPWD=", ft_strlen("OLDPWD=")) != NULL)
-			data.envp[i] = variable;
+		if (!ft_strncmp(g_data.envp[i], "PWD=", ft_strlen("PWD=")))
+			g_data.envp[i] = ft_strjoin("PWD=", current_path);
+		if (ft_strnstr(g_data.envp[i], "OLDPWD=", ft_strlen("OLDPWD=")) != NULL)
+			g_data.envp[i] = variable;
 		i++;
 	}
 }
