@@ -45,19 +45,19 @@ static void	error_args(char *str)
 	ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
 }
 
-// static int check_format(char *str)
-// {
-// 	int	i;
+static int find_equal_c(char *str)
+{
+	int	i;
 
-// 	i = 0;
-// 	while (str && str[i])
-// 	{
-// 		if (str[i] == '=')
-// 			return (i);
-// 		i++;
-// 	}
-// 	return (-1);
-// }
+	i = 0;
+	while (str && str[i])
+	{
+		if (str[i] == '=')
+			return (i);
+		i++;
+	}
+	return (-1);
+}
 
 static void	print_env(void)
 {
@@ -71,6 +71,188 @@ static void	print_env(void)
 		i++;
 	}
 }
+
+int	find_plus(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '+')
+		{
+			i++;
+			if (str[i] == '=')
+				return (i - 1);
+		}
+		else
+			i++;
+	}
+	return (-1);
+}
+
+char	*append_char(char *str, char *str_before)
+{
+	int		index_plus;
+	int		index_equal;
+	char	*key;
+	char	*value;
+	char	*to_append;
+	char	*tmp1;
+	char	*tmp2;
+	char	*final;
+	char	c;
+
+	c = '=';
+	index_plus = find_plus(str);
+	key = ft_substr(str, 0, index_plus);
+	index_equal = find_equal_c(str_before);
+	value = ft_substr(str_before, index_equal + 1, ft_strlen(str_before) - index_equal);
+	index_equal = find_equal_c(str);
+	to_append = ft_substr(str, index_equal + 1, ft_strlen(str) - index_equal);
+	tmp1 = ft_strjoin(value, to_append);
+	tmp2 = ft_strjoin(key, &c);
+	final = ft_strjoin(tmp2, tmp1);
+	free(key);
+	free(value);
+	free(to_append);
+	free(tmp1);
+	free(tmp2);
+	return (final);
+}
+
+static int	exported(char *str)
+{
+	int		i;
+	int		plus;
+	int		equal;
+	char	*key_str;
+	char	*key_envp;
+	char	*tmp;
+
+	i = 0;
+	plus = find_plus(str);
+	equal = find_equal_c(str);
+	if (plus != -1)
+		equal = plus;
+	key_str = ft_substr(str, 0, equal);
+	while (g_data.envp[i])
+	{
+		tmp = ft_strdup(g_data.envp[i]);
+		key_envp = ft_substr(g_data.envp[i], 0, find_equal_c(g_data.envp[i]));
+		if (!ft_strcmp_parse(key_str, key_envp, ft_strlen(key_str)))
+		{
+			free(g_data.envp[i]);
+			if (plus != -1)
+				g_data.envp[i] = append_char(str, g_data.envp[i]);
+			else
+				g_data.envp[i] = ft_strdup(str);
+			free(tmp);
+			free(key_str);
+			free(key_envp);
+			return (i);
+		}
+		free(tmp);
+		free(key_envp);
+		i++;
+	}
+	free(key_str);
+	return (-1);
+}
+
+
+int	export(t_lst *commands)
+{
+	int		i;
+	int		ret;
+
+	if (!commands->cmd[1])
+	{
+		print_env();
+		g_data.exit_code = 0;
+		return (EXIT_SUCCESS);
+	}
+	i = 1;
+	while (commands->cmd[i])
+	{
+		ret = 0;
+		if (commands->cmd[i][0] == '=' || ft_isdigit(commands->cmd[i][0]))
+			error_args(commands->cmd[i]);
+		else if (find_equal_c(commands->cmd[i]) != -1)
+		{
+			if (exported(commands->cmd[i]) >= 0)
+				ret = 1;
+			else
+			{
+				// on ajoute a la fin
+				
+			}
+
+		// export test+=vin si test existe pas ca doit l'ajouter
+		}
+		i++;
+	}
+	
+	return (EXIT_SUCCESS);
+}
+
+
+/*
+checkvalid(char *str) : 
+	This function is called in builtin_export. It contains a list of char that would
+	make an export name invalid.
+*/
+// int	checkvalid(char *str)
+// {
+// 	const char	*end = ft_strrchr(str, '=');
+
+// 	while (str && *str && str != end)
+// 	{
+// 		if (*str == '-' || *str == '.' || *str == '{' || *str == '}'
+// 			|| *str == '*' || *str == '#' || *str == '@' || *str == '!'
+// 			|| *str == '^' || *str == '~' || *str == '\"' || *str == '|'
+// 			|| *str == '\'' || *str == '$' || *str == ';' || *str == '&'
+// 			|| !ft_isascii(*str) || ft_isspace(*str))
+// 			return (0);
+// 		if (*str == '+' && *(str + 1) != '=')
+// 			return (0);
+// 		str++;
+// 	}
+// 	return (1);
+// }
+
+// static int	len_env(char **env)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	if (!env)
+// 		return (0);
+// 	while (env[i])
+// 		i++;
+// 	return (i);
+// }
+
+// static void	copy_e(char **tmp, int ret, char *str)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	while (data.envp[i])
+// 	{
+// 		tmp[i] = data.envp[i];
+// 		i++;
+// 	}
+// 	/* IF IT DOES NOT EXIST */
+// 	if  (ret == -1)
+// 	{
+// 		tmp[i] = ft_strdup(str);
+// 		tmp[i + 1] = NULL;
+// 	}
+// 	/* ELSE */
+// 	else
+// 		tmp[ret] = str;
+// }
 
 // int	export(t_lst *commands)
 // {
@@ -120,116 +302,4 @@ static void	print_env(void)
 // 		return (EXIT_FAILURE);
 // 	}
 // 	return (EXIT_SUCCESS);
-// }
-
-// static int	exported(char *str)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (data.envp[i])
-// 	{
-// 		if (!ft_strncmp(str, data.envp[i], ft_strlen(str)))
-// 		{
-// 			printf("%s\n", str);
-// 			return (i);
-// 		}
-// 		i++;
-// 	}
-// 	return (-1);
-// }
-
-// static int	len_env(char **env)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	if (!env)
-// 		return (0);
-// 	while (env[i])
-// 		i++;
-// 	return (i);
-// }
-
-// static void	copy_e(char **tmp, int ret, char *str)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (data.envp[i])
-// 	{
-// 		tmp[i] = data.envp[i];
-// 		i++;
-// 	}
-// 	/* IF IT DOES NOT EXIST */
-// 	if  (ret == -1)
-// 	{
-// 		tmp[i] = ft_strdup(str);
-// 		tmp[i + 1] = NULL;
-// 	}
-// 	/* ELSE */
-// 	else
-// 		tmp[ret] = str;
-// }
-
-int	export(t_lst *commands)
-{
-	int		i;
-	int		ret;
-	// char	**tmp;
-
-	if (!commands->cmd[1])
-	{
-		print_env();
-		g_data.exit_code = 0;
-		return (EXIT_SUCCESS);
-	}
-	i = 1;
-	while (commands->cmd[i])
-	{
-		ret = 0;
-		if (commands->cmd[i][0] == '=' || ft_isdigit(commands->cmd[i][0]))
-			error_args(commands->cmd[i]);
-		// else if (check_format(commands->cmd[i]) != -1)
-		// {
-		// 	if (exported(commands->cmd[i]) >= 0)
-		// 		ret = 1;
-		// 	printf("ret: %d\n", ret);
-		// 	// tmp = malloc(sizeof(char *) * (len_env(data.envp) + 2 - ret));
-		// 	// if (!tmp)
-		// 	// 	return (-1);
-		// 	// copy_e(tmp, ret, commands->cmd[i]);
-		// 	// free(data.envp);
-		// 	// data.envp = tmp;
-		// 	// free(tmp);
-		// }
-		i++;
-	}
-	
-	return (EXIT_SUCCESS);
-}
-
-
-/*
-checkvalid(char *str) : 
-	This function is called in builtin_export. It contains a list of char that would
-	make an export name invalid.
-*/
-// int	checkvalid(char *str)
-// {
-// 	const char	*end = ft_strrchr(str, '=');
-
-// 	while (str && *str && str != end)
-// 	{
-// 		if (*str == '-' || *str == '.' || *str == '{' || *str == '}'
-// 			|| *str == '*' || *str == '#' || *str == '@' || *str == '!'
-// 			|| *str == '^' || *str == '~' || *str == '\"' || *str == '|'
-// 			|| *str == '\'' || *str == '$' || *str == ';' || *str == '&'
-// 			|| !ft_isascii(*str) || ft_isspace(*str))
-// 			return (0);
-// 		if (*str == '+' && *(str + 1) != '=')
-// 			return (0);
-// 		str++;
-// 	}
-// 	return (1);
 // }
