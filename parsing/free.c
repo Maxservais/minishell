@@ -25,10 +25,10 @@ void	free_envp(void)
 	int	x;
 
 	x = 0;
-	while (data.envp[x])
+	while (g_data.envp[x])
 	{
-		free(data.envp[x]);
+		free(g_data.envp[x]);
 		x++;
 	}
-	free(data.envp);
+	free(g_data.envp);
 }

@@ -7,7 +7,7 @@ t_lst	*put_in_list(char **splited)
 	char	*temp;
 
 	x = 0;
-	data.nb_of_commands = 1;
+	g_data.nb_of_commands = 1;
 	while (splited[x])
 	{
 		temp = ft_strtrim(splited[x], " ");
@@ -20,7 +20,7 @@ t_lst	*put_in_list(char **splited)
 	while (splited[x])
 	{
 		lstadd_back(&commands, lstnew(split_token(splited[x]), x + 1));
-		data.nb_of_commands++;
+		g_data.nb_of_commands++;
 		x++;
 	}
 	add_index(&commands);
@@ -34,7 +34,7 @@ int	check_syntax(t_lst *commands)
 
 	x = 0;
 	trav = commands;
-	if (trav->content[x] && !strcmp(trav->content[x], ">>"))
+	if (trav->content[x] && !ft_strcmp(trav->content[x], ">>"))
 	{
 		if (!trav->content[x + 1] || !trav->content[x + 2])
 		{
@@ -42,7 +42,7 @@ int	check_syntax(t_lst *commands)
 			return (-1);
 		}
 	}
-	else if (trav->content[x] && !strncmp(trav->content[x], ">", 1))
+	else if (trav->content[x] && !ft_strncmp(trav->content[x], ">", 1))
 	{
 		if (!trav->content[x + 1] || !trav->content[x + 2])
 		{
@@ -50,7 +50,7 @@ int	check_syntax(t_lst *commands)
 			return (-1);
 		}
 	}
-	else if (trav->content[x] && !strncmp(trav->content[x], "<", 1))
+	else if (trav->content[x] && !ft_strncmp(trav->content[x], "<", 1))
 	{
 		if (!trav->content[x + 1] || !trav->content[x + 2])
 		{
@@ -78,7 +78,7 @@ void	remove_files(t_lst **commands)
 		}
 		x = 0;
 		y = 0;
-		while (trav->content[x] && !strncmp(trav->content[x], ">>", 2))
+		while (trav->content[x] && !ft_strncmp(trav->content[x], ">>", 2))
 		{
 			if (!trav->content[x][2])
 				x += 2;
@@ -99,7 +99,7 @@ void	remove_files(t_lst **commands)
 			else
 				x++;
 		}
-		while (trav->content[x] && trav->content[x][0] != '<' && trav->content[x][0] != '>' && strncmp(trav->content[x], ">>", 2))
+		while (trav->content[x] && trav->content[x][0] != '<' && trav->content[x][0] != '>' && ft_strncmp(trav->content[x], ">>", 2))
 			trav->cmd[y++] = ft_strdup(trav->content[x++]);;
 		trav->cmd[y] = NULL;
 		trav = trav->next;

@@ -86,7 +86,7 @@ typedef struct s_operations
 
 /* 3. GLOBAL VARIABLE */
 
-t_data	data; // IS it norminette compliant???? NO, c'est une global il faut la declarer autrement
+t_data	g_data; // IS it norminette compliant???? NO, c'est une global il faut la declarer autrement
 
 /* 4. MAIN FUNCTIONS */
 

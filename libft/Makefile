@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mservais <mservais@student.s19.be >        +#+  +:+       +#+         #
+#    By: tuytters <tuytters@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/12 17:29:50 by mservais          #+#    #+#              #
-#    Updated: 2021/10/19 14:36:46 by mservais         ###   ########.fr        #
+#    Updated: 2021/12/22 10:30:56 by tuytters         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -73,7 +73,7 @@ NAME			= libft.a
 
 CC				= gcc
 
-CFLAGS			= -Wall -Wextra -Werror
+CFLAGS			= -Wall -Wextra -Werror -g
 
 all: $(NAME)
 

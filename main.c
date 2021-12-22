@@ -53,7 +53,11 @@ void	parser_test(char *line)
 	count = nbr_of_dollars(line);
 	while (ft_strchr(line, '$') && ret != count)
 		line = add_env(line, &ret, &count);
-	printf("|%s|\n", line);
+	if (*line == '\0')
+	{
+		rl_on_new_line();
+		return ;
+	}
 	tokens = token_finder(line);
 	splited = ft_test(line, tokens);
 	commands = put_in_list(splited);
@@ -95,11 +99,11 @@ char	*ft_space_line(char *line)
 
 void	prompt_test(char *line)
 {
-	data.exit = -1;
-	data.exit_code = 0;
-	while (data.exit == -1)
+	g_data.exit = -1;
+	g_data.exit_code = 0;
+	while (g_data.exit == -1)
 	{
-		data.here_doc = 0;
+		g_data.here_doc = 0;
 		signal(SIGINT, sighandler);
 		signal(SIGQUIT, SIG_IGN);
 		line = readline("Minishell$ ");
@@ -112,7 +116,7 @@ void	prompt_test(char *line)
 		if (line[0] == '|')
 		{
 			printf("bash: syntax error near unexpected token `|'\n");
-			line = strdup("");
+			line = ft_strdup("");
 		}
 		if(line[0] == ' ' || line[0] == '	')
 			line = ft_space_line(line);
@@ -127,10 +131,10 @@ int	main(void)
 {
 	char	*line;
 
-	tcgetattr(0, &data.main_old); // recupere les parametres du terminal
-	data.main_new = data.main_old; //on copie l'ancien terminal
-	data.main_new.c_lflag&= ~(ECHOCTL); // enleve les caracteres speciaux genre ^C
-	tcsetattr(0, TCSANOW, &data.main_new); //on definit les parametres avec les modifications
+	tcgetattr(0, &g_data.main_old); // recupere les parametres du terminal
+	g_data.main_new = g_data.main_old; //on copie l'ancien terminal
+	g_data.main_new.c_lflag&= ~(ECHOCTL); // enleve les caracteres speciaux genre ^C
+	tcsetattr(0, TCSANOW, &g_data.main_new); //on definit les parametres avec les modifications
 	if (copy_env() == -1)
 		return (EXIT_FAILURE);
 	line = NULL;
@@ -138,7 +142,7 @@ int	main(void)
 	// raises an error;
 	// -->>
 	// free_envp();
-	tcsetattr(0, TCSANOW, &data.main_old); //on redonne les anciens parametres
+	tcsetattr(0, TCSANOW, &g_data.main_old); //on redonne les anciens parametres
 	//system("leaks minishell");
-	return (data.exit_code);
+	return (g_data.exit_code);
 }

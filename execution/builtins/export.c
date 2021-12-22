@@ -1,54 +1,27 @@
 /* Reminders:
-- retour des bonnes valeurs:
-		0 en cas de succes
-		1 en cas d'erreur (meme si partiellement reussi, si message d'erreur, renvoie 1)
-- leaks to be found?
+- retour des bonnes valeurs (0 en cas de succes, etc.) !!!!!!!!!
+- variables d'environnement doivent etre passées au child process grace à execve.
+Si j'export une variable, les enfants doivent en 'heriter'. Par contre l'inverse n'est pas vrai.
+Ici je travaille directement sur environ, peut-etre qu'il faut travailler sur une copie.
+- leaks to be found
+- export coucou=hey = bonjour=y a gerer!!! Il faut renvoyer erreur mais qd meme
 - Faut gerer export QQCHOSE+=qqchose !!!
-- si export d'un truc qui existe deja, ca le remplace, ca n'ajoute pas un nouveau!!!!!!!!!!!!!
+- si export d'un truc qui existe deja, ca le remplace, ca n'ajoute pas un nouveau
 
 Some tests to run:
 export coucou=hey=
-------------------
-declare -x coucou="hey="
-
 export coucou=56 = hey=42
--------------------------
-bash: export: `=': not a valid identifier
-declare -x coucou="56"
-declare -x hey="42"
-
 export coucou=56 =
-------------------------
-bash: export: `=': not a valid identifier
-declare -x coucou="56"
-
 export = coucou=12
-------------------
-bash: export: `=': not a valid identifier
-declare -x coucou="12"
-
 export =
---------
-bash: export: `=': not a valid identifier
-
+export bonjour=bon = holla=56
 export =coucou=hey
-------------------
-bash: export: `=coucou=hey': not a valid identifier
-
 export "A= 2"
--------------
-declare -x A=" 2"
-
+export C=c CWI=2
 export C=c B=b C=l
-------------------
-declare -x B="b"
-declare -x C="l"
-
+export " C=c"
+export "D C=c"
 export "D C=c" B=b
-------------------
-bash: export: `D C=c': not a valid identifier
-declare -x B="b"
-
 */
 
 #include "../../minishell.h"
@@ -88,32 +61,13 @@ static void	error_args(char *str)
 
 static void	print_env(void)
 {
-	int		i;
-	int		j;
-	char	*var;
-	char	*value;
+	int	i;
 
 	i = 0;
-	while (data.envp[i] != NULL)
+	while (g_data.envp[i] != NULL)
 	{
-		j = 0;
-		while(data.envp[i][j])
-		{
-			if (data.envp[i][j] == '=')
-			{
-				var = ft_substr(data.envp[i], 0, j + 1);
-				value = ft_substr(data.envp[i], j + 1, ft_strlen(data.envp[i]) - j);
-				break ;
-			}
-			j++;
-		}
-		ft_putstr_fd("declare -x ", STDOUT_FILENO);
-		ft_putstr_fd(var, STDOUT_FILENO);
-		ft_putstr_fd("\"", STDOUT_FILENO);
-		ft_putstr_fd(value, STDOUT_FILENO);
-		ft_putendl_fd("\"", STDOUT_FILENO);
-		free(var);
-		free(value);
+		ft_putstr_fd("declare -x ", STDIN_FILENO);
+		ft_putendl_fd(g_data.envp[i], STDIN_FILENO);
 		i++;
 	}
 }
@@ -227,7 +181,7 @@ int	export(t_lst *commands)
 	if (!commands->cmd[1])
 	{
 		print_env();
-		data.exit_code = 0;
+		g_data.exit_code = 0;
 		return (EXIT_SUCCESS);
 	}
 	i = 1;

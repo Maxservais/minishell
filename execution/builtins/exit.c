@@ -14,20 +14,20 @@ int	ft_exit(t_lst *commands)
 		write(STDERR_FILENO, "bash: ", 6);
 		write(STDERR_FILENO, commands->cmd[1], ft_strlen(commands->cmd[1]));
 		write(STDERR_FILENO, ": numeric argument required\n", 28);
-		data.exit_code = 255;
-		data.exit = 1;
+		g_data.exit_code = 255;
+		g_data.exit = 1;
 	}
 	else if (commands->args >= 3 && strisdigit(commands->cmd[1]) == 0)
 	{
 		write(STDERR_FILENO, "bash: exit: too many arguments\n", 31);
-		data.exit_code = 1;
+		g_data.exit_code = 1;
 	}
 	else if (commands->args == 2 && strisdigit(commands->cmd[1]) == 0)
 	{
-		data.exit_code = ft_atoi(commands->cmd[1]);
-		data.exit = 1;
+		g_data.exit_code = ft_atoi(commands->cmd[1]);
+		g_data.exit = 1;
 	}
 	else
-		data.exit = 1;
+		g_data.exit = 1;
 	return (0);
 }

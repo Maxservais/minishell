@@ -122,13 +122,13 @@ char	*add_env(char *line, int *ret, int *count)
 		// printf("before:%s\n", string_before);
 		// printf("after:%s\n", string_after);
 		if (key[0] == '?')
-			value = ft_itoa(data.exit_code);
-		while (!value && data.envp[x])
+			value = ft_itoa(g_data.exit_code);
+		while (!value && g_data.envp[x])
 		{
-			sub_str = ft_substr(data.envp[x], 0, find_equal(data.envp[x]));
+			sub_str = ft_substr(g_data.envp[x], 0, find_equal(g_data.envp[x]));
 			if (!ft_strcmp_parse(sub_str, key, ft_strlen(sub_str)))
 			{
-				value = ft_substr(data.envp[x], ft_strlen(key) + 1, ft_strlen(data.envp[x]) - 1 - ft_strlen(key));
+				value = ft_substr(g_data.envp[x], ft_strlen(key) + 1, ft_strlen(g_data.envp[x]) - 1 - ft_strlen(key));
 				free (sub_str);
 				break ;
 			}
@@ -139,6 +139,7 @@ char	*add_env(char *line, int *ret, int *count)
 		if (!value)
 		{
 			temp = ft_strjoin(string_before, string_after);
+			// printf("temp |%s| before |%s| after |%s|\n", temp, string_before, string_after);
 			free(key);
 			free(string_before);
 			free(string_after);
