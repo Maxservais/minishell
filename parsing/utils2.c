@@ -64,9 +64,6 @@ int	find_first_quote(char *line, int dollar)
 	{
 		if (line[x] == '\'' && x == dollar -1)
 			return (x);
-			// return ('\'');
-		// if (line[x] == '\"')
-		// 	return ('\"');
 		x++;
 	}
 	return (-1);
