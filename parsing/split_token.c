@@ -121,7 +121,7 @@ static	char	*create_word(char *str, t_operation *o, int *i)
 	return (word);
 }
 
-static void fill(char **result, char *str, t_operation *o, int size)
+static void	fill(char **result, char *str, t_operation *o, int size)
 {
 	int		x;
 	int		i;
@@ -148,7 +148,7 @@ static char	**factory(char **result, t_operation *o, char *str)
 		return (NULL);
 	words = count_words(str, o);
 	result = malloc(sizeof(char *) * (words + 1));
-	if  (!result)
+	if (!result)
 	{
 		free(str);
 		return (NULL);

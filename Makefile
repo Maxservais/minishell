@@ -1,6 +1,7 @@
 SRC_FILES 		=	main.c									\
 					./parsing/parser.c						\
 					./parsing/split_pipes.c					\
+					./parsing/split_pipes2.c				\
 					./parsing/tokenizer.c					\
 					./parsing/split_token.c					\
 					./parsing/utils1.c						\

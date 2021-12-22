@@ -27,6 +27,12 @@ t_lst	*put_in_list(char **splited)
 	return (commands);
 }
 
+int	syntax_error(void)
+{
+	printf("bash: syntax error near unexpected token `newline'\n");
+	return (-1);
+}
+
 int	check_syntax(t_lst *commands)
 {
 	int		x;
@@ -37,71 +43,67 @@ int	check_syntax(t_lst *commands)
 	if (trav->content[x] && !ft_strcmp(trav->content[x], ">>"))
 	{
 		if (!trav->content[x + 1] || !trav->content[x + 2])
-		{
-			printf("bash: syntax error near unexpected token `newline'\n");
-			return (-1);
-		}
+			return (syntax_error());
 	}
 	else if (trav->content[x] && !ft_strncmp(trav->content[x], ">", 1))
 	{
 		if (!trav->content[x + 1] || !trav->content[x + 2])
-		{
-			printf("bash: syntax error near unexpected token `newline'\n");
-			return (-1);
-		}
+			return (syntax_error());
 	}
 	else if (trav->content[x] && !ft_strncmp(trav->content[x], "<", 1))
 	{
 		if (!trav->content[x + 1] || !trav->content[x + 2])
-		{
-			printf("bash: syntax error near unexpected token `newline'\n");
-			return (-1);
-		}
+			return (syntax_error());
 	}
 	return (0);
 }
 
-void	remove_files(t_lst **commands)
+int	check_chevron(t_lst *comd, int x, int y)
 {
-	t_lst	*trav;
+	while (comd->content[x] && !ft_strncmp(comd->content[x], ">>", 2))
+	{
+		if (!comd->content[x][2])
+			x += 2;
+		else
+			x++;
+	}
+	while (comd->content[x] && comd->content[x][0] == '<')
+	{
+		if (!comd->content[x][1])
+			x += 2;
+		else
+			x++;
+	}
+	while (comd->content[x] && comd->content[x][0] == '>')
+	{
+		if (!comd->content[x][1])
+			x += 2;
+		else
+			x++;
+	}
+	while (comd->content[x] && comd->content[x][0] != '<' &&
+		comd->content[x][0] != '>' && ft_strncmp(comd->content[x], ">>", 2))
+			comd->cmd[y++] = ft_strdup(comd->content[x++]);
+	return (y);
+}
+
+void	remove_files(t_lst *commands)
+{
 	int		x;
 	int		y;
 
-	trav = *commands;
-	while (trav)
+	while (commands)
 	{
-		trav->cmd = malloc(sizeof(char *) * (trav->args + 1));
-		if (!trav->cmd)
+		commands->cmd = malloc(sizeof(char *) * (commands->args + 1));
+		if (!commands->cmd)
 		{
 			printf("Malloc failed\n");
 			return ;
 		}
 		x = 0;
 		y = 0;
-		while (trav->content[x] && !ft_strncmp(trav->content[x], ">>", 2))
-		{
-			if (!trav->content[x][2])
-				x += 2;
-			else
-				x++;
-		}
-		while (trav->content[x] && trav->content[x][0] == '<')
-		{
-			if (!trav->content[x][1])
-				x += 2;
-			else
-				x++;
-		}
-		while (trav->content[x] && trav->content[x][0] == '>')
-		{
-			if (!trav->content[x][1])
-				x += 2;
-			else
-				x++;
-		}
-		while (trav->content[x] && trav->content[x][0] != '<' && trav->content[x][0] != '>' && ft_strncmp(trav->content[x], ">>", 2))
-			trav->cmd[y++] = ft_strdup(trav->content[x++]);;
-		trav->cmd[y] = NULL;
-		trav = trav->next;
+		y = check_chevron(commands, x, y);
+		commands->cmd[y] = NULL;
+		commands = commands->next;
 	}
 }
