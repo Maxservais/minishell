@@ -32,3 +32,15 @@ void	free_envp(void)
 	}
 	free(g_data.envp);
 }
+
+void	free_token(t_operation *o)
+{
+	int i;
+
+	i = 0;
+	while(o[i].operation)
+	{
+		free(o[i].operation);
+		i++;
+	}
+}
