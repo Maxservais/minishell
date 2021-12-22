@@ -101,6 +101,32 @@ typedef struct s_operations
 	int		size;
 }				t_operation;
 
+typedef struct s_check_quote
+{
+	int			*i;
+	char		*str;
+	t_operation	*o;
+	char		frstquote;
+	int			len;
+}	t_check_quote;
+
+typedef struct s_copy_word
+{
+	int			*i;
+	char		*str;
+	char		frstquote;
+	char		*word;
+	int			len;
+}	t_copy_word;
+
+typedef struct s_count_token
+{
+	int			*counter;
+	char		**str;
+	t_operation	*o;
+	char		first_quote;
+}	t_count_token;
+
 /* 3. GLOBAL VARIABLE */
 
 t_data	g_data;
@@ -122,6 +148,13 @@ int		in_quotes(t_token *tokens, int pos);
 /* 5.1 Tokenizer */
 t_token	*token_finder(char *line);
 char	**split_token(char *str);
+void	fill(char **result, char *str, t_operation *o, int size);
+int		count_words_tok(char *str, t_operation *o);
+char	find_first_quote_tok(char *str);
+int		check_occ_tok(char *str, t_operation *o);
+int		check_for_quote(t_check_quote arg);
+void	foo(char *word, int *i, char *str, int *len);
+void	copy_word(t_copy_word arg);
 
 /* 5.2 Utils */
 int		check_occurence(char c, char *to_find);

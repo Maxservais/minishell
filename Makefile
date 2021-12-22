@@ -1,9 +1,11 @@
 SRC_FILES 		=	main.c									\
+					./parsing/create_word_tok.c				\
 					./parsing/parser.c						\
 					./parsing/split_pipes.c					\
 					./parsing/split_pipes2.c				\
 					./parsing/tokenizer.c					\
 					./parsing/split_token.c					\
+					./parsing/split_token2.c				\
 					./parsing/utils1.c						\
 					./parsing/utils2.c						\
 					./parsing/utils3.c						\
