@@ -4,12 +4,12 @@ void	sighandler(int signum)
 {
 	if (signum == SIGINT)
 	{
-		rl_replace_line("", 0); //remet la line a zero
+		rl_replace_line("", 0);
 		write(STDOUT_FILENO, "\n", 1);
-		rl_on_new_line(); //relance le prompt
+		rl_on_new_line();
 		if (g_data.here_doc != 1)
-			rl_redisplay(); //reaffiche la ligne precedente
-		g_data.exit_code = 1; // doit rester 1 pour le code de sortie
+			rl_redisplay();
+		g_data.exit_code = 1;
 	}
 }
 

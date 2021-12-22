@@ -39,6 +39,23 @@ typedef struct s_param
 	char	***cmds;
 }				t_param;
 
+typedef struct s_dollar
+{
+	int		x;
+	int		dollar;
+	int		space;
+	int		quote;
+	int		first_quote;
+	int		last_quote;
+	char	*key;
+	char	*string_before;
+	char	*string_after;
+	char	*sub_str;
+	char	*value;
+	char	*temp;
+	char	*new_line;
+}				t_dollar;
+
 typedef struct s_lst
 {
 	struct s_lst	*prev;
@@ -86,7 +103,7 @@ typedef struct s_operations
 
 /* 3. GLOBAL VARIABLE */
 
-t_data	g_data; // IS it norminette compliant???? NO, c'est une global il faut la declarer autrement
+t_data	g_data;
 
 /* 4. MAIN FUNCTIONS */
 
@@ -108,9 +125,8 @@ char	**split_token(char *str);
 /* 5.2 Utils */
 int		check_occurence(char c, char *to_find);
 int		space_position(char *line, char c, int start);
-// int		char_position(char *line, char c);
 int		char_position(char *line, char c, int occ);
-int		count_chevrons(t_lst command, char *chevron);
+int		count_chev(t_lst command, char *chevron);
 int		last_infile(t_lst *command);
 int		last_outfile(t_lst *command);
 void	add_index(t_lst **commands);
@@ -120,6 +136,9 @@ int		ft_strcmp(char *str, char *end);
 int		ft_strcmp_unset(char *str, char *end);
 int		ft_strcmp_parse(char *str1, char *str2, int n);
 int		nbr_of_dollars(char *line);
+int		find_equal(char *line);
+int		find_f_quote(char *line, int dollar);
+int		find_sec_quote(char *line, int first_quote);
 
 /* 5.3 Free Memory */
 void	free_splited(char **splited);
@@ -184,5 +203,6 @@ void	lstadd_back(t_lst **lst, t_lst *new);
 void	command_not_found(t_lst *commands);
 int		invalid_file(t_lst *commands, int i);
 void	invalid_path(t_lst *commands);
+int		pipe_error(void);
 
 #endif

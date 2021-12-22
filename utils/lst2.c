@@ -1,19 +1,5 @@
 #include "../minishell.h"
 
-int	strisdigit(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] != '\0')
-	{
-		if (str[i] < '0' || str[i] > '9')
-			return (-1);
-		i++;
-	}
-	return (0);
-}
-
 void	lstdelone(t_lst *lst)
 {
 	int	x;
@@ -31,6 +17,20 @@ void	lstdelone(t_lst *lst)
 	free(lst->infile);
 	free(lst->outfile);
 	free(lst);
+}
+
+int	strisdigit(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] != '\0')
+	{
+		if (str[i] < '0' || str[i] > '9')
+			return (-1);
+		i++;
+	}
+	return (0);
 }
 
 int	ft_strcmp(char *str, char *end)

@@ -106,10 +106,7 @@ int	pipex(t_lst *command, int left_pipe[])
 	int		right_pipe[2];
 
 	if (pipe(right_pipe) == -1)
-	{
-		ft_putendl_fd(strerror(errno), STDERR_FILENO);
-		return (-1);
-	}
+		return (pipe_error());
 	if (command->index == 1)
 	{
 		if (first_command(right_pipe, command) == -1)
@@ -125,8 +122,7 @@ int	pipex(t_lst *command, int left_pipe[])
 		if (inter_command(left_pipe, right_pipe, command, 0) == -1)
 			return (-1);
 	}
-	if (waitpid(-1, &command->status, 0) == -1)
-		return (-1);
+	waitpid(-1, &command->status, 0);
 	if (WIFEXITED(command->status))
 		g_data.exit_code = WEXITSTATUS(command->status);
 	return (0);

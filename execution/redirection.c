@@ -31,21 +31,19 @@ void	add_files_loop(t_lst *commands, int *x, int *y, int *z)
 
 int	add_files(t_lst *commands)
 {
-	int		nbr_chevrons;
+	int		nbr_ch;
 	int		x;
 	int		y;
 	int		z;
 
 	while (commands)
 	{
-		nbr_chevrons = count_chevrons(*commands, "<")
-			+ count_chevrons(*commands, "<<");
-		commands->infile = malloc(sizeof(t_file) * (nbr_chevrons + 1));
+		nbr_ch = count_chev(*commands, "<") + count_chev(*commands, "<<");
+		commands->infile = malloc(sizeof(t_file) * (nbr_ch + 1));
 		if (!commands->infile)
 			return (-1);
-		nbr_chevrons = count_chevrons(*commands, ">")
-			+ count_chevrons(*commands, ">>");
-		commands->outfile = malloc(sizeof(t_file) * (nbr_chevrons + 1));
+		nbr_ch = count_chev(*commands, ">") + count_chev(*commands, ">>");
+		commands->outfile = malloc(sizeof(t_file) * (nbr_ch + 1));
 		if (!commands->outfile)
 			return (-1);
 		x = 0;
