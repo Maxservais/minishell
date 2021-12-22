@@ -27,7 +27,7 @@ SRC_FILES 		=	main.c									\
 					./execution/open_files.c				\
 					./execution/utils.c						\
 					./signals/signal.c						\
-					./utils/lst.c							\
+					./utils/lst1.c							\
 					./utils/lst2.c							\
 
 OBJ_FILES		=	$(SRC_FILES:.c=.o)

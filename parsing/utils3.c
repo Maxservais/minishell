@@ -10,7 +10,7 @@ void	init_value(t_dollar *dollar, char *line, int *ret)
 	if (dollar->quote < dollar->space)
 		dollar->space = dollar->quote;
 	dollar->first_quote = find_f_quote(line, dollar->dollar);
-	dollar->last_quote = find_sec_quote(line, dollar->first_quote);
+	dollar->last_quote = find_sec_quote(line, dollar->first_quote + 1);
 }
 
 void	remove_dollar1(t_dollar *d, char *line)

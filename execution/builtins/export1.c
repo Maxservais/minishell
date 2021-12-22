@@ -1,29 +1,3 @@
-/* Reminders:
-- retour des bonnes valeurs (0 en cas de succes, etc.) !!!!!!!!!
-- variables d'environnement doivent etre passées au child process grace à execve.
-Si j'export une variable, les enfants doivent en 'heriter'. Par contre l'inverse n'est pas vrai.
-Ici je travaille directement sur environ, peut-etre qu'il faut travailler sur une copie.
-- leaks to be found
-- export coucou=hey = bonjour=y a gerer!!! Il faut renvoyer erreur mais qd meme
-- Faut gerer export QQCHOSE+=qqchose !!!
-- si export d'un truc qui existe deja, ca le remplace, ca n'ajoute pas un nouveau
-
-Some tests to run:
-export coucou=hey=
-export coucou=56 = hey=42
-export coucou=56 =
-export = coucou=12
-export =
-export bonjour=bon = holla=56
-export =coucou=hey
-export "A= 2"
-export C=c CWI=2
-export C=c B=b C=l
-export " C=c"
-export "D C=c"
-export "D C=c" B=b
-*/
-
 #include "../../minishell.h"
 
 static void	error_args(char *str)
@@ -33,28 +7,28 @@ static void	error_args(char *str)
 	ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
 }
 
-static int	check_export_name(char *str)
+static int	check_export_name(char *s)
 {
 	int	i;
 	int	plus;
 	int	equal;
 
-	plus = find_plus(str);
-	equal = find_equal_c(str);
+	plus = find_plus(s);
+	equal = find_equal_c(s);
 	if (equal == -1)
-		equal = ft_strlen(str);
+		equal = ft_strlen(s);
 	if (plus != -1)
 		equal = plus;
 	i = 0;
-	while (str[i] && i < equal)
+	while (s[i] && i < equal)
 	{
-		if (str[i] == '.' || str[i] == '{' || str[i] == '-'  || str[i] == '}'
-			|| str[i] == '$' || str[i] == '\'' || str[i] == ';' || str[i] == '&'
-			|| str[i] == '\"'|| str[i] == '|' || str[i] == '^'  || str[i] == '~'
-			|| str[i] == '*' || str[i] == '#' || str[i] == '@' || str[i] == '!'
-			|| !ft_isascii(*str))
+		if (s[i] == '.' || s[i] == '{' || s[i] == '-'  || s[i] == '}'
+			|| s[i] == '$' || s[i] == '\'' || s[i] == ';' || s[i] == '&'
+			|| s[i] == '\"'|| s[i] == '|' || s[i] == '^'  || s[i] == '~'
+			|| s[i] == '*' || s[i] == '#' || s[i] == '@' || s[i] == '!'
+			|| !ft_isascii(*s))
 			{
-				error_args(str);
+				error_args(s);
 				return (-1);
 			}
 		i++;
@@ -83,11 +57,7 @@ static void	print_env(void)
 			}
 			j++;
 		}
-		ft_putstr_fd("declare -x ", STDOUT_FILENO);
-		ft_putstr_fd(var, STDOUT_FILENO);
-		ft_putstr_fd("\"", STDOUT_FILENO);
-		ft_putstr_fd(value, STDOUT_FILENO);
-		ft_putendl_fd("\"", STDOUT_FILENO);
+		printf("declare -x %s\"%s\"\n", var, value);
 		free(var);
 		free(value);
 		i++;
@@ -96,8 +66,6 @@ static void	print_env(void)
 
 char	*append_char(char *str, char *str_before)
 {
-	int		index_plus;
-	int		index_equal;
 	char	*key;
 	char	*value;
 	char	*to_append;
@@ -107,12 +75,9 @@ char	*append_char(char *str, char *str_before)
 	char	c;
 
 	c = '=';
-	index_plus = find_plus(str);
-	key = ft_substr(str, 0, index_plus);
-	index_equal = find_equal_c(str_before);
-	value = ft_substr(str_before, index_equal + 1, ft_strlen(str_before) - index_equal);
-	index_equal = find_equal_c(str);
-	to_append = ft_substr(str, index_equal + 1, ft_strlen(str) - index_equal);
+	key = ft_substr(str, 0, find_plus(str));
+	value = ft_substr(str_before, find_equal_c(str_before) + 1, ft_strlen(str_before) - find_equal_c(str_before));
+	to_append = ft_substr(str, find_equal_c(str) + 1, ft_strlen(str) - find_equal_c(str));
 	tmp1 = ft_strjoin(value, to_append);
 	tmp2 = ft_strjoin(key, &c);
 	final = ft_strjoin(tmp2, tmp1);

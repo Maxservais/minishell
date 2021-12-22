@@ -1,6 +1,6 @@
 #include "../../minishell.h"
 
-int find_equal_c(char *str)
+int	find_equal_c(char *str)
 {
 	int	i;
 

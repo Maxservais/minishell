@@ -2,8 +2,8 @@
 
 int	is_error(char *line)
 {
-	int simple_quote;
-	int double_quote;
+	int	simple_quote;
+	int	double_quote;
 
 	simple_quote = 0;
 	double_quote = 0;
@@ -118,7 +118,7 @@ void	prompt_test(char *line)
 			printf("bash: syntax error near unexpected token `|'\n");
 			line = ft_strdup("");
 		}
-		if(line[0] == ' ' || line[0] == '	')
+		if (line[0] == ' ' || line[0] == '	')
 			line = ft_space_line(line);
 		if (ft_strlen(line))
 			parser_test(line);

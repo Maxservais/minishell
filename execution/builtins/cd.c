@@ -1,9 +1,3 @@
-/* Reminders:
-- La commande 'cd' doit etre capable de gerer les variables qui ont été EXPORT.
-e.g. 	export test=Documents/minishell
-		cd $test
-*/
-
 #include "../../minishell.h"
 
 static void	add_to_env(char *variable)
@@ -16,9 +10,15 @@ static void	add_to_env(char *variable)
 	while (g_data.envp[i] != NULL)
 	{
 		if (!ft_strncmp(g_data.envp[i], "PWD=", ft_strlen("PWD=")))
+		{
+			free(g_data.envp[i]);
 			g_data.envp[i] = ft_strjoin("PWD=", current_path);
+		}
 		if (ft_strnstr(g_data.envp[i], "OLDPWD=", ft_strlen("OLDPWD=")) != NULL)
+		{
+			free(g_data.envp[i]);
 			g_data.envp[i] = variable;
+		}
 		i++;
 	}
 }
