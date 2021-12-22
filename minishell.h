@@ -108,15 +108,18 @@ char	**split_token(char *str);
 /* 5.2 Utils */
 int		check_occurence(char c, char *to_find);
 int		space_position(char *line, char c, int start);
-int		char_position(char *line, char c);
+// int		char_position(char *line, char c);
+int		char_position(char *line, char c, int occ);
 int		count_chevrons(t_lst command, char *chevron);
 int		last_infile(t_lst *command);
 int		last_outfile(t_lst *command);
 void	add_index(t_lst **commands);
-char	*add_env(char *line);
+char	*add_env(char *line, int *ret, int *count);
 int		strisdigit(char *str);
 int		ft_strcmp(char *str, char *end);
 int		ft_strcmp_unset(char *str, char *end);
+int		ft_strcmp_parse(char *str1, char *str2, int n);
+int		nbr_of_dollars(char *line);
 
 /* 5.3 Free Memory */
 void	free_splited(char **splited);
@@ -146,11 +149,11 @@ void	test_built(t_lst *commands);
 /* 6.2 Piping */
 int		first_command(int right_pipe[], t_lst *command);
 int		last_command(int left_pipe[], int right_pipe[], t_lst *command);
-int		inter_command(int l_pipe[], int r_pipe[], t_lst *command);
+int		inter_command(int l_pipe[], int r_pipe[], t_lst *command, int err);
 int		pipex(t_lst *command, int left_pipe[]);
 
 /* 6.3 Redirections */
-void	add_files(t_lst *commands);
+int		add_files(t_lst *commands);
 int		ft_open(char *file_name, int mode);
 int		open_files(t_lst *commands);
 int		close_files(t_lst *commands);
@@ -161,7 +164,7 @@ int		heredoc(t_lst *commands, int index);
 
 /* 6.4 Utils */
 char	**find_paths(void);
-void	exec_cmd(t_lst *command);
+void	exec_cmd(t_lst *command, int i);
 
 /* 7. SIGNALS */
 void	sighandler(int signum);
@@ -176,11 +179,10 @@ t_lst	*lstnew(char **content, int index);
 void	lstdelone(t_lst *lst);
 void	lstclear(t_lst **lst);
 void	lstadd_back(t_lst **lst, t_lst *new);
-int		ft_strcmp(char *str, char *end);
 
 /* 9. ERROR HANDLING */
 void	command_not_found(t_lst *commands);
-void	invalid_file(t_lst *commands, int i);
+int		invalid_file(t_lst *commands, int i);
 void	invalid_path(t_lst *commands);
 
 #endif

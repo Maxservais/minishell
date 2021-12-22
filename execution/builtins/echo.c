@@ -1,21 +1,5 @@
 #include "../../minishell.h"
 
-// char	find_first_quote(char *line)
-// {
-// 	int		x;
-
-// 	x = 0;
-// 	while (line[x])
-// 	{
-// 		if (line[x] == '\'')
-// 			return ('\'');
-// 		if (line[x] == '\"')
-// 			return ('\"');
-// 		x++;
-// 	}
-// 	return (0);
-// }
-
 // char	*dquote(char *line)
 // {
 // 	char	*new_line;

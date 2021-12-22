@@ -1,6 +1,35 @@
 #include "../minishell.h"
 
-void	add_files(t_lst *commands)
+void	add_files_loop(t_lst *commands, int *x, int *y, int *z)
+{
+	while (commands->content[(*x)])
+	{
+		if (!ft_strncmp(commands->content[(*x)], ">>", 2))
+		{
+			commands->outfile[(*z)].mode = 3;
+			commands->outfile[(*z)++].name = commands->content[(*x) + 1];
+		}
+		else if (!ft_strncmp(commands->content[(*x)], ">", 1))
+		{
+			commands->outfile[(*z)].mode = 2;
+			commands->outfile[(*z)++].name = commands->content[(*x) + 1];
+		}
+		else if (!ft_strncmp(commands->content[(*x)], "<<", 2))
+		{
+			commands->infile[(*y)].mode = 4;
+			g_data.here_doc = 1;
+			commands->infile[(*y)++].name = "/tmp/tmp";
+		}
+		else if (!ft_strncmp(commands->content[(*x)], "<", 1))
+		{
+			commands->infile[(*y)].mode = 1;
+			commands->infile[(*y)++].name = commands->content[(*x) + 1];
+		}
+		(*x)++;
+	}
+}
+
+int	add_files(t_lst *commands)
 {
 	int		nbr_chevrons;
 	int		x;
@@ -12,41 +41,22 @@ void	add_files(t_lst *commands)
 		nbr_chevrons = count_chevrons(*commands, "<")
 			+ count_chevrons(*commands, "<<");
 		commands->infile = malloc(sizeof(t_file) * (nbr_chevrons + 1));
+		if (!commands->infile)
+			return (-1);
 		nbr_chevrons = count_chevrons(*commands, ">")
 			+ count_chevrons(*commands, ">>");
 		commands->outfile = malloc(sizeof(t_file) * (nbr_chevrons + 1));
+		if (!commands->outfile)
+			return (-1);
 		x = 0;
 		y = 0;
 		z = 0;
-		while (commands->content[x])
-		{
-			if (!ft_strncmp(commands->content[x], ">>", 2))
-			{
-				commands->outfile[z].mode = 3;
-				commands->outfile[z++].name = commands->content[x + 1];
-			}
-			else if (!ft_strncmp(commands->content[x], ">", 1))
-			{
-				commands->outfile[z].mode = 2;
-				commands->outfile[z++].name = commands->content[x + 1];
-			}
-			else if (!ft_strncmp(commands->content[x], "<<", 2))
-			{
-				commands->infile[y].mode = 4;
-				g_data.here_doc = 1;
-				commands->infile[y++].name = "/tmp/tmp";
-			}
-			else if (!ft_strncmp(commands->content[x], "<", 1))
-			{
-				commands->infile[y].mode = 1;
-				commands->infile[y++].name = commands->content[x + 1];
-			}
-			x++;
-		}
+		add_files_loop(commands, &x, &y, &z);
 		commands->infile[y].name = NULL;
 		commands->outfile[z].name = NULL;
 		commands = commands->next;
 	}
+	return (0);
 }
 
 int	redirect_input(int index, t_lst *commands)

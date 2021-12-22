@@ -71,6 +71,11 @@ void	remove_files(t_lst **commands)
 	while (trav)
 	{
 		trav->cmd = malloc(sizeof(char *) * (trav->args + 1));
+		if (!trav->cmd)
+		{
+			printf("Malloc failed\n");
+			return ;
+		}
 		x = 0;
 		y = 0;
 		while (trav->content[x] && !ft_strncmp(trav->content[x], ">>", 2))

@@ -38,7 +38,7 @@ void	sighandler_cmd(int signum)
 	}
 	else if (signum == SIGQUIT)
 	{
-		write(STDOUT_FILENO, "Quit: 3\n", 8);
+		write(STDOUT_FILENO, "^\\Quit: 3\n", 10);
 		rl_on_new_line();
 		g_data.exit_code = 131;
 	}

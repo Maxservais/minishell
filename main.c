@@ -23,19 +23,49 @@ int	is_error(char *line)
 	return (0);
 }
 
+int	nbr_of_dollars(char *line)
+{
+	int	i;
+	int	count;
+
+	i = 0;
+	count = 0;
+	while (line[i])
+	{
+		if (line[i] == '$')
+			count++;
+		i++;
+	}
+	return (count);
+}
+
 void	parser_test(char *line)
 {
+	int			ret;
+	int			count;
 	t_token		*tokens;
 	char		**splited;
 	t_lst		*commands;
 
 	if (is_error(line))
 		return ;
-	add_env(line);
+	ret = 0;
+	count = nbr_of_dollars(line);
+	while (ft_strchr(line, '$') && ret != count)
+		line = add_env(line, &ret, &count);
+	if (*line == '\0')
+	{
+		rl_on_new_line();
+		return ;
+	}
 	tokens = token_finder(line);
 	splited = ft_test(line, tokens);
 	commands = put_in_list(splited);
-	add_files(commands);
+	if (add_files(commands) == -1)
+	{
+		printf("Malloc failed\n");
+		return ;
+	}
 	if (check_syntax(commands) == -1)
 		return ;
 	remove_files(&commands);
@@ -51,12 +81,11 @@ char	*ft_space_line(char *line)
 
 	i = 0;
 	j = 0;
-	line2 = 0;
 	while (line[i] == ' ' || line[i] == '	')
 		i++;
 	line2 = malloc(sizeof(char) * ((ft_strlen(line) - i) + 1));
 	if (!line2)
-		return ("EXIT");
+		return (NULL);
 	while (line[i])
 	{
 		line2[j] = line[i];

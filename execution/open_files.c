@@ -29,10 +29,7 @@ int	open_files(t_lst *commands)
 			commands->infile[i].fd
 				= ft_open(commands->infile[i].name, commands->infile[i].mode);
 			if (commands->infile[i].fd == -1)
-			{
-				invalid_file(commands, i);
-				return (-1);
-			}
+				return (invalid_file(commands, i));
 			i++;
 		}
 		i = 0;
