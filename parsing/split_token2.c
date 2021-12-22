@@ -61,26 +61,6 @@ static char	**factory(char **result, t_operation *o, char *str)
 	return (result);
 }
 
-int	malloc_operation(int i, t_operation *o)
-{
-	if (i == 0 || i == 1 || i == 4)
-	{
-		o[i].operation = malloc(sizeof(char) * 3);
-		if (!o[i].operation)
-			return (-1);
-		o[i].size = 2;
-	}
-	else
-	{
-		o[i].operation = malloc(sizeof(char) * 2);
-		o[i].size = 1;
-		if (!o[i].operation)
-			return (-1);
-	}
-	i++;
-	return (i);
-}
-
 void	assignation_o(t_operation *o)
 {
 	o[0].operation = ">>";
@@ -109,9 +89,11 @@ char	**split_token(char *str)
 	i = 0;
 	while (i < 15)
 	{
-		i = malloc_operation(i, o);
-		if (i == -1)
-			return (NULL);
+		if (i == 0 || i == 1 || i == 4)
+			o[i].size = 2;
+		else
+			o[i].size = 1;
+		i++;
 	}
 	assignation_o(o);
 	result = NULL;

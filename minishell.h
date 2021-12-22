@@ -178,7 +178,6 @@ int		find_sec_quote(char *line, int first_quote);
 void	free_splited(char **splited);
 void	clean_all(t_token *tokens, char **splited, t_lst **commands);
 void	free_envp(void);
-void	free_token(t_operation *o);
 
 /* 6. EXECUTOR */
 
