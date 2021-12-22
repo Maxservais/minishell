@@ -19,7 +19,7 @@ int	pwd(t_lst *commands)
 	}
 	else
 	{
-		perror("bash: pwd");
+		perror("bash: current directory");
 		return (EXIT_FAILURE);
 	}
 	return (EXIT_SUCCESS);

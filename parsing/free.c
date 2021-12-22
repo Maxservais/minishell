@@ -31,4 +31,4 @@ void	free_envp(void)
 		x++;
 	}
 	free(g_data.envp);
-}
+}	
