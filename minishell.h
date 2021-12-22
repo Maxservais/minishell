@@ -86,7 +86,7 @@ typedef struct s_operations
 
 /* 3. GLOBAL VARIABLE */
 
-t_data	g_data; // IS it norminette compliant???? NO, c'est une global il faut la declarer autrement
+t_data	g_data;
 
 /* 4. MAIN FUNCTIONS */
 
@@ -98,8 +98,9 @@ void	prompt_test(char *line);
 /* 5.0 Parser */
 t_lst	*put_in_list(char **splited);
 int		check_syntax(t_lst *commands);
-void	remove_files(t_lst **commands);
+void	remove_files(t_lst *commands);
 char	**ft_test(char *s, t_token *tokens);
+int	in_quotes(t_token *tokens, int pos);
 
 /* 5.1 Tokenizer */
 t_token	*token_finder(char *line);

@@ -44,7 +44,6 @@ int	char_position(char *line, char c, int occ)
 		position++;
 	}
 	return (-1);
-
 }
 
 int	count_chevrons(t_lst command, char *chevron)
@@ -52,11 +51,13 @@ int	count_chevrons(t_lst command, char *chevron)
 	int	x;
 	int	counter;
 
-	x = 0;	
+	x = 0;
 	counter = 0;
 	while (command.content[x])
 	{
-		if (!ft_strncmp(command.content[x], chevron, ft_strlen(chevron)) && ft_strlen(command.content[x]) == ft_strlen(chevron))
+		if (!ft_strncmp(command.content[x], chevron,
+				ft_strlen(chevron))
+			&& ft_strlen(command.content[x]) == ft_strlen(chevron))
 			counter++;
 		x++;
 	}

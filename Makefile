@@ -1,7 +1,7 @@
 SRC_FILES 		=	main.c									\
-					error.c									\
 					./parsing/parser.c						\
 					./parsing/split_pipes.c					\
+					./parsing/split_pipes2.c				\
 					./parsing/tokenizer.c					\
 					./parsing/split_token.c					\
 					./parsing/utils1.c						\
@@ -15,6 +15,7 @@ SRC_FILES 		=	main.c									\
 					./execution/builtins/cd.c				\
 					./execution/builtins/unset.c			\
 					./execution/builtins/error_handler.c	\
+					./execution/error.c						\
 					./execution/exec.c						\
 					./execution/pipex.c						\
 					./execution/redirection.c				\
