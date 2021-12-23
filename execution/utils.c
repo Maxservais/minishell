@@ -4,6 +4,7 @@ char	**find_paths(void)
 {
 	int		i;
 	char	*env;
+	char	*tmp;
 	char	**paths;
 
 	i = 0;
@@ -16,8 +17,9 @@ char	**find_paths(void)
 		}
 		i++;
 	}
-	paths = ft_split(ft_substr(env, ft_strlen("PATH="),
-				ft_strlen(env)), ':');
+	tmp = ft_substr(env, ft_strlen("PATH="), ft_strlen(env));
+	paths = ft_split(tmp, ':');
+	free(tmp);
 	if (!paths)
 		return (NULL);
 	return (paths);
@@ -45,6 +47,7 @@ void	exec_cmd(t_lst *command, int i)
 			free(paths[i]);
 			i++;
 			execve(path, command->cmd, g_data.envp);
+			free(path);
 		}
 	}
 	command_not_found(command);

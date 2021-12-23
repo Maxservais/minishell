@@ -124,6 +124,48 @@ typedef struct s_count_token
 	char		first_quote;
 }	t_count_token;
 
+typedef struct s_append_char
+{
+	char	*key;
+	char	*value;
+	char	*to_append;
+	char	*tmp1;
+	char	*tmp2;
+	char	*final;
+	char	c;
+}	t_append_char;
+
+typedef struct s_exported
+{
+	int		i;
+	int		plus;
+	int		equal;
+	char	*key_str;
+	char	*key_envp;
+	char	*tmp;
+}	t_exported;
+
+typedef struct s_add_to_envp
+{
+	int		i;
+	int		plus;
+	char	*key;
+	char	*value;
+	char	*tmp;
+	char	**new_envp;
+}	t_add_to_envp;
+
+typedef struct s_find_var_unset
+{
+	int		i;
+	int		plus;
+	int		equal;
+	int		ok;
+	char	*key_str;
+	char	*key_envp;
+	char	*tmp;
+}	t_find_var_unset;
+
 /* 3. GLOBAL VARIABLE */
 
 t_data	g_data;
@@ -188,6 +230,12 @@ int		env(t_lst *commands);
 int		export(t_lst *command);
 char	*append_char(char *str, char *str_before);
 int		exported(char *str);
+int		add_to_envp(char *str);
+int		exported(char *str);
+void	exported_ok(t_lst *commands, int i);
+void	free_exported(t_exported vars, char *str);
+void	join_free(t_add_to_envp var, char *str);
+int		free_new_envp(t_add_to_envp var);
 int		add_to_envp(char *str);
 int		find_equal_c(char *str);
 int		ft_find_plus(char *str);

@@ -17,6 +17,8 @@ SRC_FILES 		=	main.c									\
 					./execution/builtins/env.c				\
 					./execution/builtins/export1.c			\
 					./execution/builtins/export2.c			\
+					./execution/builtins/export3.c			\
+					./execution/builtins/export_free.c		\
 					./execution/builtins/cd.c				\
 					./execution/builtins/unset.c			\
 					./execution/builtins/error_handler.c	\

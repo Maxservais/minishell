@@ -67,115 +67,23 @@ static void	print_env(void)
 
 char	*append_char(char *str, char *str_before)
 {
-	char	*key;
-	char	*value;
-	char	*to_append;
-	char	*tmp1;
-	char	*tmp2;
-	char	*final;
-	char	c;
+	t_append_char	vars;
 
-	c = '=';
-	key = ft_substr(str, 0, ft_find_plus(str));
-	value = ft_substr(str_before, find_equal_c(str_before)
+	vars.c = '=';
+	vars.key = ft_substr(str, 0, ft_find_plus(str));
+	vars.value = ft_substr(str_before, find_equal_c(str_before)
 			+ 1, ft_strlen(str_before) - find_equal_c(str_before));
-	to_append = ft_substr(str, find_equal_c(str) + 1, ft_strlen(str)
+	vars.to_append = ft_substr(str, find_equal_c(str) + 1, ft_strlen(str)
 			- find_equal_c(str));
-	tmp1 = ft_strjoin(value, to_append);
-	tmp2 = ft_strjoin(key, &c);
-	final = ft_strjoin(tmp2, tmp1);
-	free(key);
-	free(value);
-	free(to_append);
-	free(tmp1);
-	free(tmp2);
-	return (final);
-}
-
-int	exported(char *str)
-{
-	int		i;
-	int		plus;
-	int		equal;
-	char	*key_str;
-	char	*key_envp;
-	char	*tmp;
-
-	i = 0;
-	plus = ft_find_plus(str);
-	equal = find_equal_c(str);
-	if (plus != -1)
-		equal = plus;
-	key_str = ft_substr(str, 0, equal);
-	while (g_data.envp[i])
-	{
-		tmp = ft_strdup(g_data.envp[i]);
-		key_envp = ft_substr(g_data.envp[i], 0, find_equal_c(g_data.envp[i]));
-		if (!ft_strcmp_parse(key_str, key_envp, ft_strlen(key_str)))
-		{
-			free(g_data.envp[i]);
-			if (plus != -1)
-				g_data.envp[i] = append_char(str, g_data.envp[i]);
-			else
-				g_data.envp[i] = ft_strdup(str);
-			free(tmp);
-			free(key_str);
-			free(key_envp);
-			return (i);
-		}
-		free(tmp);
-		free(key_envp);
-		i++;
-	}
-	free(key_str);
-	return (-1);
-}
-
-int	add_to_envp(char *str)
-{
-	int		i;
-	int		plus;
-	char	c;
-	char	*key;
-	char	*value;
-	char	*tmp;
-	char	**new_envp;
-
-	i = 0;
-	c = '=';
-	new_envp = malloc(sizeof(char *) * (len_env(g_data.envp) + 2));
-	if (!new_envp)
-		return (-1);
-	while (g_data.envp[i] != NULL)
-	{
-		new_envp[i] = ft_strdup(g_data.envp[i]);
-		if (!new_envp[i])
-		{
-			while (i-- > 0)
-				free(new_envp[i]);
-			free(new_envp);
-			return (-1);
-		}
-		i++;
-	}
-	plus = ft_find_plus(str);
-	if (plus != -1)
-	{
-		key = ft_substr(str, 0, plus);
-		value = ft_substr(str, plus + 2, ft_strlen(str) - plus);
-		tmp = ft_strjoin(key, &c);
-		free(key);
-		new_envp[i] = ft_strjoin(tmp, value);
-		free(value);
-		free(tmp);
-	}
-	else
-		new_envp[i] = ft_strdup(str);
-	i++;
-	new_envp[i] = NULL;
-	free_envp();
-	g_data.envp = new_envp;
-	return (EXIT_SUCCESS);
+	vars.tmp1 = ft_strjoin(vars.value, vars.to_append);
+	vars.tmp2 = ft_strjoin(vars.key, &vars.c);
+	vars.final = ft_strjoin(vars.tmp2, vars.tmp1);
+	free(vars.key);
+	free(vars.value);
+	free(vars.to_append);
+	free(vars.tmp1);
+	free(vars.tmp2);
+	return (vars.final);
 }
 
 int	export(t_lst *commands)
@@ -200,12 +108,7 @@ int	export(t_lst *commands)
 		else if (check_export_name(commands->cmd[i]) == -1)
 			g_data.exit_code = 1;
 		else if (find_equal_c(commands->cmd[i]) != -1)
-		{
-			if (exported(commands->cmd[i]) >= 0)
-				g_data.exit_code = 0;
-			else if (add_to_envp(commands->cmd[i]) == 0)
-				g_data.exit_code = 0;
-		}
+			exported_ok(commands, i);
 		i++;
 	}
 	return (g_data.exit_code);

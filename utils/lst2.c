@@ -56,6 +56,7 @@ int	ft_strcmp_unset(char *str, char *end)
 	int	i;
 
 	i = 0;
+	printf("str = |%s| end = |%s|\n", str, end);
 	while (end[i] != '\0' && str[i] != '\0')
 	{
 		if (str[i] != end[i])

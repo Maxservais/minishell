@@ -24,6 +24,7 @@ void	parser_test(char *line)
 	if (*line == '\0')
 	{
 		rl_on_new_line();
+		free(line);
 		return ;
 	}
 	tokens = token_finder(line);
@@ -109,6 +110,6 @@ int	main(void)
 	prompt_test(line);
 	free_envp();
 	tcsetattr(0, TCSANOW, &g_data.main_old);
-	system("leaks minishell");
+	// system("leaks minishell");
 	return (g_data.exit_code);
 }
