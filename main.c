@@ -43,6 +43,7 @@ void	parser_test(char *line)
 {
 	int			ret;
 	int			count;
+	char		*tmp;
 	t_token		*tokens;
 	char		**splited;
 	t_lst		*commands;
@@ -51,15 +52,23 @@ void	parser_test(char *line)
 		return ;
 	ret = 0;
 	count = nbr_of_dollars(line);
+	line = ft_strdup(line);
 	while (ft_strchr(line, '$') && ret != count)
-		line = add_env(line, &ret, &count);
+	{
+		tmp = ft_strdup(line);
+		free(line);
+		line = add_env(tmp, &ret, &count);
+		free(tmp);
+	}
 	if (*line == '\0')
 	{
 		rl_on_new_line();
+		free(line);
 		return ;
 	}
 	tokens = token_finder(line);
 	splited = ft_test(line, tokens);
+	free(line);
 	commands = put_in_list(splited);
 	if (add_files(commands) == -1)
 	{
