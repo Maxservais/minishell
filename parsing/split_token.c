@@ -45,7 +45,7 @@ static	char	*create_word(char *str, t_operation *o, int *i)
 		if (!word)
 			return (NULL);
 		while (len)
-			foo(word, i, str, &len);
+			ft_str_word(word, i, str, &len);
 		word[*i] = '\0';
 		return (word);
 	}
@@ -73,4 +73,5 @@ void	fill(char **result, char *str, t_operation *o, int size)
 		size--;
 	}
 	result[x] = NULL;
+	x = 0;
 }

@@ -19,7 +19,7 @@ void	lstdelone(t_lst *lst)
 	free(lst);
 }
 
-int	strisdigit(char *str)
+int	ft_strisdigit(char *str)
 {
 	int	i;
 

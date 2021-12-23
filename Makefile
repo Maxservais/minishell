@@ -1,4 +1,5 @@
 SRC_FILES 		=	main.c									\
+					utils_main.c							\
 					./parsing/create_word_tok.c				\
 					./parsing/parser.c						\
 					./parsing/split_pipes.c					\

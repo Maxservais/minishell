@@ -1,58 +1,26 @@
 #include "minishell.h"
 
-int	is_error(char *line)
+char	*line_env(char *line)
 {
-	int	simple_quote;
-	int	double_quote;
-
-	simple_quote = 0;
-	double_quote = 0;
-	while (*line)
-	{
-		if (*line == '\'')
-			simple_quote++;
-		if (*line == '\"')
-			double_quote++;
-		line++;
-	}
-	if (simple_quote % 2 == 1 || double_quote % 2 == 1)
-	{
-		ft_putstr_fd("input error\n", 1);
-		return (1);
-	}
-	return (0);
-}
-
-int	nbr_of_dollars(char *line)
-{
-	int	i;
+	int	ret;
 	int	count;
 
-	i = 0;
-	count = 0;
-	while (line[i])
-	{
-		if (line[i] == '$')
-			count++;
-		i++;
-	}
-	return (count);
+	ret = 0;
+	count = nbr_of_dollars(line);
+	while (ft_strchr(line, '$') && ret != count)
+		line = add_env(line, &ret, &count);
+	return (line);
 }
 
 void	parser_test(char *line)
 {
-	int			ret;
-	int			count;
 	t_token		*tokens;
 	char		**splited;
 	t_lst		*commands;
 
 	if (is_error(line))
 		return ;
-	ret = 0;
-	count = nbr_of_dollars(line);
-	while (ft_strchr(line, '$') && ret != count)
-		line = add_env(line, &ret, &count);
+	line = line_env(line);
 	if (*line == '\0')
 	{
 		rl_on_new_line();
@@ -99,8 +67,6 @@ char	*ft_space_line(char *line)
 
 void	prompt_test(char *line)
 {
-	g_data.exit = -1;
-	g_data.exit_code = 0;
 	while (g_data.exit == -1)
 	{
 		g_data.here_doc = 0;
@@ -133,11 +99,13 @@ int	main(void)
 
 	tcgetattr(0, &g_data.main_old);
 	g_data.main_new = g_data.main_old;
-	g_data.main_new.c_lflag&= ~(ECHOCTL);
+	g_data.main_new.c_lflag &= ~(ECHOCTL);
 	tcsetattr(0, TCSANOW, &g_data.main_new);
 	if (copy_env() == -1)
 		return (EXIT_FAILURE);
 	line = NULL;
+	g_data.exit = -1;
+	g_data.exit_code = 0;
 	prompt_test(line);
 	free_envp();
 	tcsetattr(0, TCSANOW, &g_data.main_old);

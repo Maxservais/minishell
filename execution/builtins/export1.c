@@ -13,7 +13,7 @@ static int	check_export_name(char *s)
 	int	plus;
 	int	equal;
 
-	plus = find_plus(s);
+	plus = ft_find_plus(s);
 	equal = find_equal_c(s);
 	if (equal == -1)
 		equal = ft_strlen(s);
@@ -22,15 +22,15 @@ static int	check_export_name(char *s)
 	i = 0;
 	while (s[i] && i < equal)
 	{
-		if (s[i] == '.' || s[i] == '{' || s[i] == '-'  || s[i] == '}'
+		if (s[i] == '.' || s[i] == '{' || s[i] == '-' || s[i] == '}'
 			|| s[i] == '$' || s[i] == '\'' || s[i] == ';' || s[i] == '&'
-			|| s[i] == '\"'|| s[i] == '|' || s[i] == '^'  || s[i] == '~'
+			|| s[i] == '\"' || s[i] == '|' || s[i] == '^' || s[i] == '~'
 			|| s[i] == '*' || s[i] == '#' || s[i] == '@' || s[i] == '!'
 			|| !ft_isascii(*s))
-			{
-				error_args(s);
-				return (-1);
-			}
+		{
+			error_args(s);
+			return (-1);
+		}
 		i++;
 	}
 	return (0);
@@ -47,12 +47,13 @@ static void	print_env(void)
 	while (g_data.envp[i] != NULL)
 	{
 		j = 0;
-		while(g_data.envp[i][j])
+		while (g_data.envp[i][j])
 		{
 			if (g_data.envp[i][j] == '=')
 			{
 				var = ft_substr(g_data.envp[i], 0, j + 1);
-				value = ft_substr(g_data.envp[i], j + 1, ft_strlen(g_data.envp[i]) - j);
+				value = ft_substr(g_data.envp[i], j + 1,
+						ft_strlen(g_data.envp[i]) - j);
 				break ;
 			}
 			j++;
@@ -75,9 +76,11 @@ char	*append_char(char *str, char *str_before)
 	char	c;
 
 	c = '=';
-	key = ft_substr(str, 0, find_plus(str));
-	value = ft_substr(str_before, find_equal_c(str_before) + 1, ft_strlen(str_before) - find_equal_c(str_before));
-	to_append = ft_substr(str, find_equal_c(str) + 1, ft_strlen(str) - find_equal_c(str));
+	key = ft_substr(str, 0, ft_find_plus(str));
+	value = ft_substr(str_before, find_equal_c(str_before)
+			+ 1, ft_strlen(str_before) - find_equal_c(str_before));
+	to_append = ft_substr(str, find_equal_c(str) + 1, ft_strlen(str)
+			- find_equal_c(str));
 	tmp1 = ft_strjoin(value, to_append);
 	tmp2 = ft_strjoin(key, &c);
 	final = ft_strjoin(tmp2, tmp1);
@@ -99,7 +102,7 @@ int	exported(char *str)
 	char	*tmp;
 
 	i = 0;
-	plus = find_plus(str);
+	plus = ft_find_plus(str);
 	equal = find_equal_c(str);
 	if (plus != -1)
 		equal = plus;
@@ -155,7 +158,7 @@ int	add_to_envp(char *str)
 		}
 		i++;
 	}
-	plus = find_plus(str);
+	plus = ft_find_plus(str);
 	if (plus != -1)
 	{
 		key = ft_substr(str, 0, plus);
@@ -188,7 +191,8 @@ int	export(t_lst *commands)
 	i = 1;
 	while (commands->cmd[i])
 	{
-		if (commands->cmd[i][0] == '=' || commands->cmd[i][0] == '+' || ft_isdigit(commands->cmd[i][0]))
+		if (commands->cmd[i][0] == '=' || commands->cmd[i][0] == '+'
+			|| ft_isdigit(commands->cmd[i][0]))
 		{
 			error_args(commands->cmd[i]);
 			g_data.exit_code = 1;

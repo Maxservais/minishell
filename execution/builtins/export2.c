@@ -14,7 +14,7 @@ int	find_equal_c(char *str)
 	return (-1);
 }
 
-int	find_plus(char *str)
+int	ft_find_plus(char *str)
 {
 	int	i;
 

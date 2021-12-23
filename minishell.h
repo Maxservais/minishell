@@ -69,8 +69,6 @@ typedef struct s_lst
 	char			**cmd;
 	int				args;
 	int				index;
-	int				to_display;
-	int				job_done;
 	struct s_file	*infile;
 	struct s_file	*outfile;
 }				t_lst;
@@ -134,6 +132,8 @@ t_data	g_data;
 
 void	parser_test(char *line);
 void	prompt_test(char *line);
+int		is_error(char *line);
+int		nbr_of_dollars(char *line);
 
 /* 5. PARSER */
 
@@ -152,7 +152,7 @@ int		count_words_tok(char *str, t_operation *o);
 char	find_first_quote_tok(char *str);
 int		check_occ_tok(char *str, t_operation *o);
 int		check_for_quote(t_check_quote arg);
-void	foo(char *word, int *i, char *str, int *len);
+void	ft_str_word(char *word, int *i, char *str, int *len);
 void	copy_word(t_copy_word arg);
 
 /* 5.2 Utils */
@@ -164,7 +164,7 @@ int		last_infile(t_lst *command);
 int		last_outfile(t_lst *command);
 void	add_index(t_lst **commands);
 char	*add_env(char *line, int *ret, int *count);
-int		strisdigit(char *str);
+int		ft_strisdigit(char *str);
 int		ft_strcmp(char *str, char *end);
 int		ft_strcmp_unset(char *str, char *end);
 int		ft_strcmp_parse(char *str1, char *str2, int n);
@@ -190,7 +190,7 @@ char	*append_char(char *str, char *str_before);
 int		exported(char *str);
 int		add_to_envp(char *str);
 int		find_equal_c(char *str);
-int		find_plus(char *str);
+int		ft_find_plus(char *str);
 int		len_env(char **env);
 int		unset(t_lst *commands);
 int		ft_exit(t_lst *command);

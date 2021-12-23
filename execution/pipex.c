@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-static void	exec(t_lst *command, int err)
+static void	ft_exec(t_lst *command, int err)
 {
 	if (err != -1)
 	{
@@ -34,7 +34,7 @@ int	first_command(int right_pipe[], t_lst *command)
 			if (dup2(right_pipe[WRITE], STDOUT_FILENO) == -1)
 				return (-1);
 		close(right_pipe[WRITE]);
-		exec(command, err);
+		ft_exec(command, err);
 	}
 	else
 	{
@@ -61,7 +61,7 @@ int	last_command(int left_pipe[], int right_pipe[], t_lst *command)
 				return (-1);
 		}
 		close(left_pipe[READ]);
-		exec(command, err);
+		ft_exec(command, err);
 	}
 	else
 	{
@@ -89,7 +89,7 @@ int	inter_command(int l_pipe[], int r_pipe[], t_lst *command, int err)
 			if (dup2(l_pipe[READ], STDIN_FILENO) == -1)
 				return (-1);
 		close(l_pipe[READ]);
-		exec(command, err);
+		ft_exec(command, err);
 	}
 	else
 	{

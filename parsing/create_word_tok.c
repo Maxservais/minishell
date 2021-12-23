@@ -18,7 +18,7 @@ int	check_for_quote(t_check_quote arg)
 	return (arg.len);
 }
 
-void	foo(char *word, int *i, char *str, int *len)
+void	ft_str_word(char *word, int *i, char *str, int *len)
 {
 	word[*i] = (str)[*i];
 	(*i)++;
