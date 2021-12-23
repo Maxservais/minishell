@@ -176,6 +176,7 @@ void	parser_test(char *line);
 void	prompt_test(char *line);
 int		is_error(char *line);
 int		nbr_of_dollars(char *line);
+void	rem_handcom_clean(t_lst *commands, t_token *tokens, char **splited);
 
 /* 5. PARSER */
 

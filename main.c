@@ -28,16 +28,6 @@ void	parser_test(char *line)
 	if (is_error(line))
 		return ;
 	line = line_env(line);
-	// ret = 0;
-	// count = nbr_of_dollars(line);
-	// line = ft_strdup(line);
-	// while (ft_strchr(line, '$') && ret != count)
-	// {
-	// 	tmp = ft_strdup(line);
-	// 	free(line);
-	// 	line = add_env(tmp, &ret, &count);
-	// 	free(tmp);
-	// }
 	if (*line == '\0')
 	{
 		rl_on_new_line();
@@ -55,9 +45,7 @@ void	parser_test(char *line)
 	}
 	if (check_syntax(commands) == -1)
 		return ;
-	remove_files(commands);
-	handle_command(commands);
-	clean_all(tokens, splited, &commands);
+	rem_handcom_clean(commands, tokens, splited);
 }
 
 char	*ft_space_line(char *line)

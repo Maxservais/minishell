@@ -38,3 +38,10 @@ int	nbr_of_dollars(char *line)
 	}
 	return (count);
 }
+
+void	rem_handcom_clean(t_lst *commands, t_token *tokens, char **splited)
+{
+	remove_files(commands);
+	handle_command(commands);
+	clean_all(tokens, splited, &commands);
+}
