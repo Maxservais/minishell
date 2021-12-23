@@ -14,7 +14,8 @@ SRC_FILES 		=	main.c									\
 					./execution/builtins/exit.c				\
 					./execution/builtins/pwd.c				\
 					./execution/builtins/env.c				\
-					./execution/builtins/export.c			\
+					./execution/builtins/export1.c			\
+					./execution/builtins/export2.c			\
 					./execution/builtins/cd.c				\
 					./execution/builtins/unset.c			\
 					./execution/builtins/error_handler.c	\
@@ -26,7 +27,7 @@ SRC_FILES 		=	main.c									\
 					./execution/open_files.c				\
 					./execution/utils.c						\
 					./signals/signal.c						\
-					./utils/lst.c							\
+					./utils/lst1.c							\
 					./utils/lst2.c							\
 
 OBJ_FILES		=	$(SRC_FILES:.c=.o)

@@ -1,10 +1,3 @@
-/* Reminders:
-- retour des bonnes valeurs (0 en cas de succes, etc.) !!!!!!!!!
-- unset does two things: 
-1) remove an environment variable from the list of exported variables
-2) remove a shell variable
-*/
-
 #include "../../minishell.h"
 
 int	find_var(char *variable)

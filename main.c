@@ -2,8 +2,8 @@
 
 int	is_error(char *line)
 {
-	int simple_quote;
-	int double_quote;
+	int	simple_quote;
+	int	double_quote;
 
 	simple_quote = 0;
 	double_quote = 0;
@@ -118,7 +118,7 @@ void	prompt_test(char *line)
 			printf("bash: syntax error near unexpected token `|'\n");
 			line = ft_strdup("");
 		}
-		if(line[0] == ' ' || line[0] == '	')
+		if (line[0] == ' ' || line[0] == '	')
 			line = ft_space_line(line);
 		if (ft_strlen(line))
 			parser_test(line);
@@ -131,18 +131,16 @@ int	main(void)
 {
 	char	*line;
 
-	tcgetattr(0, &g_data.main_old); // recupere les parametres du terminal
-	g_data.main_new = g_data.main_old; //on copie l'ancien terminal
-	g_data.main_new.c_lflag&= ~(ECHOCTL); // enleve les caracteres speciaux genre ^C
-	tcsetattr(0, TCSANOW, &g_data.main_new); //on definit les parametres avec les modifications
+	tcgetattr(0, &g_data.main_old);
+	g_data.main_new = g_data.main_old;
+	g_data.main_new.c_lflag&= ~(ECHOCTL);
+	tcsetattr(0, TCSANOW, &g_data.main_new);
 	if (copy_env() == -1)
 		return (EXIT_FAILURE);
 	line = NULL;
 	prompt_test(line);
-	// raises an error;
-	// -->>
-	// free_envp();
-	tcsetattr(0, TCSANOW, &g_data.main_old); //on redonne les anciens parametres
-	//system("leaks minishell");
+	free_envp();
+	tcsetattr(0, TCSANOW, &g_data.main_old);
+	system("leaks minishell");
 	return (g_data.exit_code);
 }
