@@ -15,8 +15,8 @@
 # include <errno.h>
 # include <string.h>
 # include <signal.h>
-# include "libft/libft.h"
 # include <termios.h>
+# include "libft/libft.h"
 
 /* 1. MACROS */
 
@@ -105,7 +105,7 @@ typedef struct s_check_quote
 	t_operation	*o;
 	char		frstquote;
 	int			len;
-}	t_check_quote;
+}				t_check_quote;
 
 typedef struct s_copy_word
 {
@@ -114,7 +114,7 @@ typedef struct s_copy_word
 	char		frstquote;
 	char		*word;
 	int			len;
-}	t_copy_word;
+}				t_copy_word;
 
 typedef struct s_count_token
 {
@@ -122,7 +122,7 @@ typedef struct s_count_token
 	char		**str;
 	t_operation	*o;
 	char		first_quote;
-}	t_count_token;
+}				t_count_token;
 
 typedef struct s_append_char
 {
@@ -133,7 +133,7 @@ typedef struct s_append_char
 	char	*tmp2;
 	char	*final;
 	char	c;
-}	t_append_char;
+}				t_append_char;
 
 typedef struct s_exported
 {
@@ -143,7 +143,7 @@ typedef struct s_exported
 	char	*key_str;
 	char	*key_envp;
 	char	*tmp;
-}	t_exported;
+}				t_exported;
 
 typedef struct s_add_to_envp
 {
@@ -153,7 +153,7 @@ typedef struct s_add_to_envp
 	char	*value;
 	char	*tmp;
 	char	**new_envp;
-}	t_add_to_envp;
+}				t_add_to_envp;
 
 typedef struct s_find_var_unset
 {
@@ -164,7 +164,7 @@ typedef struct s_find_var_unset
 	char	*key_str;
 	char	*key_envp;
 	char	*tmp;
-}	t_find_var_unset;
+}				t_find_var_unset;
 
 /* 3. GLOBAL VARIABLE */
 
@@ -172,10 +172,10 @@ t_data	g_data;
 
 /* 4. MAIN FUNCTIONS */
 
+char	*line_env(char *line);
 void	parser_test(char *line);
+char	*ft_space_line(char *line);
 void	prompt_test(char *line);
-int		is_error(char *line);
-int		nbr_of_dollars(char *line);
 
 /* 5. PARSER */
 

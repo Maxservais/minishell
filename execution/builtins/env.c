@@ -52,7 +52,7 @@ int	copy_env(void)
 
 int	env(t_lst *commands)
 {
-	int			i;
+	int	i;
 
 	i = 0;
 	if (commands->cmd[1] && !ft_strncmp(commands->cmd[1], "-", 1))

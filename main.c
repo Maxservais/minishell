@@ -28,16 +28,6 @@ void	parser_test(char *line)
 	if (is_error(line))
 		return ;
 	line = line_env(line);
-	// ret = 0;
-	// count = nbr_of_dollars(line);
-	// line = ft_strdup(line);
-	// while (ft_strchr(line, '$') && ret != count)
-	// {
-	// 	tmp = ft_strdup(line);
-	// 	free(line);
-	// 	line = add_env(tmp, &ret, &count);
-	// 	free(tmp);
-	// }
 	if (*line == '\0')
 	{
 		rl_on_new_line();
@@ -101,6 +91,7 @@ void	prompt_test(char *line)
 		if (line[0] == '|')
 		{
 			printf("bash: syntax error near unexpected token `|'\n");
+			free(line);
 			line = ft_strdup("");
 		}
 		if (line[0] == ' ' || line[0] == '	')
@@ -128,6 +119,6 @@ int	main(void)
 	prompt_test(line);
 	free_envp();
 	tcsetattr(0, TCSANOW, &g_data.main_old);
-	system("leaks minishell");
+	// system("leaks minishell");
 	return (g_data.exit_code);
 }
