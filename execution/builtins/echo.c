@@ -1,6 +1,6 @@
 #include "../../minishell.h"
 
-int	echo_base(t_lst *command, int x)
+static int	echo_base(t_lst *command, int x)
 {
 	x = 1;
 	while (command->cmd[x])
@@ -28,7 +28,7 @@ int	echo_base(t_lst *command, int x)
 	return (x);
 }
 
-int	echo_n(t_lst *command, int x)
+static int	echo_n(t_lst *command, int x)
 {
 	x = 2;
 	while (command->cmd[x])

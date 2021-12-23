@@ -45,9 +45,7 @@ void	parser_test(char *line)
 	}
 	if (check_syntax(commands) == -1)
 		return ;
-	remove_files(commands);
-	handle_command(commands);
-	clean_all(tokens, splited, &commands);
+	rem_handcom_clean(commands, tokens, splited);
 }
 
 char	*ft_space_line(char *line)

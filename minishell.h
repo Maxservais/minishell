@@ -176,46 +176,51 @@ char	*line_env(char *line);
 void	parser_test(char *line);
 char	*ft_space_line(char *line);
 void	prompt_test(char *line);
+int		is_error(char *line);
+int		nbr_of_dollars(char *line);
+void	rem_handcom_clean(t_lst *commands, t_token *tokens, char **splited);
 
 /* 5. PARSER */
 
 /* 5.0 Parser */
 t_lst	*put_in_list(char **splited);
+int		syntax_error(void);
 int		check_syntax(t_lst *commands);
+int		check_chevron(t_lst *comd, int x, int y);
 void	remove_files(t_lst *commands);
 char	**ft_test(char *s, t_token *tokens);
 int		in_quotes(t_token *tokens, int pos);
 
 /* 5.1 Tokenizer */
-t_token	*token_finder(char *line);
-char	**split_token(char *str);
-void	fill(char **result, char *str, t_operation *o, int size);
-int		count_words_tok(char *str, t_operation *o);
-char	find_first_quote_tok(char *str);
 int		check_occ_tok(char *str, t_operation *o);
+char	find_first_quote_tok(char *str);
+void	fill(char **result, char *str, t_operation *o, int size);
+void	count_w_token(t_count_token arg);
+int		count_words_tok(char *str, t_operation *o);
+void	assignation_o(t_operation *o);
+char	**split_token(char *str);
 int		check_for_quote(t_check_quote arg);
 void	ft_str_word(char *word, int *i, char *str, int *len);
 void	copy_word(t_copy_word arg);
+t_token	*token_finder(char *line);
 
 /* 5.2 Utils */
 int		check_occurence(char c, char *to_find);
 int		space_position(char *line, char c, int start);
 int		char_position(char *line, char c, int occ);
 int		count_chev(t_lst command, char *chevron);
+void	add_index(t_lst **commands);
 int		last_infile(t_lst *command);
 int		last_outfile(t_lst *command);
-void	add_index(t_lst **commands);
-char	*add_env(char *line, int *ret, int *count);
-int		ft_strisdigit(char *str);
-int		ft_strcmp(char *str, char *end);
-int		ft_strcmp_unset(char *str, char *end);
-int		ft_strcmp_parse(char *str1, char *str2, int n);
-int		nbr_of_dollars(char *line);
 int		find_equal(char *line);
 int		find_f_quote(char *line, int dollar);
 int		find_sec_quote(char *line, int first_quote);
+void	init_value(t_dollar *dollar, char *line, int *ret);
+void	remove_dollar1(t_dollar *d, char *line);
+char	*remove_dollar2(t_dollar *d, int *count);
+char	*add_env(char *line, int *ret, int *count);
 
-/* 5.3 Free Memory */
+/* 5.3 Memory management */
 void	free_splited(char **splited);
 void	clean_all(t_token *tokens, char **splited, t_lst **commands);
 void	free_envp(void);
@@ -223,34 +228,33 @@ void	free_envp(void);
 /* 6. EXECUTOR */
 
 /* 6.0 Builtins */
-int		pwd(t_lst *commands);
 int		cd(t_lst *commands);
+int		echo(t_lst *command);
 int		copy_env(void);
 int		env(t_lst *commands);
-int		export(t_lst *command);
+int		ft_exit(t_lst *commands);
+int		pwd(t_lst *commands);
+int		unset(t_lst *commands);
 char	*append_char(char *str, char *str_before);
+int		export(t_lst *commands);
+int		find_equal_c(char *str);
+int		ft_find_plus(char *str);
+int		len_env(char **env);
 int		exported(char *str);
 int		add_to_envp(char *str);
-int		exported(char *str);
 void	exported_ok(t_lst *commands, int i);
 void	free_exported(t_exported vars, char *str);
 void	join_free(t_add_to_envp var, char *str);
 int		free_new_envp(t_add_to_envp var);
-int		add_to_envp(char *str);
-int		find_equal_c(char *str);
-int		ft_find_plus(char *str);
-int		len_env(char **env);
-int		unset(t_lst *commands);
-int		ft_exit(t_lst *command);
-int		echo(t_lst *commands);
 void	error_cmd(char *bash, char *cmd_name, char *input);
 void	error_usage(char *cmd_name, char *str, char *usage);
 
 /* 6.1 Execution */
 void	handle_command(t_lst *commands);
+int		execute_one_command(t_lst *commands);
 int		handle_one_command(t_lst *commands);
-void	execute_builtin(t_lst *commands);
 void	test_built(t_lst *commands);
+void	execute_builtin(t_lst *commands);
 
 /* 6.2 Piping */
 int		first_command(int right_pipe[], t_lst *command);
@@ -259,18 +263,27 @@ int		inter_command(int l_pipe[], int r_pipe[], t_lst *command, int err);
 int		pipex(t_lst *command, int left_pipe[]);
 
 /* 6.3 Redirections */
+void	add_files_loop(t_lst *commands, int *x, int *y, int *z);
 int		add_files(t_lst *commands);
+int		redirect_input(int index, t_lst *commands);
+int		redirect_files(t_lst *commands);
+int		redirect_standard(t_lst *commands);
 int		ft_open(char *file_name, int mode);
 int		open_files(t_lst *commands);
 int		close_files(t_lst *commands);
 int		last_heredoc(t_lst *command);
-int		redirect_files(t_lst *commands);
-int		redirect_standard(t_lst *commands);
+int		heredoc_bis(int x, t_lst *commands, char *str, int fd);
 int		heredoc(t_lst *commands, int index);
 
 /* 6.4 Utils */
 char	**find_paths(void);
 void	exec_cmd(t_lst *command, int i);
+
+/* 6.5 Error handling */
+void	command_not_found(t_lst *commands);
+int		invalid_file(t_lst *commands, int i);
+void	invalid_path(t_lst *commands);
+int		pipe_error(void);
 
 /* 7. SIGNALS */
 void	sighandler(int signum);
@@ -279,17 +292,16 @@ void	sighandler_cmd(int signum);
 void	sighandler_cmd1(int signum);
 void	sighandler_heredoc(int signum);
 
-/* 8. LIST MANIPULATION */
-int		lstsize(t_lst *lst);
+/* 8. UTILS */
+int	lstsize(t_lst *lst);
 t_lst	*lstnew(char **content, int index);
-void	lstdelone(t_lst *lst);
-void	lstclear(t_lst **lst);
+t_lst	*lstlast(t_lst *lst);
 void	lstadd_back(t_lst **lst, t_lst *new);
-
-/* 9. ERROR HANDLING */
-void	command_not_found(t_lst *commands);
-int		invalid_file(t_lst *commands, int i);
-void	invalid_path(t_lst *commands);
-int		pipe_error(void);
+void	lstclear(t_lst **lst);
+void	lstdelone(t_lst *lst);
+int		ft_strisdigit(char *str);
+int		ft_strcmp(char *str, char *end);
+int		ft_strcmp_unset(char *str, char *end);
+int		ft_strcmp_parse(char *str1, char *str2, int n);
 
 #endif
