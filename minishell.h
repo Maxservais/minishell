@@ -78,7 +78,6 @@ typedef struct s_lst
 typedef struct s_data
 {
 	int				exit;
-	int				new_line;
 	int				nb_of_commands;
 	int				exit_code;
 	int				built;
