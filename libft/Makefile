@@ -6,7 +6,7 @@
 #    By: mservais <mservais@student.s19.be >        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/12 17:29:50 by mservais          #+#    #+#              #
-#    Updated: 2021/12/22 16:27:42 by mservais         ###   ########.fr        #
+#    Updated: 2021/12/23 17:53:11 by mservais         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -73,7 +73,7 @@ NAME			= libft.a
 
 CC				= gcc
 
-CFLAGS			= -Wall -Wextra -Werror -g
+CFLAGS			= -Wall -Wextra -Werror
 
 all: $(NAME)
 

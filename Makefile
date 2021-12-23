@@ -39,7 +39,7 @@ NAME			=	minishell
 
 CC				=	gcc 
 
-CFLAGS			=	-Wall -Wextra -Werror -I /Users/$(USER)/.brew/opt/readline/include -g
+CFLAGS			=	-Wall -Wextra -Werror -I /Users/$(USER)/.brew/opt/readline/include
 
 all: $(NAME)
 
