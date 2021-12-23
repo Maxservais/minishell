@@ -117,6 +117,5 @@ int	main(void)
 	prompt_test(line);
 	free_envp();
 	tcsetattr(0, TCSANOW, &g_data.main_old);
-	// system("leaks minishell");
 	return (g_data.exit_code);
 }

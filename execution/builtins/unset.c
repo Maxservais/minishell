@@ -1,84 +1,43 @@
 #include "../../minishell.h"
 
-void	free_unset(t_find_var_unset vars, char *str)
+static void	var_loop(t_find_var_unset *vars)
 {
-	free(g_data.envp[vars.i]);
-	if (vars.plus != -1)
-		g_data.envp[vars.i] = append_char(str, g_data.envp[vars.i]);
-	else
-		g_data.envp[vars.i] = ft_strdup(str);
-	free(vars.tmp);
-	free(vars.key_str);
-	free(vars.key_envp);
-}
+	int	i;
 
-// void	check_find_var(t_find_var_unset vars, char *str)
-// {
-// 	vars.tmp = ft_strdup(g_data.envp[vars.i]);
-// 	vars.key_envp = ft_substr(g_data.envp[vars.i],
-// 			0, find_equal_c(g_data.envp[vars.i]));
-// 	if (!ft_strcmp_parse(vars.key_str,
-// 			vars.key_envp, ft_strlen(vars.key_str)))
-// 	{
-// 		free_unset(vars, str);
-// 		//printf("var = |%s|\n", g_data.envp[vars.i]);
-// 		free(g_data.envp[vars.i]);
-// 		ft_bzero(g_data.envp[vars.i], ft_strlen(g_data.envp[vars.i]));
-// 		vars.ok = 1;
-// 		while (g_data.envp[vars.i])
-// 		{
-// 			g_data.envp[vars.i] = g_data.envp[vars.i + 1];
-// 			vars.i++;
-// 		}
-// 	}
-// 	else
-// 	{
-// 		free(vars.tmp);
-// 		free(vars.key_envp);
-// 		vars.i++;
-// 	}
-// }
-
-int	find_var(char *str)
-{
-	t_find_var_unset	vars;
-
-	vars.i = 0;
-	vars.equal = find_equal_c(str);
-	vars.key_str = ft_substr(str, 0, vars.equal);
-	while (g_data.envp[vars.i])
+	i = 0;
+	while (g_data.envp[i])
 	{
-		vars.tmp = ft_strdup(g_data.envp[vars.i]);
-		vars.key_envp = ft_substr(g_data.envp[vars.i],
-				0, find_equal_c(g_data.envp[vars.i]));
-		if (!ft_strcmp_parse(vars.key_str,
-				vars.key_envp, ft_strlen(vars.key_str)))
+		vars->key_envp = ft_substr(g_data.envp[i],
+				0, find_equal_c(g_data.envp[i]));
+		if (!ft_strcmp_parse(vars->key_str,
+				vars->key_envp, ft_strlen(vars->key_str)))
 		{
-			free_unset(vars, str);
-			//printf("var = |%s|\n", g_data.envp[vars.i]);
-			free(g_data.envp[vars.i]);
-			ft_bzero(g_data.envp[vars.i], ft_strlen(g_data.envp[vars.i]));
-			vars.ok = 1;
-			while (g_data.envp[vars.i])
+			ft_bzero(g_data.envp[i], ft_strlen(g_data.envp[i]));
+			free(g_data.envp[i]);
+			free(vars->key_envp);
+			while (g_data.envp[i])
 			{
-				g_data.envp[vars.i] = g_data.envp[vars.i + 1];
-				vars.i++;
+				g_data.envp[i] = g_data.envp[i + 1];
+				i++;
 			}
 		}
 		else
 		{
-			free(vars.tmp);
-			free(vars.key_envp);
-			vars.i++;
+			free(vars->key_envp);
+			i++;
 		}
 	}
-	if (vars.ok == 1)
-		return (EXIT_SUCCESS);
-	else
-	{
-		free(vars.key_str);
-		return (EXIT_FAILURE);
-	}
+}
+
+static int	find_var(char *str)
+{
+	t_find_var_unset	vars;
+
+	vars.equal = find_equal_c(str);
+	vars.key_str = ft_substr(str, 0, vars.equal);
+	var_loop(&vars);
+	free(vars.key_str);
+	return (EXIT_SUCCESS);
 }
 
 int	unset(t_lst *commands)
@@ -87,12 +46,11 @@ int	unset(t_lst *commands)
 
 	if (!g_data.envp)
 		return (1);
-	i = 0;
+	i = 1;
 	while (commands->cmd[i])
 	{
-		// if it exists, unset it
 		if (find_var(commands->cmd[i]) == 1)
-			return (EXIT_FAILURE);
+			g_data.exit_code = 1;
 		i++;
 	}
 	return (EXIT_SUCCESS);

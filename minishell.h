@@ -293,7 +293,7 @@ void	sighandler_cmd1(int signum);
 void	sighandler_heredoc(int signum);
 
 /* 8. UTILS */
-int	lstsize(t_lst *lst);
+int		lstsize(t_lst *lst);
 t_lst	*lstnew(char **content, int index);
 t_lst	*lstlast(t_lst *lst);
 void	lstadd_back(t_lst **lst, t_lst *new);
