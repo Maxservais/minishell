@@ -72,7 +72,8 @@ char	*add_env(char *line, int *ret, int *count)
 	{
 		*ret += 1;
 		*count = nbr_of_dollars(line);
-		return (line);
+		dollar.temp = ft_strdup(line);
+		return (dollar.temp);
 	}
 	else if (dollar.dollar >= 0)
 	{

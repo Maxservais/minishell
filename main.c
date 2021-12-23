@@ -2,13 +2,20 @@
 
 char	*line_env(char *line)
 {
-	int	ret;
-	int	count;
+	int		ret;
+	int		count;
+	char	*tmp;
 
 	ret = 0;
 	count = nbr_of_dollars(line);
+	line = ft_strdup(line);
 	while (ft_strchr(line, '$') && ret != count)
-		line = add_env(line, &ret, &count);
+	{
+		tmp = ft_strdup(line);
+		free(line);
+		line = add_env(tmp, &ret, &count);
+		free(tmp);
+	}
 	return (line);
 }
 
@@ -21,6 +28,16 @@ void	parser_test(char *line)
 	if (is_error(line))
 		return ;
 	line = line_env(line);
+	// ret = 0;
+	// count = nbr_of_dollars(line);
+	// line = ft_strdup(line);
+	// while (ft_strchr(line, '$') && ret != count)
+	// {
+	// 	tmp = ft_strdup(line);
+	// 	free(line);
+	// 	line = add_env(tmp, &ret, &count);
+	// 	free(tmp);
+	// }
 	if (*line == '\0')
 	{
 		rl_on_new_line();
@@ -29,6 +46,7 @@ void	parser_test(char *line)
 	}
 	tokens = token_finder(line);
 	splited = ft_test(line, tokens);
+	free(line);
 	commands = put_in_list(splited);
 	if (add_files(commands) == -1)
 	{
@@ -110,6 +128,6 @@ int	main(void)
 	prompt_test(line);
 	free_envp();
 	tcsetattr(0, TCSANOW, &g_data.main_old);
-	// system("leaks minishell");
+	system("leaks minishell");
 	return (g_data.exit_code);
 }

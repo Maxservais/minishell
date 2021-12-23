@@ -42,10 +42,7 @@ int	find_f_quote(char *line, int dollar)
 	while (line[x])
 	{
 		if (line[x] == '\'' && x == dollar -1)
-		{
-			printf("first quote:%d\n", x);
 			return (x);
-		}
 		x++;
 	}
 	return (-1);
@@ -56,10 +53,7 @@ int	find_sec_quote(char *line, int first_quote)
 	while (line[first_quote])
 	{
 		if (line[first_quote] == '\'')
-		{
-			printf("second quote:%d\n", first_quote);
 			return (first_quote);
-		}
 		first_quote++;
 	}
 	return (-1);
